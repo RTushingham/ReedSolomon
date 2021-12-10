@@ -4,8 +4,17 @@
 #if RGTPrimesDotHppDebugging
 	#include <iostream>
 #endif
+
 #include <vector>
 using namespace std;
+
+std::vector<unsigned> VectorofPrimes(unsigned To);
+std::vector<unsigned> SecondVectorofPrimes(unsigned To);
+
+
+inline std::vector<unsigned> Primes(unsigned To){
+	return VectorofPrimes(To);
+}
 
 std::vector<unsigned> VectorofPrimes(unsigned To){
 	

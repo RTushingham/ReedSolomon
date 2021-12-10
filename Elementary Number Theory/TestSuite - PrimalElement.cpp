@@ -21,7 +21,7 @@ namespace utf = boost::unit_test;
 BOOST_AUTO_TEST_CASE(PrimalElements)
 {
 	//Do the values for IsPrimes match hard coded entries?
-		//Scope: 	2 to	61 (and therefore 64)
+		//Scope: 	Primes from		2 to	61 (and therefore 64)
 	std::array<int, 18> PrimesUpTo64 = RGTPrimesUpTo64;
 	std::array<int, 18> PrimalElements = RGTPrimalElements;
 	
@@ -31,19 +31,19 @@ BOOST_AUTO_TEST_CASE(PrimalElements)
 	}
 	
 	// Do the hard coded entries actually have span =p-1?
-		//Scope: 	2 to	7
+		//Scope: 	Primes from		2 	to	7
 	for(unsigned i=0; i<4; i++){
 		BOOST_TEST(SpanofIndex(PrimalElements[i], PrimesUpTo64[i]).size() == (PrimesUpTo64[i]-1));
 	}
 	
 	// Do the values of the function ToInvariantPrimalElementofZp actually have span =p-1?
-		//Scope: 	2 to	7
+		//Scope: 	Primes from		2 to	7
 	for(unsigned i=0; i<4; i++){
 		BOOST_TEST(SpanofIndex(ToInvariantPrimalElementofZp(PrimesUpTo64[i]), PrimesUpTo64[i]).size() == (PrimesUpTo64[i]-1));
 	}
 	
 	// Do the unchecked values of the function ToInvariantPrimalElementofZp have span =p-1?
-		//Scope: 	2 to	61 (and therefore 64)
+		//Scope: 	Primes from		2 to	61 (and therefore 64)
 	for(unsigned i=4; i<PrimesUpTo64.size(); i++){
 		BOOST_TEST(SpanofIndex(ToInvariantPrimalElementofZp(PrimesUpTo64[i]), PrimesUpTo64[i]).size() == (PrimesUpTo64[i]-1));
 	}

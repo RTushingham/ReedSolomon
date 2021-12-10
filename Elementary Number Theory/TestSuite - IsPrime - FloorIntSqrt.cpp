@@ -18,18 +18,12 @@ namespace utf = boost::unit_test;
 BOOST_AUTO_TEST_CASE(TestFloorIntSqrt)
 {
 	//Do the values for FloorIntSqrt match hard coded variables?
-		//Scope:	1 to 	65024
+		//Scope:	1 to 	64
 	
 	//Do the values for FloorIntSqrt act as an inverse function to floor(n**2)?
 		//Scope:	1 to 	65024
-	unsigned PreSquare;
-	unsigned i;
-	
-	for(PreSquare = 1; PreSquare < 255; PreSquare++){
-		unsigned i = (PreSquare-1);
-		
-		unsigned n;
-		for(n = (PreSquare)*(PreSquare); n < (PreSquare+1)*(PreSquare+1); n++){
+	for(unsigned PreSquare = 1; PreSquare < 255; PreSquare++){
+		for(unsigned n = (PreSquare)*(PreSquare); n < (PreSquare+1)*(PreSquare+1); n++){
 			BOOST_TEST(FloorIntSqrt(n) == PreSquare);
 		}
 	}

@@ -1,6 +1,18 @@
 
+//	The proccess of extension into F[x] is needed for both extension from GF(p) to GF(p**n) and from GFq to the generating functions for the ReedSolomon codes.
+//		As a result it would be really useful to be able to generalise this proccess for any Field. This would require finding irriducible polynomials for any field.
+//	There is also the potential to make good use of inheritance in this module, as most of the objects we will be using are fields, or sub-fields [citation needed].
+//		And technically the ReedSolomon codes produced may have properties which we'd want to use for general codes, so from that class we may be able to construct an
+//		appropriate parent class, which could in theory then act as a parent for Geometric Goopa Codes.
+//	Will all of the functions be overridden methods, though?
+//	May be able to use an interface, as both fields and codes share methods.
+//	Field and Code would be abstract classes.
+//	Since the ReedSolomon code is the only thing which I actually want to store as a class the generating objects can be whatever makes the best code, with respect to
+//		whatever metics.
+
 #include "Elementary Number Theory\Typedef.h"
-#include <vector.h>
+#include "Elementary Number Theory\PrimeFactorisation.h"
+#include <vector>
 
 class FiniteFieldp{
 	integer NumberofElements;
@@ -8,88 +20,87 @@ class FiniteFieldp{
 	class Element;
 	Element PrimalElement;
 	
-	
-	FiniteField(int numberofelements){
-		//if(!IsPrime(numberofelements)) throw
-		
-		PrimeFactorandWeightForThisFiniteField = PrimeFactorisation_SingleFactor(numberofelements);
-		NumberofElements = numberofelements;
-		
-		Element = ElementsofFinitePrimeField<integer, NumberofElements>;
-	}
-	
-	// std:array<int, m>
-}
+	public:
+		FiniteFieldp(int numberofelements){
+			//if(!IsPrime(numberofelements)) throw
+			
+			PrimeFactorandWeightForThisFiniteField = PrimeFactorisation_SingleFactor(numberofelements);
+			NumberofElements = numberofelements;
+			
+			Element = ElementsofFinitePrimeField<integer, NumberofElements>;
+		}
+};
 
 template <class myType, integer Prime>
 Class ElementsofFinitePrimeField{
 	myType value;
 	
-	ElementsofFiniteFields(myType InputValue){
-		value = InputValue % Prime;
-	}
-	
-	myType operator+(myType a, myType b){
-		return ((a + b) % Prime);
-	}
-	myType operator-(myType a, myType B){
-		return ((Prime + a - b) % Prime);
-	}
-	myType operator*(myType a, myType b){
-		return ((a * b) % Prime);
-	}
-	myType MultiplicativeInverse(myType a){
-		// a!=0 and Q.Size() <2.
-		
-		//if(a == 0) throw;
-		
-			// Is this the best data type?
-		std::vector R;
-		std::vector Q;
-			// I probably only need to track R[Index], R[Index+1]
-		
-		R.push_back(Prime);
-		R.push_back(a);
-		
-			// Can I adjust this so that all of the values are represented as their values in Zp?
-			// If not can this overflow?
-		
-		unsigned Index = 0;
-		while(R[Index+1] !=0){
-			Q.push_back( R[Index]/R[Index+1] );
-			R.push_back( R[Index] % R[Index+1]);
-			Index++;
+	public:
+		ElementsofFiniteFields(myType InputValue){
+			value = InputValue % Prime;
 		}
 		
-		std::vector A;
-		std::vector B;
-			// I probably only need to track A[Index], A[Index-1], B[Index], and B[Index-1]
-		
-		// What do you do if Q.Size() < 2?
-		
-		A.push_back(1);
-		B.push_back(-Q[0]);
-		
-		A.push_back(-Q[1]);			//	Can do this entirely recursively if I define A[-1] to be 0.
-		B.push_back(Q[1]*Q[0]+1);	//	Can do this entirely recursively if I define B[-1] to be 1.
-		
-		Index = 2;
-		while(R[Index] > 1){
-			A.push_back( A[Index-2] - Q[Index]*A[Index-1] );	// 	if A[Index-2]*A[Index-1] < 0 and A[Index-2]<0 => A[Index] <0		if A[Index-2]*A[Index-1] < 0 and A[Index-2]>0 => A[Index]>0
-			B.push_back( B[Index-2] - Q[Index]*B[Index-1] );	// 	if B[Index-2]*B[Index-1] < 0 and B[Index-2]<0 => B[Index] <0		if B[Index-2]*B[Index-1] < 0 and B[Index-2]>0 => B[Index]>0
-			Index++;											// 		As A[0]*A[1] < 0 and A[0]>0 and B[0]*B[1] < 0 and B[0]<0 we can conclude that A[Index]*B[Index] <0 for all Index >= 0,
-		}														//			which is a necessary condition for 1 = A[last]*a + B[last] as integers.
-		
-		return A[Index] % Prime;
-	}
-	myType operator/(myType a, myType b){
-		//if(b == 0) throw;
-		return(a*MultiplicativeInverse(b) % Prime);
-	}
-	bool operator==(myType a, myType b){
-		return (a == b);
-	}
-}
+		myType operator+(myType a, myType b){
+			return ((a + b) % Prime);
+		}
+		myType operator-(myType a, myType B){
+			return ((Prime - b + a) % Prime);
+		}
+		myType operator*(myType a, myType b){
+			return ((a * b) % Prime);
+		}
+		myType MultiplicativeInverse(myType a){
+			// a!=0 and Q.Size() <2.
+			
+			//if(a == 0) throw;
+			
+				// Is this the best data type?
+			std::vector R;
+			std::vector Q;
+				// I probably only need to track R[Index], R[Index+1]
+			
+			R.push_back(Prime);
+			R.push_back(a);
+			
+				// Can I adjust this so that all of the values are represented as their values in Zp?
+				// If not can this overflow?
+			
+			unsigned Index = 0;
+			while(R[Index+1] !=0){
+				Q.push_back( R[Index]/R[Index+1] );
+				R.push_back( R[Index] % R[Index+1]);
+				Index++;
+			}
+			
+			std::vector A;
+			std::vector B;
+				// I probably only need to track A[Index], A[Index-1], B[Index], and B[Index-1]
+			
+			// What do you do if Q.Size() < 2?
+			
+			A.push_back(1);
+			B.push_back(-Q[0]);
+			
+			A.push_back(-Q[1]);			//	Can do this entirely recursively if I define A[-1] to be 0.
+			B.push_back(Q[1]*Q[0]+1);	//	Can do this entirely recursively if I define B[-1] to be 1.
+			
+			Index = 2;
+			while(R[Index] > 1){
+				A.push_back( A[Index-2] - Q[Index]*A[Index-1] );	// 	if A[Index-2]*A[Index-1] < 0 and A[Index-2]<0 => A[Index] <0		if A[Index-2]*A[Index-1] < 0 and A[Index-2]>0 => A[Index]>0
+				B.push_back( B[Index-2] - Q[Index]*B[Index-1] );	// 	if B[Index-2]*B[Index-1] < 0 and B[Index-2]<0 => B[Index] <0		if B[Index-2]*B[Index-1] < 0 and B[Index-2]>0 => B[Index]>0
+				Index++;											// 		As A[0]*A[1] < 0 and A[0]>0 and B[0]*B[1] < 0 and B[0]<0 we can conclude that A[Index]*B[Index] <0 for all Index >= 0,
+			}														//			which is a necessary condition for 1 = A[last]*a + B[last] as integers.
+			
+			return A[Index] % Prime;
+		}
+		myType operator/(myType a, myType b){
+			//if(b == 0) throw;
+			return(a*MultiplicativeInverse(b) % Prime);
+		}
+		bool operator==(myType a, myType b){
+			return (a == b);
+		}
+};
 
 /*
 	find the inverse of n:

@@ -10,15 +10,29 @@
 #include <iostream>
 namespace utf = boost::unit_test;
 
-#include "Primes.h"
-//#define RGTSinglePrimeFactorPrimeFactorsUpTo64 {{2, {2, 1}}, {3, {3, 1}}, {4, {2, 2}}, {5, {5, 1}}, {7, {7, 1}}, {8, {2, 3}}, {9, {3, 2}}, {11, {11, 1}},  {13, {13, 1}}, {16, {2, 4}}, {19, {19, 1}}, {23, {23, 1}}, {25, {5, 2}}, {27, {3, 3}}, {29, {29, 1}}, {31, {31, 1}}, {32, {2, 5}}, {37, {37, 1}}, {41, {41, 1}}, {43, {43, 1}}, {47, {47, 1}}, {49, {7, 2}}, {53, {53, 1}}, {59, {59, 1}}, {61, {61, 1}}, {64, {2, 6}}
+#include "PrimeFactorisation.h"
+
+#define RGTSinglePrimeFactorValueUpTo64 		{	2, 3, 4, 5, 7, 8, 9, 11, 13, 16, 17, 19, 23, 25, 27, 29, 31, 32, 37, 41, 43, 47, 49, 53, 59, 61, 64}
+#define RGTPrimeFactorsUpTo64					{	2, 3, 2, 5, 7, 2, 3, 11, 13,  2, 17, 19, 23,  5,  3, 29, 31,  2, 37, 41, 43, 47,  7, 53, 59, 61,  2}
+#define RGTFactorWeightUpTo64					{	1, 1, 2, 1, 1, 3, 2,  1,  1,  4,  1,  1,  1,  2,  3,  1,  1,  5,  1,  1,  1,  1,  2,  1,  1,  1,  6}
+#define NumberofInputs							27
+
+//												{	6,10,12,14,15,18,20,21,22,24,26,28,30,33,34,35,36,38,39,40,42,44,45,46,48,50,51,52,54,55,56,57,58,60,62,63}
 
 BOOST_AUTO_TEST_CASE(PrimeFactorisationTests)
 {
-	
 	//Do the Primes sets match hard coded version?
 		//Scope: 	2 to	64
+	{
+	std::array<int, NumberofInputs> Value 	= RGTSinglePrimeFactorValueUpTo64;
+	std::array<int, NumberofInputs> Factor 	= RGTPrimeFactorsUpTo64;
+	std::array<int, NumberofInputs> Weight 	= RGTFactorWeightUpTo64;
 	
+	for(unsigned Index; Index<NumberofInputs; Index++){
+		BOOST_TEST( PrimeFactorisation_SingleFactor(Value[Index]).PrimeFactor == Factor[Index]);
+		BOOST_TEST( PrimeFactorisation_SingleFactor(Value[Index]).Weight == Weight[Index]);
+	}
+	}
 }
 
 void make_use_of(char**)
