@@ -65,24 +65,25 @@ public:
 		
 		// I'm going to track things in the form:
 		//   pMultiplyer[i]*p + nMultiplyer[i]*n = remainder[i]  (where this is valid from i=0 onwards)
+		// Proved that doing so is valid can be done by induction.
+		//   Finding the solution is equivalent to providing this explanation.
 		//
-		// Because
-		//   remainders[i] = remainders[i+1] * multiplying_factors[i] + remainders[i+2]
-		// we have
-		//   p = n * multiplying_factors[0] + remainders[2]
-		//    <=>
-		//   1*p + (-multiplying_factors[0]) * n = remainders[2]
+		// We have the initial values because 
+		//   p = remainder[0]  <=>  1*p + 0*n = remainder[0]
+		//   n = remainder[1]  <=>  0*p + 1*n = remainder[1]
 		std::vector<integer> pMultiplyer{ 1, 0 };
-		//   ( next == 1 )
 		std::vector<integer> nMultiplyer{ 0, 1 };
-		//   ( next == -multiplying_factors[0] )
-		
+		//
 		// Because for all i >= 0
 		//   remainders[i] = remainders[i+1] * multiplying_factors[i] + remainders[i+2]
-		// and for all i >= 0
-		//   pMultiplyer[i]*p + nMultiplyer[i]*n = remainder[i]  (where this is valid from i=0 onwards)
+		// and if for all k < i+2
+		//   pMultiplyer[k]*p + nMultiplyer[k]*n = remainder[k]  (where this is valid from i=0 onwards)
 		// we get
-		//   
+		//   pMultiplyer[i]*p + nMultiplyer[i]*n = ( pMultiplyer[i+1]*p + nMultiplyer[i+1]*n ) * multiplying_factors[i] + remainders[i+2]
+		//    <=>
+		//   (pMultiplyer[i] - pMultiplyer[i+1]*multiplying_factors[i])*p + (nMultiplyer[i] - nMultiplyer[i+1]*multiplying_factors[i])*n = remainders[i+2]
+		//     =>
+		//   pMultiplyer[i+2] = pMultiplyer[i] - pMultiplyer[i+1]*multiplying_factors[i]  and  nMultiplyer[i+2] = nMultiplyer[i] - nMultiplyer[i+1]*multiplying_factors[i]
 		
 		for( std::size_t multiplying_factors_index = 0; multiplying_factors_index<multiplying_factors.size(); multiplying_factors_index++ )
 		{
@@ -105,9 +106,8 @@ public:
 		
 		// Because
 		//   pMultiplyer[index_of_remainder_one]*p + nMultiplyer[index_of_remainder_one]*n = remainder[index_of_remainder_one] = 1
-		//  =>
-		// 'the multiplicative inverse of n in this field' = nMultiplyer[index_of_remainder_one] % p
-		
+		//     =>
+		//   'the multiplicative inverse of n in this field' = nMultiplyer[index_of_remainder_one] % p
 		return ElementOfFiniteFieldP<Prime>{ nMultiplyer[index_of_remainder_one] % Prime };
 	}
 	
