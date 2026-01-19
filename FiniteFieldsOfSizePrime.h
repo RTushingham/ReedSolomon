@@ -4,8 +4,9 @@
 
 // As part of building the ability to create any read solomon codes we need to create elements of finite fields (aka Galois Fields)
 //   All finite fields are of the size p**k where p and k are positive integers, and p is a prime.
-//   If k > 1 then the elements need to be expressable as polynomials modulo an irriducible polynomial.
-//   I'm going to start off with finite fields of size p where p is prime, because this is just integers modulo p.
+//   If k > 1 then the elements need to be expressable as polynomials modulo an irriducible polynomial over a finite filed of size p.
+// In order to do that I need to start off with finite fields of size p.
+//   This is just integers modulo p.
 
 template <integer Prime>
 class ElementOfFiniteFieldP
@@ -16,25 +17,29 @@ public:
 	integer value;
 	
 public:
-	ElementOfFiniteFieldP(integer InputValue)
-		: value {(InputValue + Prime) % Prime}
+	constexpr ElementOfFiniteFieldP(integer InputValue)
+		: value { ( (InputValue % Prime) + Prime) % Prime}
 	{};
 	
-	bool operator==(const ElementOfFiniteFieldP<Prime>& a){
+	constexpr ElementOfFiniteFieldP()
+		: ElementOfFiniteFieldP( (integer)0 )
+	{};
+	
+	constexpr bool operator==(const ElementOfFiniteFieldP<Prime>& a) const{
 		return ( value + a.value) % Prime;
 	}
 	
-	ElementOfFiniteFieldP<Prime> operator+(const ElementOfFiniteFieldP<Prime>& a){
+	constexpr ElementOfFiniteFieldP<Prime> operator+(const ElementOfFiniteFieldP<Prime>& a) const{
 		return ( value + a.value) % Prime;
 	}
-	ElementOfFiniteFieldP<Prime> operator-(const ElementOfFiniteFieldP<Prime>& a){
+	constexpr ElementOfFiniteFieldP<Prime> operator-(const ElementOfFiniteFieldP<Prime>& a) const{
 		return (Prime - a.value + value) % Prime;
 	}
-	ElementOfFiniteFieldP<Prime> operator*(const ElementOfFiniteFieldP<Prime>& a){
+	constexpr ElementOfFiniteFieldP<Prime> operator*(const ElementOfFiniteFieldP<Prime>& a) const{
 		return ((value * a.value) % Prime);
 	}
 	
-	ElementOfFiniteFieldP<Prime> FindMultiplicativeInverse()
+	ElementOfFiniteFieldP<Prime> FindMultiplicativeInverse() const
 	{
 		// This is necessary for Fp to be a field
 		//   For all n such that 0 < n < p, we have that n and p are coprime.
@@ -111,21 +116,19 @@ public:
 		return ElementOfFiniteFieldP<Prime>{ nMultiplyer[index_of_remainder_one] % Prime };
 	}
 	
-	ElementOfFiniteFieldP<Prime> operator/(const ElementOfFiniteFieldP<Prime>& a){
+	constexpr ElementOfFiniteFieldP<Prime> operator/(const ElementOfFiniteFieldP<Prime>& a) const{
 		return (*this)*a.FindMultiplicativeInverse();
 	}
+	
+	// To illustrate that these are Fields
+	constexpr static ElementOfFiniteFieldP<Prime> GetAdditionInvarient()
+	{
+		return ElementOfFiniteFieldP<Prime>( 0 );
+	}
+	// To illustrate that these are Fields
+	constexpr static ElementOfFiniteFieldP<Prime> GetMultiplicativeInvarient()
+	{
+		return ElementOfFiniteFieldP<Prime>( 1 );
+	}
 };
-
-// To illustrate that these are Fields
-template <integer Prime>
-ElementOfFiniteFieldP<Prime> GetAdditionInvarientOfGFp()
-{
-	return ElementOfFiniteFieldP<Prime>( 0 );
-}
-// To illustrate that these are Fields
-template <integer Prime>
-ElementOfFiniteFieldP<Prime> GetMultiplicativeInvarientOfGFp()
-{
-	return ElementOfFiniteFieldP<Prime>( 1 );
-}
 
