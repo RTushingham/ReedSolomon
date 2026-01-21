@@ -24,7 +24,11 @@ public:
 	{};
 	
 	constexpr bool operator==(const ElementOfFiniteFieldP<Prime>& a) const{
-		return ( value + a.value) % Prime;
+		return value == a.value;
+	}
+	constexpr bool operator!=(const ElementOfFiniteFieldP<Prime>& a) const
+	{
+		return ! operator==(a);
 	}
 	
 	constexpr ElementOfFiniteFieldP<Prime> operator+(const ElementOfFiniteFieldP<Prime>& a) const{
