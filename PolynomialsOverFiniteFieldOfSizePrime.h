@@ -145,7 +145,7 @@ public:
 	// Additionally, in order to find MultiplicativeInverses in Finite Fileds of size p**k we need to use a variation of the Extended Euclidean Algorithm.
 	//   My intended implementation of that algorithm uses polynomial long division.
 	template<integer DivisorMaxDegree>
-	constexpr PolynomialLongDivisionRemainder<DivisorMaxDegree> LongDivideBy( const PolynomialOverPrimeSizeFiniteField<Prime,DivisorMaxDegree>& divisor )
+	constexpr PolynomialLongDivisionRemainder<DivisorMaxDegree> LongDivideBy( const PolynomialOverPrimeSizeFiniteField<Prime,DivisorMaxDegree>& divisor ) const
 	{
 		static_assert( DivisorMaxDegree > 0, "" );
 		

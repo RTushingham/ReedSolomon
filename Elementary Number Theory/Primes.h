@@ -1,62 +1,29 @@
+#pragma once
 
-#define RGTPrimesDotHppDebugging 0
-
-#if RGTPrimesDotHppDebugging
-	#include <iostream>
-#endif
+constexpr unsigned int_pow(unsigned base, unsigned exponent)
+{
+	return exponent == 0 ? 1 : base*int_pow(base,exponent-1);
+}
 
 #include <vector>
+
 using namespace std;
 
-std::vector<unsigned> VectorofPrimes(unsigned To);
-std::vector<unsigned> SecondVectorofPrimes(unsigned To);
+std::vector<unsigned> AllPrimesUntil(unsigned upper_limit)
+{
+	if( upper_limit<2 )
+		return{};
 
-
-inline std::vector<unsigned> Primes(unsigned To){
-	return VectorofPrimes(To);
-}
-
-std::vector<unsigned> VectorofPrimes(unsigned To){
-	
 	std::vector<unsigned> Primes = {2};
-	bool PrimeFlag;
-	unsigned i;
 	
-	for(i = 3; i <= To; i++){
-		PrimeFlag = 1;
+	for(unsigned i = 3; i <= upper_limit; i++){
+		bool PrimeFlag = true;
 		
-		for(unsigned j : Primes){
-			if((i % j) == 0){
-				PrimeFlag = 0;
-			}
-		}
-		
-		if(PrimeFlag){
-			Primes.push_back(i);
-		}
-	}
-	
-	#if RGTPrimesDotHppDebugging
-	for(unsigned j : Primes){
-		cout << "Value: " << j << endl;
-	}
-	#endif
-	
-	return Primes;
-}
-
-std::vector<unsigned> SecondVectorofPrimes(unsigned To){
-	
-	std::vector<unsigned> Primes = {2};
-	bool PrimeFlag;
-	unsigned i;
-	
-	for(i = 3; i <= To; i++){
-		PrimeFlag = 1;
-		
-		for(unsigned j = 0; (Primes[j]*Primes[j] <= i) and (Primes[j]*Primes[j] > Primes[j]) and (j < Primes.size()); j++){
+		// there may be some theorem somewhere which we could apply to decude that j < Primes.size() is an unnecessary check
+		for(unsigned j = 0; (Primes[j]*Primes[j] <= i) && (Primes[j]*Primes[j] > Primes[j]) && (j < Primes.size()); j++){
 			if((i % Primes[j]) == 0){
-				PrimeFlag = 0;
+				PrimeFlag = false;
+				break;
 			}
 		}
 		
@@ -64,12 +31,6 @@ std::vector<unsigned> SecondVectorofPrimes(unsigned To){
 			Primes.push_back(i);
 		}
 	}
-	
-	#if RGTPrimesDotHppDebugging
-	for(unsigned j : Primes){
-		cout << "Value: " << j << endl;
-	}
-	#endif
 	
 	return Primes;
 }

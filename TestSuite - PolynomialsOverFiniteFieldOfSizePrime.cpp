@@ -1,6 +1,7 @@
 #include "PolynomialsOverFiniteFieldOfSizePrime.h"
 
 #include <iostream>
+#include <string>
 
 constexpr integer Prime{ 101 };
 
