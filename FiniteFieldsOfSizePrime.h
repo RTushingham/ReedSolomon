@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Elementary Number Theory/Typedef.h"
+#include "elementary-number-theory/Typedef.h"
 
 // As part of building the ability to create any read solomon codes we need to create elements of finite fields (aka Galois Fields)
 //   All finite fields are of the size p**k where p and k are positive integers, and p is a prime.

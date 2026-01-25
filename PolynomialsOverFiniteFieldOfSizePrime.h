@@ -2,7 +2,7 @@
 
 #include "FiniteFieldsOfSizePrime.h"
 
-#include "Elementary Number Theory/Typedef.h"
+#include "elementary-number-theory/Typedef.h"
 
 #include <array>
 
