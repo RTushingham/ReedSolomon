@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Elementary Number Theory/Typedef.h"
 
 // As part of building the ability to create any read solomon codes we need to create elements of finite fields (aka Galois Fields)
