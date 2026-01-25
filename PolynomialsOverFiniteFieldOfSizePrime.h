@@ -128,10 +128,15 @@ public:
 	}
 	
 	// Polynomials over prime sized Finite Field are a Ring.
-	//   Additionally, they have a multiplicative invariant, but due to MaxDegree changing size isn't easy to use in this paradigm.
 	constexpr static PolynomialOverPrimeSizeFiniteField<Prime,MaxDegree> GetAdditionInvarient()
 	{
 		return PolynomialOverPrimeSizeFiniteField<Prime,MaxDegree>{ std::array<GFp, GetCapacity()>{ GFp::GetAdditionInvarient() } };
+	}
+	constexpr static PolynomialOverPrimeSizeFiniteField<Prime,MaxDegree> GetMultiplicativeInvarient()
+	{
+		auto addition_invarient = GetAdditionInvarient();
+		addition_invarient.coefficients.at( 0 ) = GFp::GetMultiplicativeInvarient();
+		return addition_invarient;
 	}
 	
 	template<integer DivisorMaxDegree>
