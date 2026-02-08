@@ -32,6 +32,11 @@ public:
 		// if( !IsIrriducible( irriducible_polynomial ) )
 		// 	throw;
 	}
+
+	ElementOfFiniteField<Prime,Exponent>& operator=(const ElementOfFiniteField<Prime,Exponent>& a){
+		value = a.value;
+		return *this;
+	}
 	
 	constexpr bool operator==(const ElementOfFiniteField<Prime, Exponent>& a) const{
 		return value == a.value && irriducible_polynomial == a.irriducible_polynomial;

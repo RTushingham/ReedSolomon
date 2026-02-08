@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FiniteFieldsOfSizePrime.h"
+#include "FiniteFieldsOfSizePrimeToAPower.h"
 
 #include "elementary-number-theory/Typedef.h"
 
