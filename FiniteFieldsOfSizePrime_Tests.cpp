@@ -2,7 +2,6 @@
 
 #include "gtest/gtest.h"
 
-#include <iostream>
 #include <vector>
 
 constexpr integer Prime{ 101 };
@@ -93,7 +92,7 @@ TEST( PrimeFieldTests, AllInversesAreInverses )
 	for( integer non_zero_element = 1; non_zero_element < Prime; non_zero_element++ )
 	{
 		ElementOfFiniteFieldP<Prime> a{ non_zero_element };
-        EXPECT_EQ( (a*a.FindMultiplicativeInverse()).value, 1 ) << "New value: " << a.value << "Inverse value: " << a.FindMultiplicativeInverse().value;
+        EXPECT_EQ( (a*a.FindMultiplicativeInverse()), 1 ) << "New value: " << a.value << "Inverse value: " << a.FindMultiplicativeInverse().value;
 	}
 }
 
@@ -107,6 +106,6 @@ TEST( PrimeFieldTests, InverseFindingClassMethodAndOriginalImplAgree )
 	for( integer non_zero_element = 1; non_zero_element < Prime; non_zero_element++ )
     {
         ElementOfFiniteFieldP<Prime> a{ non_zero_element };
-        EXPECT_EQ( FindMultiplicativeInverse_Simple<Prime>(a).value, a.FindMultiplicativeInverse().value );
+        EXPECT_EQ( FindMultiplicativeInverse_Simple<Prime>(a), a.FindMultiplicativeInverse() );
     }
 }

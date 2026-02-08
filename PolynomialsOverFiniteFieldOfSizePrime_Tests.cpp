@@ -2,9 +2,6 @@
 
 #include "gtest/gtest.h"
 
-#include <iostream>
-#include <string>
-
 constexpr integer Prime{ 101 };
 
 PolynomialOverPrimeSizeFiniteField<Prime,2> a{ 

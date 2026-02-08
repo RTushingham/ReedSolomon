@@ -33,17 +33,17 @@ public:
 	{
 		return MaxDegree;
 	}
-	constexpr size_t GetDegree() const
+	constexpr integer GetDegree() const
 	{
-		for( size_t coefficient_index = coefficients.size()-1; coefficient_index>=0; coefficient_index-- )
+		for( size_t reverse_index = 0; reverse_index<coefficients.size(); reverse_index++ )
 		{
-			if( coefficients.at(coefficient_index) != GFp::GetAdditionInvarient() )
+			if( coefficients.at(coefficients.size() - 1 - reverse_index) != GFp::GetAdditionInvarient() )
 			{
-				return coefficient_index;
+				return (integer)(coefficients.size() - 1 - reverse_index);
 			}
 		}
 		
-		return (size_t)-1;
+		return -1;
 	}
 	
 	template<integer SmallerDegree>
@@ -51,7 +51,7 @@ public:
 	{
 		static_assert( SmallerDegree <= MaxDegree , "" );
 		
-		std::array<GFp, SmallerDegree+1> downsize_data;
+		std::array<GFp, SmallerDegree+1> downsize_data{ GFp::GetAdditionInvarient() };
 		for( size_t downsize_index=0; downsize_index < downsize_data.size(); downsize_index++ )
 		{
 			downsize_data.at(downsize_index) = coefficients.at(downsize_index);
@@ -65,7 +65,7 @@ public:
 	{
 		static_assert( LargerDegree >= MaxDegree, "" );
 		
-		std::array<GFp, LargerDegree+1> oversize_result_data;
+		std::array<GFp, LargerDegree+1> oversize_result_data{ GFp::GetAdditionInvarient() };
 		for( size_t coefficient_index=0; coefficient_index < coefficients.size(); coefficient_index++ )
 		{
 			oversize_result_data.at(coefficient_index) = coefficients.at(coefficient_index);
@@ -169,13 +169,13 @@ public:
 		PolynomialOverPrimeSizeFiniteField<Prime, MaxDegree+DivisorMaxDegree-1> running_remainder{ Oversize<MaxDegree+DivisorMaxDegree-1>() };
 		PolynomialOverPrimeSizeFiniteField<Prime, MaxDegree-1> running_quotient{ PolynomialOverPrimeSizeFiniteField<Prime, MaxDegree-1>::GetAdditionInvarient() };
 
-		const auto divisor_leading_coefficient = divisor.coefficients.at( divisor.GetDegree() );
+		const auto divisor_leading_coefficient = divisor.coefficients.at( (std::size_t)(divisor.GetDegree()) );
 
-		while( running_remainder.GetDegree() >= divisor.GetDegree() )
+		while( (running_remainder != PolynomialOverPrimeSizeFiniteField<Prime, MaxDegree+DivisorMaxDegree-1>::GetAdditionInvarient()) && (running_remainder.GetDegree() >= divisor.GetDegree()) )
 		{
 			PolynomialOverPrimeSizeFiniteField<Prime, MaxDegree-1> new_quotient{ PolynomialOverPrimeSizeFiniteField<Prime, MaxDegree-1>::GetAdditionInvarient() };
 
-			new_quotient.coefficients.at( running_remainder.GetDegree() - divisor.GetDegree() ) = running_remainder.coefficients.at( running_remainder.GetDegree() ) / divisor_leading_coefficient;
+			new_quotient.coefficients.at( (std::size_t)(running_remainder.GetDegree() - divisor.GetDegree()) ) = running_remainder.coefficients.at( (std::size_t)running_remainder.GetDegree() ) / divisor_leading_coefficient;
 
 			running_remainder = running_remainder - ( new_quotient * divisor );
 			running_quotient = running_quotient + new_quotient;
