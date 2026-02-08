@@ -1,121 +1,96 @@
 #include "PolynomialsOverFiniteFieldOfSizePrime.h"
 
+#include "gtest/gtest.h"
+
 #include <iostream>
 #include <string>
 
 constexpr integer Prime{ 101 };
 
-template<integer p, integer d>
-std::string Print( const PolynomialOverPrimeSizeFiniteField<p,d> polynomial )
+PolynomialOverPrimeSizeFiniteField<Prime,2> a{ 
+	std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
+		ElementOfFiniteFieldP<Prime>{ 10 },
+		ElementOfFiniteFieldP<Prime>{ 11 },
+		ElementOfFiniteFieldP<Prime>{ 12 }
+	} 
+};
+PolynomialOverPrimeSizeFiniteField<Prime,2> b{ 
+	std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
+		ElementOfFiniteFieldP<Prime>{ 5 },
+		ElementOfFiniteFieldP<Prime>{ 7 },
+		ElementOfFiniteFieldP<Prime>{ 9 }
+	} 
+};
+
+TEST( PolynomialsOverPrimeFieldTests, Addition )
 {
-	std::string output{};
-	bool first{ true };
-	for( const auto& coefficient : polynomial.coefficients ){
-		if( !first )
-			output += std::string( ", " );
-		output += std::string( std::to_string( coefficient.value ) );
-		first = false;
-	}
-	
-	return output;
+	const auto expected = PolynomialOverPrimeSizeFiniteField<Prime,2>{ 
+		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
+			ElementOfFiniteFieldP<Prime>{ 15 },
+			ElementOfFiniteFieldP<Prime>{ 18 },
+			ElementOfFiniteFieldP<Prime>{ 21 }
+		} 
+	};
+
+	EXPECT_EQ( a + b, expected );
 }
 
-int main()
+TEST( PolynomialsOverPrimeFieldTests, Subtraction )
 {
-	PolynomialOverPrimeSizeFiniteField<Prime,2> a{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
-			ElementOfFiniteFieldP<Prime>{ 10 },
-			ElementOfFiniteFieldP<Prime>{ 11 },
-			ElementOfFiniteFieldP<Prime>{ 12 }
-		} 
-	};
-	PolynomialOverPrimeSizeFiniteField<Prime,2> b{ 
+	const auto expected = PolynomialOverPrimeSizeFiniteField<Prime,2>{ 
 		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
 			ElementOfFiniteFieldP<Prime>{ 5 },
-			ElementOfFiniteFieldP<Prime>{ 7 },
-			ElementOfFiniteFieldP<Prime>{ 9 }
-		} 
-	};
-	PolynomialOverPrimeSizeFiniteField<Prime,1> c{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-			ElementOfFiniteFieldP<Prime>{ 2 },
+			ElementOfFiniteFieldP<Prime>{ 4 },
 			ElementOfFiniteFieldP<Prime>{ 3 }
 		} 
+	}; 
+
+	EXPECT_EQ( a - b, expected );
+}
+
+PolynomialOverPrimeSizeFiniteField<Prime,1> c{ 
+	std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+		ElementOfFiniteFieldP<Prime>{ 2 },
+		ElementOfFiniteFieldP<Prime>{ 3 }
+	}
+};
+
+TEST( PolynomialsOverPrimeFieldTests, Multiplication )
+{
+	const auto expected = PolynomialOverPrimeSizeFiniteField<Prime,3>{ 
+		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,3>::GetCapacity()>{
+			ElementOfFiniteFieldP<Prime>{ 20 },
+			ElementOfFiniteFieldP<Prime>{ 52 },
+			ElementOfFiniteFieldP<Prime>{ 57 },
+			ElementOfFiniteFieldP<Prime>{ 36 }
+		} 
 	};
-	
-	std::cout << Print( a + b ) << std::endl;
-	std::cout << "Expected:" << std::endl;
-	std::cout << Print( 
-		PolynomialOverPrimeSizeFiniteField<Prime,2>{ 
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
-				ElementOfFiniteFieldP<Prime>{ 15 },
-				ElementOfFiniteFieldP<Prime>{ 18 },
-				ElementOfFiniteFieldP<Prime>{ 21 }
-			} 
-		} 
-	) << std::endl;
-	std::cout << std::endl;
-	
-	std::cout << Print( a - b ) << std::endl;
-	std::cout << "Expected:" << std::endl;
-	std::cout << Print( 
-		PolynomialOverPrimeSizeFiniteField<Prime,2>{ 
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
-				ElementOfFiniteFieldP<Prime>{ 5 },
-				ElementOfFiniteFieldP<Prime>{ 4 },
-				ElementOfFiniteFieldP<Prime>{ 3 }
-			} 
-		} 
-	) << std::endl;
-	std::cout << std::endl;
-	
-	std::cout << Print( a * c ) << std::endl;
-	std::cout << "Expected:" << std::endl;
-	std::cout << Print( 
-		PolynomialOverPrimeSizeFiniteField<Prime,3>{ 
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,3>::GetCapacity()>{
-				ElementOfFiniteFieldP<Prime>{ 20 },
-				ElementOfFiniteFieldP<Prime>{ 52 },
-				ElementOfFiniteFieldP<Prime>{ 57 },
-				ElementOfFiniteFieldP<Prime>{ 36 }
-			} 
-		} 
-	) << std::endl;
-	std::cout << std::endl;
-	
-	
-	PolynomialOverPrimeSizeFiniteField<Prime,0> x{ 
+
+	EXPECT_EQ( a * c, expected );
+}
+
+TEST( PolynomialsOverPrimeFieldTests, Modulo )
+{
+	const auto abQuotient = PolynomialOverPrimeSizeFiniteField<Prime,0>{ 
 		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,0>::GetCapacity()>{
 			ElementOfFiniteFieldP<Prime>{ 12 }/ElementOfFiniteFieldP<Prime>{ 9 }
 		} 
 	};
-	std::cout << Print( a % b ) << std::endl;
-	std::cout << "Expected:" << std::endl;
-	std::cout << Print( a - (x*b) ) << std::endl;
-	std::cout << std::endl;
-	
-	
-	PolynomialOverPrimeSizeFiniteField<Prime,1> y{ 
+	EXPECT_EQ( (a % b).Oversize<2>(), a - ( abQuotient * b ) );
+
+	const auto acQuotient = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
 		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
 			ElementOfFiniteFieldP<Prime>{ 1 },
 			ElementOfFiniteFieldP<Prime>{ 4 }
 		} 
 	};
-	std::cout << Print( a % c ) << std::endl;
-	std::cout << "Expected:" << std::endl;
-	std::cout << Print( 
-		PolynomialOverPrimeSizeFiniteField<Prime,0>{ 
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,0>::GetCapacity()>{
-				ElementOfFiniteFieldP<Prime>{ 8 }
-			} 
+	const auto acRemainder = PolynomialOverPrimeSizeFiniteField<Prime,0>{ 
+		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,0>::GetCapacity()>{
+			ElementOfFiniteFieldP<Prime>{ 8 }
 		} 
-	) << std::endl;
-	std::cout << "Verification:" << std::endl;
-	std::cout << Print( a - (y*c) ) << std::endl;
-	std::cout << std::endl;
-	
-	std::cout << Print( c % a ) << std::endl;
-	std::cout << "Expected:" << std::endl;
-	std::cout << Print( c ) << std::endl;
-}
+	};
+	EXPECT_EQ( a % c, acRemainder );
+	EXPECT_EQ( (a % c).Oversize<2>(), a - ( acQuotient * c ) );
 
+	EXPECT_EQ( c % a, c );
+}

@@ -1,5 +1,7 @@
 #include "FiniteFieldsOfSizePrime.h"
 
+#include "gtest/gtest.h"
+
 #include <iostream>
 #include <vector>
 
@@ -86,22 +88,25 @@ ElementOfFiniteFieldP<Prime> FindMultiplicativeInverse_Simple( const ElementOfFi
 }
 
 
-int main()
+TEST( PrimeFieldTests, AllInversesAreInverses )
 {
 	for( integer non_zero_element = 1; non_zero_element < Prime; non_zero_element++ )
 	{
 		ElementOfFiniteFieldP<Prime> a{ non_zero_element };
-		std::cout << "New value: " << a.value << std::endl;
-		std::cout << "Inverse value: " << a.FindMultiplicativeInverse().value << std::endl;
-		std::cout << "Verification value: " << (a*a.FindMultiplicativeInverse()).value << " Exepcted value: 1" << std::endl;
+        EXPECT_EQ( (a*a.FindMultiplicativeInverse()).value, 1 ) << "New value: " << a.value << "Inverse value: " << a.FindMultiplicativeInverse().value;
 	}
-	
+}
+
+TEST( PrimeFieldTests, ClassIsConstexprInstantiable )
+{
 	constexpr ElementOfFiniteFieldP<Prime> a{ 52 };
-	
+}
+
+TEST( PrimeFieldTests, InverseFindingClassMethodAndOriginalImplAgree )
+{
 	for( integer non_zero_element = 1; non_zero_element < Prime; non_zero_element++ )
     {
         ElementOfFiniteFieldP<Prime> a{ non_zero_element };
-		std::cout << "Inverse value produced by different functions (simple, optimized): (" << FindMultiplicativeInverse_Simple<Prime>(a).value << "," << a.FindMultiplicativeInverse().value << ")" << std::endl;
+        EXPECT_EQ( FindMultiplicativeInverse_Simple<Prime>(a).value, a.FindMultiplicativeInverse().value );
     }
 }
-
