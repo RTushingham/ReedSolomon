@@ -1,5 +1,6 @@
-#include "PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
-#include "test-data/IrriduciblePolynomial.h"
+#include "reed-solomon-codes/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
+
+#include "finite-fields-tests/test-data/IrriduciblePolynomial.h"
 
 #include "gtest/gtest.h"
 

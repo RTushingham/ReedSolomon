@@ -1,4 +1,4 @@
-#include "FiniteFieldsOfSizePrime.h"
+#include "finite-fields/FiniteFieldsOfSizePrime.h"
 
 #include "gtest/gtest.h"
 

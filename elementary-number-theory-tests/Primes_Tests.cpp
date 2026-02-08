@@ -1,4 +1,4 @@
-#include "Primes.h"
+#include "elementary-number-theory/Primes.h"
 
 #include "gtest/gtest.h"
 

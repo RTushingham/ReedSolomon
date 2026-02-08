@@ -1,4 +1,4 @@
-#include "PolynomialsOverFiniteFieldOfSizePrime.h"
+#include "finite-fields/PolynomialsOverFiniteFieldOfSizePrime.h"
 
 #include "gtest/gtest.h"
 

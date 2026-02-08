@@ -1,4 +1,4 @@
-#include "FiniteFieldsOfSizePrimeToAPower.h"
+#include "finite-fields/FiniteFieldsOfSizePrimeToAPower.h"
 
 #include "test-data/IrriduciblePolynomial.h"
 
@@ -114,3 +114,58 @@ TEST( ElementOfFiniteFieldTests, Inversion )
 		}
 	}
 }
+
+TEST( ElementOfFiniteFieldTests, InversionForAnyIrriducible )
+{
+	std::vector<ElementOfFiniteFieldP<Prime>> nonSquares{ 2,3,7,8,10,11,12,15,18,26,27,28,29,32,34,35,38,39,40,41,42,44,46,48,50,51,53,55,57,59,60,61,62,63,66,67,69,72,73,74,75,83,86,89,90,91,93,94,98,99 };
+	
+	std::vector<PolynomialOverPrimeSizeFiniteField<Prime,2>> irriducibles;
+	for( const auto nonSquare : nonSquares )
+	{
+		irriducibles.push_back(
+			PolynomialOverPrimeSizeFiniteField<Prime,2>{
+				std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
+					ElementOfFiniteFieldP<Prime>{ -nonSquare.value },
+					ElementOfFiniteFieldP<Prime>{ 0 },
+					ElementOfFiniteFieldP<Prime>{ 1 }
+				} 
+			}
+		);
+	}
+
+	unsigned testCount{ 0 };
+
+	for( const auto poly : irriducibles )
+	{
+		const auto one = ElementOfFiniteField<Prime, Exponent>::GetMultiplicativeInvarient( poly );
+
+		for( integer loop_index_0 = 0; loop_index_0<Prime; loop_index_0++ )
+		{
+			for( integer loop_index_1 = 0; loop_index_1<Prime; loop_index_1++ )
+			{
+				testCount++;
+
+				const auto initializer = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
+					std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+						ElementOfFiniteFieldP<Prime>{ loop_index_0 },
+						ElementOfFiniteFieldP<Prime>{ loop_index_1 }
+					}
+				};
+
+				const auto a = ElementOfFiniteField<Prime, Exponent>{
+					initializer,
+					poly
+				};
+
+				if( a == a.GetAdditionInvarient() )
+					continue;
+
+				EXPECT_EQ( a/a, one );
+			}
+		}
+	}
+
+	EXPECT_EQ( testCount, irriducibles.size()*Prime*Prime );
+}
+
+	
