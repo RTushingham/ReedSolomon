@@ -47,7 +47,7 @@ public:
 	}
 	
 	template<integer SmallerDegree>
-	PolynomialOverPrimeSizeFiniteField<Prime,SmallerDegree>	Downsize() const
+	constexpr PolynomialOverPrimeSizeFiniteField<Prime,SmallerDegree>	Downsize() const
 	{
 		static_assert( SmallerDegree <= MaxDegree , "" );
 		
@@ -61,7 +61,7 @@ public:
 	}
 
 	template<integer LargerDegree>
-	PolynomialOverPrimeSizeFiniteField<Prime,LargerDegree>Oversize() const
+	constexpr PolynomialOverPrimeSizeFiniteField<Prime,LargerDegree>Oversize() const
 	{
 		static_assert( LargerDegree >= MaxDegree, "" );
 		
@@ -75,7 +75,7 @@ public:
 	}
 
 public:
-	PolynomialOverPrimeSizeFiniteField( std::array<GFp, GetCapacity()> Input )
+	constexpr PolynomialOverPrimeSizeFiniteField( std::array<GFp, GetCapacity()> Input )
 		: coefficients( Input )
 	{};
 	
