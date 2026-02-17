@@ -1,0 +1,40 @@
+load( "@rules_cc//cc:defs.bzl", "cc_test", "cc_library" )
+
+cc_library(
+    name = "test-data",
+    testonly = True,
+    hdrs = glob([
+        "test-data/*.h"
+    ]),
+    deps = [
+        "//finite-fields"
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "test-data-tests",
+    srcs = glob([
+        "test-data/*_Tests.cpp"
+    ]),
+    deps = [
+        ":test-data",
+        "//imports/thirdparty/GoogleTest:GoogleTest",
+        "//imports/thirdparty/GoogleTest:GoogleTest-Main",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "finite-fields-tests",
+    srcs = glob([
+        "*_Tests.cpp",
+    ]),
+    deps = [
+        "//finite-fields",
+        ":test-data",
+        "//imports/thirdparty/GoogleTest:GoogleTest",
+        "//imports/thirdparty/GoogleTest:GoogleTest-Main",
+    ],
+    visibility = ["//visibility:public"],
+)

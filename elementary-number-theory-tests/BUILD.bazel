@@ -1,0 +1,14 @@
+load( "@rules_cc//cc:defs.bzl", "cc_test", "cc_library" )
+
+cc_test(
+    name = "elementary-number-theory-tests",
+    srcs = glob([
+        "*_Tests.cpp"
+    ]),
+    deps = [
+        "//elementary-number-theory",
+        "//imports/thirdparty/GoogleTest:GoogleTest",
+        "//imports/thirdparty/GoogleTest:GoogleTest-Main",
+    ],
+    visibility = ["//visibility:public"],
+)

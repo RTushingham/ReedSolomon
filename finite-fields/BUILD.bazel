@@ -1,0 +1,13 @@
+load( "@rules_cc//cc:defs.bzl", "cc_library" )
+
+cc_library(
+    name = "finite-fields",
+    hdrs = glob([
+        "*.h"
+    ]),
+    deps = [
+        "//elementary-number-theory"
+    ],
+    includes = [ "//src" ],
+    visibility = ["//visibility:public"],
+)
