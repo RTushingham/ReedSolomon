@@ -1,7 +1,7 @@
 #pragma once
 
-#include "IntegerPowers.h"
-#include "Typedef.h"
+#include "cpp-helpers/Typedef.h"
+#include "elementary-mathematical-functions/IntegerPowers.h"
 
 bool constexpr IsPrime( unsigned candidate )
 {

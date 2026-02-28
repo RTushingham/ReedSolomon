@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IntegerPowers.h"
+#include "elementary-mathematical-functions/IntegerPowers.h"
 
 #include <vector>
 

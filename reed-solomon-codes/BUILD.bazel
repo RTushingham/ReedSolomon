@@ -8,6 +8,5 @@ cc_library(
     deps = [
         "//finite-fields"
     ],
-    includes = [ "//src" ],
     visibility = ["//visibility:public"],
 )

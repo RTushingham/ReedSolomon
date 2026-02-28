@@ -2,7 +2,7 @@
 
 #include "finite-fields/FiniteFieldsOfSizePrimeToAPower.h"
 
-#include "elementary-number-theory/Typedef.h"
+#include "cpp-helpers/Typedef.h"
 
 #include <array>
 

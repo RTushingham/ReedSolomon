@@ -3,19 +3,9 @@
 #include "FiniteFieldsOfSizePrime.h"
 #include "PolynomialsOverFiniteFieldOfSizePrime.h"
 
+#include "container-helpers/ArrayExtensions.h"
+#include "elementary-mathematical-functions/DiscreteLog.h"
 #include "elementary-number-theory/PrimeFactorisation.h"
-
-template<class T, std::size_t Length, class ValueType>
-bool constexpr array_contains( const std::array<T, Length>& array, const ValueType & target )
-{
-	for( const auto & a : array )
-	{
-		if( a == target )
-			return true;
-	}
-
-	return false;
-};
 
 template<integer Prime, std::size_t matrix_length>
 void constexpr populate_squares_up_to( std::array<std::array<ElementOfFiniteFieldP<Prime>, Prime>, matrix_length>& squares, std::size_t maximum_exponent )

@@ -1,12 +1,11 @@
 load( "@rules_cc//cc:defs.bzl", "cc_library" )
 
 cc_library(
-    name = "elementary-number-theory",
+    name = "elementary-mathematical-functions",
     hdrs = glob([
         "*.h"
     ]),
     deps = [
-        "//elementary-mathematical-functions",
         "//cpp-helpers",
     ],
     visibility = ["//visibility:public"],

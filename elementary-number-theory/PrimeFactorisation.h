@@ -1,28 +1,10 @@
 #pragma once
 
-#include "IntegerPowers.h"
 #include "IsPrime.h"
-#include "Typedef.h"
 
-constexpr unsigned discrete_sqrt_ceiling( unsigned n )
-{
-	for( unsigned index = 0; index<=n; index++ )
-	{
-		if( int_pow( index, 2 ) >= n )
-			return index;
-	}
-	return 0;
-}
-
-constexpr unsigned discrete_log_ceiling( unsigned n, unsigned base )
-{
-	for( unsigned index = 0; index<=n; index++ )
-	{
-		if( int_pow( base, index ) >= n )
-			return index;
-	}
-	return 0;
-}
+#include "elementary-mathematical-functions/DiscreteSquareRoot.h"
+#include "elementary-mathematical-functions/IntegerPowers.h"
+#include "cpp-helpers/Typedef.h"
 
 struct PrimeFactorAndWeight
 {

@@ -2,7 +2,7 @@
 
 #include "FiniteFieldsOfSizePrime.h"
 
-#include "elementary-number-theory/Typedef.h"
+#include "cpp-helpers/Typedef.h"
 
 #include <array>
 
@@ -47,7 +47,7 @@ public:
 	}
 	
 	template<integer SmallerDegree>
-	constexpr PolynomialOverPrimeSizeFiniteField<Prime,SmallerDegree>	Downsize() const
+	constexpr PolynomialOverPrimeSizeFiniteField<Prime,SmallerDegree> Downsize() const
 	{
 		static_assert( SmallerDegree <= MaxDegree , "" );
 		

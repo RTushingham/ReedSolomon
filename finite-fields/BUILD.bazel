@@ -6,8 +6,10 @@ cc_library(
         "*.h"
     ]),
     deps = [
-        "//elementary-number-theory"
+        "//container-helpers",
+        "//cpp-helpers",
+        "//elementary-mathematical-functions",
+        "//elementary-number-theory",
     ],
-    includes = [ "//src" ],
     visibility = ["//visibility:public"],
 )
