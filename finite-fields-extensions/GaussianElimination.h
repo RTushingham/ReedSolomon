@@ -23,7 +23,7 @@ std::array<std::size_t, row_count> GaussianElimination( ElementaryMatrix<row_cou
             if( array_contains( non_zero_row_index, equation_index ) )
                 continue;
             
-            auto& eq = matrix.Row( round_index );
+            auto& eq = matrix.Row( equation_index );
             
             if( eq.at( round_index ) != addition_invarient )
             {
@@ -34,7 +34,7 @@ std::array<std::size_t, row_count> GaussianElimination( ElementaryMatrix<row_cou
         }
         if( new_nonzero_leading_row_found == false )
         {
-            throw;
+            break;
         }
 
         const auto leading_non_zero_index{ non_zero_row_index.at( round_index ) };

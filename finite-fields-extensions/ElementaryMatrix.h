@@ -2,10 +2,10 @@
 
 #include <array>
 
-template<std::size_t row_count, std::size_t row_length, typename FieldElements>
+template<std::size_t rows, std::size_t columns, typename FieldElements>
 class ElementaryMatrix
 {
-    std::array<std::array<FieldElements, row_length>, row_count> m_Matrix{};
+    std::array<std::array<FieldElements, columns>, rows> m_Matrix{};
 
 public:
     constexpr ElementaryMatrix( const FieldElements& initializer )
@@ -20,17 +20,17 @@ public:
         }
     }
 
-    std::array<FieldElements, row_length>& Row( std::size_t index )
+    std::array<FieldElements, columns>& Row( std::size_t index )
     {
         return m_Matrix.at( index );
     }
     static constexpr std::size_t RowCount()
     {
-        return row_count;
+        return rows;
     }
     static constexpr std::size_t ColumnCount()
     {
-        return row_length;
+        return columns;
     }
 
     void SubtractRowByRow( std::size_t target_index, FieldElements multiplyer, std::size_t source_index )

@@ -190,4 +190,212 @@ TEST( ElementOfFiniteFieldTests, InversionForAnyIrriducible )
 	EXPECT_EQ( testCount, irriducibles.size()*Prime*Prime );
 }
 
+TEST( ElementOfFiniteFieldTests, Multiplication )
+{
+	ElementOfFiniteField<Prime, Exponent> a{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 7 },
+				ElementOfFiniteFieldP<Prime>{ 6 }
+			} 
+		},
+		irriducible
+	};
+
+
+	const ElementOfFiniteField<Prime, Exponent> b{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 9 },
+				ElementOfFiniteFieldP<Prime>{ 8 }
+			} 
+		},
+		irriducible
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> ab_expected{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 58 },
+				ElementOfFiniteFieldP<Prime>{ 9 }
+			} 
+		},
+		irriducible
+	};
+
+	EXPECT_EQ( a*b, ab_expected );
 	
+
+	const ElementOfFiniteField<Prime, Exponent> c{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 10 },
+				ElementOfFiniteFieldP<Prime>{ 11 }
+			} 
+		},
+		irriducible
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> ac_expected{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 0 },
+				ElementOfFiniteFieldP<Prime>{ 36 }
+			} 
+		},
+		irriducible
+	};
+
+	EXPECT_EQ( a*c, ac_expected );
+	
+
+	const ElementOfFiniteField<Prime, Exponent> d{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 12 },
+				ElementOfFiniteFieldP<Prime>{ 13 }
+			} 
+		},
+		irriducible
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> ad_expected{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 38 },
+				ElementOfFiniteFieldP<Prime>{ 62 }
+			} 
+		},
+		irriducible
+	};
+
+	EXPECT_EQ( a*d, ad_expected );
+	
+
+	const ElementOfFiniteField<Prime, Exponent> e{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 14 },
+				ElementOfFiniteFieldP<Prime>{ 15 }
+			} 
+		},
+		irriducible
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> ae_expected{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 76 },
+				ElementOfFiniteFieldP<Prime>{ 88 }
+			} 
+		},
+		irriducible
+	};
+
+	EXPECT_EQ( a*e, ae_expected );
+}
+
+TEST( ElementOfFiniteFieldTests, Addition )
+{
+	ElementOfFiniteField<Prime, Exponent> a{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 4 },
+				ElementOfFiniteFieldP<Prime>{ 5 }
+			} 
+		},
+		irriducible
+	};
+
+
+	const ElementOfFiniteField<Prime, Exponent> b{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 58 },
+				ElementOfFiniteFieldP<Prime>{ 9 }
+			} 
+		},
+		irriducible
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> ab_expected{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 62 },
+				ElementOfFiniteFieldP<Prime>{ 14 }
+			} 
+		},
+		irriducible
+	};
+
+	EXPECT_EQ( a+b, ab_expected );
+	
+
+	const ElementOfFiniteField<Prime, Exponent> c{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 0 },
+				ElementOfFiniteFieldP<Prime>{ 36 }
+			} 
+		},
+		irriducible
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> ac_expected{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 4 },
+				ElementOfFiniteFieldP<Prime>{ 41 }
+			} 
+		},
+		irriducible
+	};
+
+	EXPECT_EQ( a+c, ac_expected );
+	
+
+	const ElementOfFiniteField<Prime, Exponent> d{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 38 },
+				ElementOfFiniteFieldP<Prime>{ 62 }
+			} 
+		},
+		irriducible
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> ad_expected{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 42 },
+				ElementOfFiniteFieldP<Prime>{ 67 }
+			} 
+		},
+		irriducible
+	};
+
+	EXPECT_EQ( a+d, ad_expected );
+	
+
+	const ElementOfFiniteField<Prime, Exponent> e{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 76 },
+				ElementOfFiniteFieldP<Prime>{ 88 }
+			} 
+		},
+		irriducible
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> ae_expected{
+		PolynomialOverPrimeSizeFiniteField<Prime,1>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				ElementOfFiniteFieldP<Prime>{ 80 },
+				ElementOfFiniteFieldP<Prime>{ 93 }
+			} 
+		},
+		irriducible
+	};
+
+	EXPECT_EQ( a+e, ae_expected );
+}
