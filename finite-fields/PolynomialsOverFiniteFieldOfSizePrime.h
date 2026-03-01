@@ -78,10 +78,18 @@ public:
 	constexpr PolynomialOverPrimeSizeFiniteField( std::array<GFp, GetCapacity()> Input )
 		: coefficients( Input )
 	{};
+	constexpr PolynomialOverPrimeSizeFiniteField()
+		: coefficients{}
+	{};
 	
 	constexpr bool operator==(const PolynomialOverPrimeSizeFiniteField<Prime,MaxDegree>& a) const
 	{
-		return coefficients == a.coefficients;
+		for( std::size_t index{ 0 }; index<coefficients.size(); index++ )
+		{
+			if( coefficients.at(index) != a.coefficients.at(index) )
+				return false;
+		}
+		return true;
 	}
 	constexpr bool operator!=(const PolynomialOverPrimeSizeFiniteField<Prime,MaxDegree>& a) const
 	{

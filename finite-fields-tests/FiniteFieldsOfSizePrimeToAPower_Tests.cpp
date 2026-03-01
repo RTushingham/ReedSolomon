@@ -115,6 +115,28 @@ TEST( ElementOfFiniteFieldTests, Inversion )
 	}
 }
 
+TEST( ElementOfFiniteFieldTests, ClassIsValueInstantiable )
+{
+	ElementOfFiniteField<Prime, Exponent> a{};
+
+	const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+	EXPECT_NE( a, zero );
+}
+
+TEST( ElementOfFiniteFieldTests, AssignmentOverwritesValueInitialized )
+{
+	const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+	ElementOfFiniteField<Prime, Exponent> a{};
+
+	a = zero;
+	EXPECT_EQ( a, zero );
+}
+
+TEST( ElementOfFiniteFieldTests, AdditionInvarientHelperConstexpr )
+{
+	constexpr auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+}
+
 TEST( ElementOfFiniteFieldTests, InversionForAnyIrriducible )
 {
 	std::vector<ElementOfFiniteFieldP<Prime>> nonSquares{ 2,3,7,8,10,11,12,15,18,26,27,28,29,32,34,35,38,39,40,41,42,44,46,48,50,51,53,55,57,59,60,61,62,63,66,67,69,72,73,74,75,83,86,89,90,91,93,94,98,99 };

@@ -18,7 +18,7 @@ class ElementOfFiniteField
 	// template<integer Degree>
 	// using PolynomialOverPrimeSizeFiniteField<Prime,Degree> = PolynomialOverPrimeSizeFiniteField<Prime,Degree>;
 
-	const PolynomialOverPrimeSizeFiniteField<Prime,Exponent> irriducible_polynomial;	
+	PolynomialOverPrimeSizeFiniteField<Prime,Exponent> irriducible_polynomial;	
 
 public:
 	PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1> value;
@@ -33,8 +33,16 @@ public:
 		// 	throw;
 	}
 
-	ElementOfFiniteField<Prime,Exponent>& operator=(const ElementOfFiniteField<Prime,Exponent>& a){
+	// Only used for value-initialization
+	//   - leaves class in an error state.
+	constexpr ElementOfFiniteField<Prime,Exponent>()
+		: value{}
+		, irriducible_polynomial{}
+	{}
+	
+	constexpr ElementOfFiniteField<Prime,Exponent>& operator=(const ElementOfFiniteField<Prime,Exponent>& a){
 		value = a.value;
+		irriducible_polynomial = a.irriducible_polynomial;
 		return *this;
 	}
 	

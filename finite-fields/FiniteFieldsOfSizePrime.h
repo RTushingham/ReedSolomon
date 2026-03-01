@@ -43,7 +43,7 @@ public:
 		return ((value * a.value) % Prime);
 	}
 	
-	ElementOfFiniteFieldP<Prime> FindMultiplicativeInverse() const
+	constexpr ElementOfFiniteFieldP<Prime> FindMultiplicativeInverse() const
 	{
 		// This is necessary for Fp to be a field
 		//   For all n such that 0 < n < p, we have that n and p are coprime.

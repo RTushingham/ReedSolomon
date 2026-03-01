@@ -96,11 +96,6 @@ TEST( PrimeFieldTests, AllInversesAreInverses )
 	}
 }
 
-TEST( PrimeFieldTests, ClassIsConstexprInstantiable )
-{
-	constexpr ElementOfFiniteFieldP<Prime> a{ 52 };
-}
-
 TEST( PrimeFieldTests, InverseFindingClassMethodAndOriginalImplAgree )
 {
 	for( integer non_zero_element = 1; non_zero_element < Prime; non_zero_element++ )
@@ -108,4 +103,15 @@ TEST( PrimeFieldTests, InverseFindingClassMethodAndOriginalImplAgree )
         ElementOfFiniteFieldP<Prime> a{ non_zero_element };
         EXPECT_EQ( FindMultiplicativeInverse_Simple<Prime>(a), a.FindMultiplicativeInverse() );
     }
+}
+
+
+TEST( PrimeFieldTests, ClassIsConstexprInstantiable )
+{
+	constexpr ElementOfFiniteFieldP<Prime> a{ 52 };
+}
+
+TEST( PrimeFieldTests, AdditionInvarientHelperConstexpr )
+{
+	constexpr auto zero{ ElementOfFiniteFieldP<Prime>::GetAdditionInvarient() };
 }

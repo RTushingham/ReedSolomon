@@ -91,3 +91,25 @@ TEST( PolynomialsOverPrimeFieldTests, Modulo )
 
 	EXPECT_EQ( c % a, c );
 }
+
+TEST( PolynomialsOverPrimeFieldTests, ClassIsConstexprInstantiable )
+{
+	constexpr PolynomialOverPrimeSizeFiniteField<Prime,0> const_expr{ 
+		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,0>::GetCapacity()>{
+			ElementOfFiniteFieldP<Prime>{ 12 }/ElementOfFiniteFieldP<Prime>{ 9 }
+		} 
+	};
+}
+
+TEST( PolynomialsOverPrimeFieldTests, ValueInitializable )
+{
+	PolynomialOverPrimeSizeFiniteField<Prime,0> val_init{};
+
+	const auto zero{ PolynomialOverPrimeSizeFiniteField<Prime,0>::GetAdditionInvarient() };
+	EXPECT_EQ( val_init, zero );
+}
+
+TEST( PolynomialsOverPrimeFieldTests, AdditionInvarientHelperConstexpr )
+{
+	constexpr auto zero{ PolynomialOverPrimeSizeFiniteField<Prime,0>::GetAdditionInvarient() };
+}

@@ -28,7 +28,7 @@ cc_test(
 cc_test(
     name = "finite-fields-tests",
     srcs = glob([
-        "*_Tests.cpp",
+        "*.cpp",
     ]),
     deps = [
         "//finite-fields",
