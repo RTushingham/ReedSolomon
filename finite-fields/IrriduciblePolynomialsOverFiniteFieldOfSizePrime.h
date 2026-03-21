@@ -41,6 +41,9 @@ constexpr std::array<ElementOfFiniteFieldP<Prime>, Prime> GetDiscretePowerArray(
 template <integer Prime, integer Degree>
 constexpr PolynomialOverPrimeSizeFiniteField<Prime,Degree> GetIrriduciblePolynomial()
 {
+	static_assert( Degree!=1, " This function is aimed at non-trivial case (All polnomails of degree 1 are irriducible) " );
+	static_assert( Degree>=0, "Constant polynomials are not irriducible" );
+
 	std::array<std::array<ElementOfFiniteFieldP<Prime>, Prime>, discrete_log_ceiling( Degree, 2 )> squares{
 		{ ElementOfFiniteFieldP<Prime>::GetAdditionInvarient() }
 	};
@@ -49,19 +52,19 @@ constexpr PolynomialOverPrimeSizeFiniteField<Prime,Degree> GetIrriduciblePolynom
 		squares.at(0).at(index) = ElementOfFiniteFieldP<Prime>{ (integer)index };
 	}
 
-	const auto prime_factorization{ PrimeFactorisation_SingleFactor( Degree ) };
-	if( Degree != int_pow( prime_factorization.PrimeFactor, prime_factorization.Weight ) )
+	const auto degree_factorization{ PrimeFactorisation_SingleFactor( Degree ) };
+	if( Degree != int_pow( degree_factorization.PrimeFactor, degree_factorization.Weight ) )
 		throw;	
 
-	if( prime_factorization.PrimeFactor == 2 )
+	if( degree_factorization.PrimeFactor == 2 )
 	{
-		if( prime_factorization.Weight != 1 )
+		if( degree_factorization.Weight != 1 )
 		{
 			throw;
 		}
 
-		populate_squares_up_to( squares, discrete_log_ceiling( prime_factorization.PrimeFactor, 2 )  );
-		const auto all_powers_of_prime_factor{ GetDiscretePowerArray( prime_factorization.PrimeFactor, squares ) };
+		populate_squares_up_to( squares, discrete_log_ceiling( degree_factorization.PrimeFactor, 2 )  );
+		const auto all_powers_of_prime_factor{ GetDiscretePowerArray( degree_factorization.PrimeFactor, squares ) };
 
 		for( unsigned seed = 0; seed<Prime; seed++ )
 		{
@@ -78,10 +81,10 @@ constexpr PolynomialOverPrimeSizeFiniteField<Prime,Degree> GetIrriduciblePolynom
 			}
 		}
 	}
-	else if( Prime != 2 && prime_factorization.PrimeFactor != 2 )
+	else if( Prime != 2 && degree_factorization.PrimeFactor != 2 )
 	{
-		populate_squares_up_to( squares, discrete_log_ceiling( prime_factorization.PrimeFactor, 2 ) - 1  );
-		const auto all_powers_of_prime_factor{ GetDiscretePowerArray( prime_factorization.PrimeFactor, squares ) };
+		populate_squares_up_to( squares, discrete_log_ceiling( degree_factorization.PrimeFactor, 2 ) - 1  );
+		const auto all_powers_of_prime_factor{ GetDiscretePowerArray( degree_factorization.PrimeFactor, squares ) };
 
 		for( unsigned seed = 0; seed<Prime; seed++ )
 		{

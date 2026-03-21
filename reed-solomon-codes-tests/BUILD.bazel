@@ -1,7 +1,7 @@
 load( "@rules_cc//cc:defs.bzl", "cc_test" )
 
 cc_test(
-    name = "reed-solomon-codes-test",
+    name = "reed-solomon-codes-tests",
     srcs = glob([
         "*_Tests.cpp",
     ]),

@@ -22,7 +22,6 @@ cc_test(
         "//imports/thirdparty/GoogleTest:GoogleTest",
         "//imports/thirdparty/GoogleTest:GoogleTest-Main",
     ],
-    visibility = ["//visibility:public"],
 )
 
 cc_test(

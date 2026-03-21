@@ -29,6 +29,9 @@ public:
 	PolynomialOverFiniteField( std::array<GFq, GetCapacity()> Input )
 		: coefficients( Input )
 	{};
+	constexpr PolynomialOverFiniteField()
+		: coefficients{}
+	{};
 	
 	constexpr GFq operator()(const GFq& a) const
 	{
