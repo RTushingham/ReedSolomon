@@ -19,8 +19,7 @@ namespace
 				ElementOfFiniteFieldP<Prime>{ 9 },
 				ElementOfFiniteFieldP<Prime>{ 8 }
 			} 
-		},
-		irriducible
+		}
 	};
 	const ElementOfFiniteField<Prime, Exponent> b{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
@@ -28,14 +27,13 @@ namespace
 				ElementOfFiniteFieldP<Prime>{ 62 },
 				ElementOfFiniteFieldP<Prime>{ 14 }
 			} 
-		},
-		irriducible
+		}
 	};
 }
 
 TEST( ElementaryMatrixTests, RowCount )
 {
-    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
     ClassUnderTest matrix{ zero };
 
     EXPECT_EQ( matrix.RowCount(), n );
@@ -43,7 +41,7 @@ TEST( ElementaryMatrixTests, RowCount )
 
 TEST( ElementaryMatrixTests, ColumnCount )
 {
-    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
     ClassUnderTest matrix{ zero };
 
     EXPECT_EQ( matrix.ColumnCount(), n+1 );
@@ -51,7 +49,7 @@ TEST( ElementaryMatrixTests, ColumnCount )
 
 TEST( ElementaryMatrixTests, DefaultInitializable )
 {
-    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
     ClassUnderTest matrix{ zero };
 
     for( std::size_t row_index{ 0 }; row_index<n; row_index++ )
@@ -66,7 +64,7 @@ TEST( ElementaryMatrixTests, DefaultInitializable )
 
 TEST( ElementaryMatrixTests, CoefficientOverwriting )
 {
-    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 
     matrix.Row( 0 ).at( 0 ) = a;
     matrix.Row( 0 ).at( 1 ) = a;
@@ -85,7 +83,7 @@ TEST( ElementaryMatrixTests, CoefficientOverwriting )
 
 TEST( ElementaryMatrixTests, RowSubtraction )
 {
-    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 
     matrix.Row( 0 ).at( 0 ) = a;
     matrix.Row( 0 ).at( 1 ) = a;
@@ -94,22 +92,22 @@ TEST( ElementaryMatrixTests, RowSubtraction )
     matrix.Row( 1 ).at( 1 ) = b;
 
 
-    matrix.SubtractRowByRow( 1, ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient( irriducible ), 0 );
+    matrix.SubtractRowByRow( 1, ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient(), 0 );
 
 
     EXPECT_EQ( matrix.Row( 0 ).at( 0 ), a );
     EXPECT_EQ( matrix.Row( 0 ).at( 1 ), a );
 
-    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
     EXPECT_EQ( matrix.Row( 1 ).at( 0 ), zero );
     EXPECT_EQ( matrix.Row( 1 ).at( 1 ), b-a );
 }
 
 TEST( ElementaryMatrixTests, RowSubtractionUsingScalar )
 {
-    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 
-    const auto one{ ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient( irriducible ) };
+    const auto one{ ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient() };
     matrix.Row( 0 ).at( 0 ) = one;
     matrix.Row( 0 ).at( 1 ) = a;
 
@@ -123,7 +121,7 @@ TEST( ElementaryMatrixTests, RowSubtractionUsingScalar )
     EXPECT_EQ( matrix.Row( 0 ).at( 0 ), one );
     EXPECT_EQ( matrix.Row( 0 ).at( 1 ), a );
 
-    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
     EXPECT_EQ( matrix.Row( 1 ).at( 0 ), zero );
     EXPECT_EQ( matrix.Row( 1 ).at( 0 ), zero );
     EXPECT_EQ( matrix.Row( 1 ).at( 1 ), b-(a*a) );
@@ -132,12 +130,12 @@ TEST( ElementaryMatrixTests, RowSubtractionUsingScalar )
 
 TEST( ElementaryMatrixTests, RowDivision )
 {
-    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 
     matrix.Row( 0 ).at( 0 ) = a;
     matrix.Row( 0 ).at( 1 ) = a;
 
-    matrix.Row( 1 ).at( 0 ) = ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient( irriducible );
+    matrix.Row( 1 ).at( 0 ) = ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient();
     matrix.Row( 1 ).at( 1 ) = b;
 
     matrix.DivideRow( 1, a );
@@ -151,7 +149,7 @@ TEST( ElementaryMatrixTests, RowDivision )
 
 TEST( ElementaryMatrixTests, RowDivisionUsingInvarient )
 {
-    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 
     matrix.Row( 0 ).at( 0 ) = a;
     matrix.Row( 0 ).at( 1 ) = a;
@@ -159,7 +157,7 @@ TEST( ElementaryMatrixTests, RowDivisionUsingInvarient )
     matrix.Row( 1 ).at( 0 ) = a;
     matrix.Row( 1 ).at( 1 ) = b;
 
-    matrix.DivideRow( 1, ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient( irriducible ) );
+    matrix.DivideRow( 1, ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient() );
 
     EXPECT_EQ( matrix.Row( 0 ).at( 0 ), a );
     EXPECT_EQ( matrix.Row( 0 ).at( 1 ), a );

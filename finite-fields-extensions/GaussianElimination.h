@@ -7,7 +7,7 @@
 #include <array>
 
 template<std::size_t row_count, std::size_t row_length, typename FieldElements>
-std::array<std::size_t, row_count> GaussianElimination( ElementaryMatrix<row_count, row_length, FieldElements>& matrix, const FieldElements& addition_invarient )
+std::array<std::size_t, row_count> GaussianElimination( ElementaryMatrix<row_count, row_length, FieldElements>& matrix )
 {
     std::array<std::size_t, matrix.RowCount()> non_zero_row_index{};
 	for( auto & a : non_zero_row_index )
@@ -25,7 +25,7 @@ std::array<std::size_t, row_count> GaussianElimination( ElementaryMatrix<row_cou
             
             auto& eq = matrix.Row( equation_index );
             
-            if( eq.at( round_index ) != addition_invarient )
+            if( eq.at( round_index ) != FieldElements::GetAdditionInvarient() )
             {
                 non_zero_row_index.at( round_index ) = equation_index;
                 new_nonzero_leading_row_found = true;

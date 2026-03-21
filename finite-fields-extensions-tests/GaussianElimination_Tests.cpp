@@ -21,8 +21,7 @@ namespace
 				ElementOfFiniteFieldP<Prime>{ 9 },
 				ElementOfFiniteFieldP<Prime>{ 8 }
 			} 
-		},
-		irriducible
+		}
 	};
 	const ElementOfFiniteField<Prime, Exponent> b{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
@@ -30,15 +29,14 @@ namespace
 				ElementOfFiniteFieldP<Prime>{ 62 },
 				ElementOfFiniteFieldP<Prime>{ 14 }
 			} 
-		},
-		irriducible
+		}
 	};
 }
 
 
 TEST( GaussianEliminationTests, TrivialExample )
 {
-    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 
     std::array<std::size_t, matrix.RowCount()> expected{};
     for( std::size_t column_index{ 0 }; column_index<matrix.RowCount(); column_index++ )
@@ -47,14 +45,14 @@ TEST( GaussianEliminationTests, TrivialExample )
         expected.at( column_index ) = column_index;
     }
     
-    const auto res{ GaussianElimination( matrix, ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) ) };
+    const auto res{ GaussianElimination( matrix ) };
     
     EXPECT_THAT( res, ::testing::ContainerEq( expected ) );
 }
 
 TEST( GaussianEliminationTests, ReorderedExample )
 {
-    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 
     std::array<std::size_t, matrix.RowCount()> expected{};
     expected.at( 0 ) = 2;
@@ -67,14 +65,14 @@ TEST( GaussianEliminationTests, ReorderedExample )
         matrix.Row( expected.at( column_index ) ).at( column_index ) = a;
     }
     
-    const auto res{ GaussianElimination( matrix, ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) ) };
+    const auto res{ GaussianElimination( matrix ) };
     
     EXPECT_THAT( res, ::testing::ContainerEq( expected ) );
 }
 
 TEST( GaussianEliminationTests, ReorderedNonTrivialExample )
 {
-    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 
     std::array<std::size_t, matrix.RowCount()> expected{};
     expected.at( 0 ) = 2;
@@ -94,11 +92,11 @@ TEST( GaussianEliminationTests, ReorderedNonTrivialExample )
     matrix.Row( 0 ).at( 1 ) = a;
     
 
-    const auto res{ GaussianElimination( matrix, ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) ) };
+    const auto res{ GaussianElimination( matrix ) };
     
     EXPECT_THAT( res, ::testing::ContainerEq( expected ) );
 
-    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
     EXPECT_EQ( matrix.Row( 0 ).at( matrix.ColumnCount()-1 ), zero );
 }
 
@@ -117,8 +115,7 @@ namespace
 					ElementOfFiniteFieldP<Prime>{ 4 },
 					ElementOfFiniteFieldP<Prime>{ 5 }
 				} 
-			},
-			irriducible
+			}
 		},
 		ElementOfFiniteField<Prime, Exponent>{
 			PolynomialOverPrimeSizeFiniteField<Prime,1>{
@@ -126,8 +123,7 @@ namespace
 					ElementOfFiniteFieldP<Prime>{ 7 },
 					ElementOfFiniteFieldP<Prime>{ 6 }
 				} 
-			},
-			irriducible
+			}
 		}
 	};
 
@@ -141,8 +137,7 @@ namespace
 				ElementOfFiniteFieldP<Prime>{ 9 },
 				ElementOfFiniteFieldP<Prime>{ 8 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> argument_two{
@@ -151,8 +146,7 @@ namespace
 				ElementOfFiniteFieldP<Prime>{ 10 },
 				ElementOfFiniteFieldP<Prime>{ 11 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> argument_three{
@@ -161,8 +155,7 @@ namespace
 				ElementOfFiniteFieldP<Prime>{ 12 },
 				ElementOfFiniteFieldP<Prime>{ 13 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> argument_four{
@@ -171,8 +164,7 @@ namespace
 				ElementOfFiniteFieldP<Prime>{ 14 },
 				ElementOfFiniteFieldP<Prime>{ 15 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	void SetMatrixWithStartParameters( ClassUnderTest& matrix, std::size_t assumed_error_value, std::size_t max_error_value, const std::vector<ElementOfFiniteField<Prime,Exponent>>& revieced_signal, const std::vector<ElementOfFiniteField<Prime,Exponent>>& generating_elements )
@@ -190,7 +182,7 @@ namespace
 			auto& row{ matrix.Row( row_index ) };
 			
 			std::size_t coeff_count{ 0 };
-			auto running_product{ ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient( irriducible ) };
+			auto running_product{ ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient() };
 			while( coeff_count <= MaxDegree + assumed_error_value )
 			{
 				row.at( coeff_count ) = running_product;
@@ -198,7 +190,7 @@ namespace
 				coeff_count++;
 			}
 
-			running_product = ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) - ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient( irriducible );
+			running_product = ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() - ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient();
 			running_product = running_product * revieced_signal.at( row_index );
 
 			coeff_count = max_error_value+MaxDegree + 1;
@@ -221,7 +213,7 @@ namespace
 			if( false == array_contains( rows_for_leading_non_zeros, row_index ) )
 			{
 				// wrong - you check this for all of the things no in here...
-				if( matrix.Row( row_index ).at( matrix.ColumnCount()-1 ) != ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) )
+				if( matrix.Row( row_index ).at( matrix.ColumnCount()-1 ) != ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() )
 				{
 					// no possible solution
 					return false;
@@ -247,7 +239,7 @@ namespace
 
 	DecodeResult GetPolynomialsFromMatrix( ClassUnderTest& matrix, std::size_t error_value, std::size_t max_error_value, const std::array<std::size_t, n>& res )
 	{
-		constexpr auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+		const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 
 		DecodeResult result{};
 		// layout = e0, e1, ..., e(e-1), q0, ..., q(e+k), "const"
@@ -283,7 +275,7 @@ namespace
 			coeff_count++;
 			e_coeff_index++;
 		}
-		result.error_polynomial.coefficients.at( e_coeff_index ) = ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient( irriducible );
+		result.error_polynomial.coefficients.at( e_coeff_index ) = ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient();
 
 		return result;
 	}
@@ -291,7 +283,7 @@ namespace
 
 TEST( GaussianEliminationBerlekampWelchTests, Example )
 {
-    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 	constexpr std::size_t e = 1;
 
 	std::vector<ElementOfFiniteField<Prime, Exponent>> generators{};
@@ -308,7 +300,7 @@ TEST( GaussianEliminationBerlekampWelchTests, Example )
 
 	SetMatrixWithStartParameters( matrix, e, e, signals, generators );
 
-    const auto res{ GaussianElimination( matrix, ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) ) };
+    const auto res{ GaussianElimination( matrix ) };
 
 	EXPECT_FALSE( array_contains( res, (std::size_t)-1 ) ) << "This system is solvabled";
 	EXPECT_EQ( true, SSEHasAtLeastOneSolution( res, matrix ) );
@@ -317,7 +309,7 @@ TEST( GaussianEliminationBerlekampWelchTests, Example )
 
 TEST( GaussianEliminationBerlekampWelchTests, NoErrorExample )
 {
-    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 	constexpr std::size_t e = 1;
 
 	std::vector<ElementOfFiniteField<Prime, Exponent>> generators{};
@@ -334,7 +326,7 @@ TEST( GaussianEliminationBerlekampWelchTests, NoErrorExample )
 
 	SetMatrixWithStartParameters( matrix, e, e, signals, generators );
 
-    const auto res{ GaussianElimination( matrix, ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) ) };
+    const auto res{ GaussianElimination( matrix ) };
 
 	EXPECT_TRUE( array_contains( res, (std::size_t)-1 ) ) << "This system is not solvable";
 	EXPECT_EQ( true, SSEHasAtLeastOneSolution( res, matrix ) );
@@ -343,7 +335,7 @@ TEST( GaussianEliminationBerlekampWelchTests, NoErrorExample )
 
 TEST( GaussianEliminationBerlekampWelchTests, ExampleWhereHadToShrinkPolynomialSize )
 {
-    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
+    ClassUnderTest matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 	constexpr std::size_t e = 1;
 
 	std::vector<ElementOfFiniteField<Prime, Exponent>> generators{};
@@ -360,14 +352,14 @@ TEST( GaussianEliminationBerlekampWelchTests, ExampleWhereHadToShrinkPolynomialS
 
 	SetMatrixWithStartParameters( matrix, 0, e, signals, generators );
 
-	const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
-    const auto res{ GaussianElimination( matrix, zero ) };
+    const auto res{ GaussianElimination( matrix ) };
 
 	EXPECT_NE( res.at( 0 ), (std::size_t)-1 );
 	EXPECT_NE( res.at( MaxDegree ), (std::size_t)-1 );
 	EXPECT_EQ( res.at( 2 ), (std::size_t)-1 );
 	EXPECT_EQ( res.at( 3 ), (std::size_t)-1 );
 	
+	const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 	EXPECT_EQ( matrix.Row( 2 ).at( 4 ), zero );
 	EXPECT_EQ( matrix.Row( 3 ).at( 4 ), zero );
 	
@@ -394,4 +386,9 @@ TEST( GaussianEliminationBerlekampWelchTests, ExampleWhereHadToShrinkPolynomialS
  
 	EXPECT_EQ( polys.generator.coefficients.at( 0 ), Q_zero );
 	EXPECT_EQ( polys.generator.coefficients.at( 1 ), Q_one );
+
+	auto longDivisionRes{ polys.generator.LongDivideBy( polys.error_polynomial ) };
+
+	const auto poly_zero{ PolynomialOverFiniteField<Prime,Exponent,0>::GetAdditionInvarient() };
+	EXPECT_EQ( longDivisionRes.remainder, poly_zero );
 }

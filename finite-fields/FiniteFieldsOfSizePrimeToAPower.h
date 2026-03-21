@@ -1,5 +1,6 @@
 #pragma once
 
+#include "IrriduciblePolynomialsOverFiniteFieldOfSizePrime.h"
 #include "PolynomialsOverFiniteFieldOfSizePrime.h"
 
 #include "cpp-helpers/Typedef.h"
@@ -18,16 +19,16 @@ class ElementOfFiniteField
 	// template<integer Degree>
 	// using PolynomialOverPrimeSizeFiniteField<Prime,Degree> = PolynomialOverPrimeSizeFiniteField<Prime,Degree>;
 
-	PolynomialOverPrimeSizeFiniteField<Prime,Exponent> irriducible_polynomial;	
+public:
+	inline static PolynomialOverPrimeSizeFiniteField<Prime,Exponent> irriducible_polynomial{ GetIrriduciblePolynomial<Prime,Exponent>() };
 
 public:
 	PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1> value;
 	
 public:
 	template<integer OtherMaxDegree>
-	constexpr ElementOfFiniteField<Prime,Exponent>( const PolynomialOverPrimeSizeFiniteField<Prime,OtherMaxDegree>& value, const PolynomialOverPrimeSizeFiniteField<Prime,Exponent>& irriducible_polynomial )
+	constexpr ElementOfFiniteField<Prime,Exponent>( const PolynomialOverPrimeSizeFiniteField<Prime,OtherMaxDegree>& value )
 		: value { value % irriducible_polynomial }
-		, irriducible_polynomial{ irriducible_polynomial }
 	{
 		// if( !IsIrriducible( irriducible_polynomial ) )
 		// 	throw;
@@ -37,17 +38,15 @@ public:
 	//   - leaves class in an error state.
 	constexpr ElementOfFiniteField<Prime,Exponent>()
 		: value{}
-		, irriducible_polynomial{}
 	{}
 	
 	constexpr ElementOfFiniteField<Prime,Exponent>& operator=(const ElementOfFiniteField<Prime,Exponent>& a){
 		value = a.value;
-		irriducible_polynomial = a.irriducible_polynomial;
 		return *this;
 	}
 	
 	constexpr bool operator==(const ElementOfFiniteField<Prime, Exponent>& a) const{
-		return value == a.value && irriducible_polynomial == a.irriducible_polynomial;
+		return value == a.value;
 	}
 	constexpr bool operator!=(const ElementOfFiniteField<Prime, Exponent>& a) const
 	{
@@ -55,13 +54,13 @@ public:
 	}
 	
 	constexpr ElementOfFiniteField<Prime, Exponent> operator+(const ElementOfFiniteField<Prime, Exponent>& a) const{
-		return {value + a.value, irriducible_polynomial};
+		return {value + a.value};
 	}
 	constexpr ElementOfFiniteField<Prime, Exponent> operator-(const ElementOfFiniteField<Prime, Exponent>& a) const{
-		return {value - a.value, irriducible_polynomial};
+		return {value - a.value};
 	}
 	constexpr ElementOfFiniteField<Prime, Exponent> operator*(const ElementOfFiniteField<Prime, Exponent>& a) const{
-		return {(value * a.value) % irriducible_polynomial, irriducible_polynomial};
+		return {(value * a.value) % irriducible_polynomial};
 	}
 
 	constexpr ElementOfFiniteField<Prime, Exponent> FindMultiplicativeInverse() const
@@ -120,28 +119,20 @@ public:
 	        nMultiplyer.push_back( nMultiplyer.at(multiplying_factors_index) - ( nMultiplyer.at(multiplying_factors_index+1) * multiplying_factors.at(multiplying_factors_index) ) % irriducible_polynomial );
 	    }
 
-	    return ElementOfFiniteField<Prime, Exponent>{ nMultiplyer.back() * final_correcting_factor, irriducible_polynomial };
+	    return ElementOfFiniteField<Prime, Exponent>{ nMultiplyer.back() * final_correcting_factor };
 	}
 	
 	constexpr ElementOfFiniteField<Prime, Exponent> operator/(const ElementOfFiniteField<Prime, Exponent>& a) const{
 		return (*this)*a.FindMultiplicativeInverse();
 	}
 	
-	constexpr static ElementOfFiniteField<Prime, Exponent> GetAdditionInvarient( const PolynomialOverPrimeSizeFiniteField<Prime,Exponent>& irriducible_polynomial )
+	constexpr static ElementOfFiniteField<Prime, Exponent> GetAdditionInvarient()
 	{
-		return ElementOfFiniteField<Prime, Exponent>( PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>::GetAdditionInvarient(), irriducible_polynomial );
+		return ElementOfFiniteField<Prime, Exponent>( PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>::GetAdditionInvarient() );
 	}
-	constexpr ElementOfFiniteField<Prime, Exponent> GetAdditionInvarient() const
+	constexpr static ElementOfFiniteField<Prime, Exponent> GetMultiplicativeInvarient()
 	{
-		return GetAdditionInvarient( irriducible_polynomial );
-	}
-	constexpr static ElementOfFiniteField<Prime, Exponent> GetMultiplicativeInvarient( const PolynomialOverPrimeSizeFiniteField<Prime,Exponent>& irriducible_polynomial )
-	{
-		return ElementOfFiniteField<Prime, Exponent>{ PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>::GetMultiplicativeInvarient(), irriducible_polynomial };
-	}
-	constexpr ElementOfFiniteField<Prime, Exponent> GetMultiplicativeInvarient() const
-	{
-		return GetMultiplicativeInvarient( irriducible_polynomial );
+		return ElementOfFiniteField<Prime, Exponent>{ PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>::GetMultiplicativeInvarient() };
 	}
 };
 

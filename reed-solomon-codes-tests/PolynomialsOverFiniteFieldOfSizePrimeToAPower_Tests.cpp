@@ -18,8 +18,7 @@ namespace
 					ElementOfFiniteFieldP<Prime>{ 4 },
 					ElementOfFiniteFieldP<Prime>{ 5 }
 				} 
-			},
-			irriducible
+			}
 		},
 		ElementOfFiniteField<Prime, Exponent>{
 			PolynomialOverPrimeSizeFiniteField<Prime,1>{
@@ -27,8 +26,7 @@ namespace
 					ElementOfFiniteFieldP<Prime>{ 7 },
 					ElementOfFiniteFieldP<Prime>{ 6 }
 				} 
-			},
-			irriducible
+			}
 		}
 	};
 
@@ -58,8 +56,7 @@ TEST( PolynomialOverFiniteFieldTests, Evaluation )
 				ElementOfFiniteFieldP<Prime>{ 9 },
 				ElementOfFiniteFieldP<Prime>{ 8 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> expected{
@@ -68,8 +65,7 @@ TEST( PolynomialOverFiniteFieldTests, Evaluation )
 				ElementOfFiniteFieldP<Prime>{ 62 },
 				ElementOfFiniteFieldP<Prime>{ 14 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	EXPECT_EQ( polynomial( argument ), expected );
@@ -83,8 +79,7 @@ TEST( PolynomialOverFiniteFieldTests, b )
 				ElementOfFiniteFieldP<Prime>{ 10 },
 				ElementOfFiniteFieldP<Prime>{ 11 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> expected{
@@ -93,8 +88,7 @@ TEST( PolynomialOverFiniteFieldTests, b )
 				ElementOfFiniteFieldP<Prime>{ 4 },
 				ElementOfFiniteFieldP<Prime>{ 41 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	EXPECT_EQ( polynomial( argument ), expected );
@@ -108,8 +102,7 @@ TEST( PolynomialOverFiniteFieldTests, c )
 				ElementOfFiniteFieldP<Prime>{ 12 },
 				ElementOfFiniteFieldP<Prime>{ 13 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> expected{
@@ -118,8 +111,7 @@ TEST( PolynomialOverFiniteFieldTests, c )
 				ElementOfFiniteFieldP<Prime>{ 42 },
 				ElementOfFiniteFieldP<Prime>{ 67 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	EXPECT_EQ( polynomial( argument ), expected );
@@ -133,8 +125,7 @@ TEST( PolynomialOverFiniteFieldTests, d )
 				ElementOfFiniteFieldP<Prime>{ 14 },
 				ElementOfFiniteFieldP<Prime>{ 15 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> expected{
@@ -143,8 +134,7 @@ TEST( PolynomialOverFiniteFieldTests, d )
 				ElementOfFiniteFieldP<Prime>{ 80 },
 				ElementOfFiniteFieldP<Prime>{ 93 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	EXPECT_EQ( polynomial( argument ), expected );

@@ -23,7 +23,8 @@ TEST( TestDataVerifictaion, ValueIsAsAssumed )
 			ElementOfFiniteFieldP<Prime>{ 1 }
 		} 
 	};
-	ASSERT_EQ( irriducible, assumed ) << "This layer of indirection is so that expensive tests which verify irriducibility can be kept separate and only run if irriducible changes.";
+	const auto& class_irriducible{ ElementOfFiniteField<Prime, Exponent>::irriducible_polynomial };
+	ASSERT_EQ( class_irriducible, assumed ) << "This layer of indirection is so that expensive tests which verify irriducibility can be kept separate and only run if irriducible changes.";
 }
 
 TEST( ElementOfFiniteFieldTests, Construction )
@@ -37,8 +38,7 @@ TEST( ElementOfFiniteFieldTests, Construction )
 	};
 
 	const auto a = ElementOfFiniteField<Prime, Exponent>{
-		initializer,
-		irriducible
+		initializer
 	};
 
 	const auto equivalent_value = PolynomialOverPrimeSizeFiniteField<Prime,1>{
@@ -49,8 +49,7 @@ TEST( ElementOfFiniteFieldTests, Construction )
 	};
 
 	const auto expected = ElementOfFiniteField<Prime, Exponent>{
-		equivalent_value,
-		irriducible
+		equivalent_value
 	};
 	
 	EXPECT_EQ( a, expected );
@@ -66,18 +65,17 @@ TEST( ElementOfFiniteFieldTests, GetMultiplicativeInvarient )
 	};
 
 	const auto a = ElementOfFiniteField<Prime, Exponent>{
-		initializer,
-		irriducible
+		initializer
 	};
 
-	const auto one = ElementOfFiniteField<Prime, Exponent>::GetMultiplicativeInvarient( irriducible );
+	const auto one = ElementOfFiniteField<Prime, Exponent>::GetMultiplicativeInvarient();
 
 	EXPECT_EQ( one, a );
 }
 
 TEST( ElementOfFiniteFieldTests, Inversion )
 {
-	const auto one = ElementOfFiniteField<Prime, Exponent>::GetMultiplicativeInvarient( irriducible );
+	const auto one = ElementOfFiniteField<Prime, Exponent>::GetMultiplicativeInvarient();
 
 	const auto arbitrary = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
 		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
@@ -86,8 +84,7 @@ TEST( ElementOfFiniteFieldTests, Inversion )
 		}
 	};
 	const auto unwound = ElementOfFiniteField<Prime, Exponent>{
-		arbitrary,
-		irriducible
+		arbitrary
 	};
 	EXPECT_EQ( unwound/unwound, one );
 
@@ -103,8 +100,7 @@ TEST( ElementOfFiniteFieldTests, Inversion )
 			};
 
 			const auto a = ElementOfFiniteField<Prime, Exponent>{
-				initializer,
-				irriducible
+				initializer
 			};
 
 			if( a == a.GetAdditionInvarient() )
@@ -119,22 +115,17 @@ TEST( ElementOfFiniteFieldTests, ClassIsValueInstantiable )
 {
 	ElementOfFiniteField<Prime, Exponent> a{};
 
-	const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
-	EXPECT_NE( a, zero );
+	const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
+	EXPECT_EQ( a, zero );
 }
 
 TEST( ElementOfFiniteFieldTests, AssignmentOverwritesValueInitialized )
 {
-	const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
-	ElementOfFiniteField<Prime, Exponent> a{};
+	const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
+	auto a{ ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient() };
 
 	a = zero;
 	EXPECT_EQ( a, zero );
-}
-
-TEST( ElementOfFiniteFieldTests, AdditionInvarientHelperConstexpr )
-{
-	constexpr auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient( irriducible ) };
 }
 
 TEST( ElementOfFiniteFieldTests, InversionForAnyIrriducible )
@@ -157,9 +148,10 @@ TEST( ElementOfFiniteFieldTests, InversionForAnyIrriducible )
 
 	unsigned testCount{ 0 };
 
+	const auto original{ ElementOfFiniteField<Prime, Exponent>::irriducible_polynomial };
 	for( const auto poly : irriducibles )
 	{
-		const auto one = ElementOfFiniteField<Prime, Exponent>::GetMultiplicativeInvarient( poly );
+		const auto one = ElementOfFiniteField<Prime, Exponent>::GetMultiplicativeInvarient();
 
 		for( integer loop_index_0 = 0; loop_index_0<Prime; loop_index_0++ )
 		{
@@ -174,9 +166,9 @@ TEST( ElementOfFiniteFieldTests, InversionForAnyIrriducible )
 					}
 				};
 
+				ElementOfFiniteField<Prime, Exponent>::irriducible_polynomial = poly;
 				const auto a = ElementOfFiniteField<Prime, Exponent>{
-					initializer,
-					poly
+					initializer
 				};
 
 				if( a == a.GetAdditionInvarient() )
@@ -187,6 +179,7 @@ TEST( ElementOfFiniteFieldTests, InversionForAnyIrriducible )
 		}
 	}
 
+	ElementOfFiniteField<Prime, Exponent>::irriducible_polynomial = original;
 	EXPECT_EQ( testCount, irriducibles.size()*Prime*Prime );
 }
 
@@ -198,8 +191,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 				ElementOfFiniteFieldP<Prime>{ 7 },
 				ElementOfFiniteFieldP<Prime>{ 6 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 
@@ -209,8 +201,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 				ElementOfFiniteFieldP<Prime>{ 9 },
 				ElementOfFiniteFieldP<Prime>{ 8 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> ab_expected{
@@ -219,8 +210,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 				ElementOfFiniteFieldP<Prime>{ 58 },
 				ElementOfFiniteFieldP<Prime>{ 9 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	EXPECT_EQ( a*b, ab_expected );
@@ -232,8 +222,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 				ElementOfFiniteFieldP<Prime>{ 10 },
 				ElementOfFiniteFieldP<Prime>{ 11 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> ac_expected{
@@ -242,8 +231,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 				ElementOfFiniteFieldP<Prime>{ 0 },
 				ElementOfFiniteFieldP<Prime>{ 36 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	EXPECT_EQ( a*c, ac_expected );
@@ -255,8 +243,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 				ElementOfFiniteFieldP<Prime>{ 12 },
 				ElementOfFiniteFieldP<Prime>{ 13 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> ad_expected{
@@ -265,8 +252,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 				ElementOfFiniteFieldP<Prime>{ 38 },
 				ElementOfFiniteFieldP<Prime>{ 62 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	EXPECT_EQ( a*d, ad_expected );
@@ -278,8 +264,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 				ElementOfFiniteFieldP<Prime>{ 14 },
 				ElementOfFiniteFieldP<Prime>{ 15 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> ae_expected{
@@ -288,8 +273,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 				ElementOfFiniteFieldP<Prime>{ 76 },
 				ElementOfFiniteFieldP<Prime>{ 88 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	EXPECT_EQ( a*e, ae_expected );
@@ -303,8 +287,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 				ElementOfFiniteFieldP<Prime>{ 4 },
 				ElementOfFiniteFieldP<Prime>{ 5 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 
@@ -314,8 +297,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 				ElementOfFiniteFieldP<Prime>{ 58 },
 				ElementOfFiniteFieldP<Prime>{ 9 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> ab_expected{
@@ -324,8 +306,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 				ElementOfFiniteFieldP<Prime>{ 62 },
 				ElementOfFiniteFieldP<Prime>{ 14 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	EXPECT_EQ( a+b, ab_expected );
@@ -337,8 +318,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 				ElementOfFiniteFieldP<Prime>{ 0 },
 				ElementOfFiniteFieldP<Prime>{ 36 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> ac_expected{
@@ -347,8 +327,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 				ElementOfFiniteFieldP<Prime>{ 4 },
 				ElementOfFiniteFieldP<Prime>{ 41 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	EXPECT_EQ( a+c, ac_expected );
@@ -360,8 +339,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 				ElementOfFiniteFieldP<Prime>{ 38 },
 				ElementOfFiniteFieldP<Prime>{ 62 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> ad_expected{
@@ -370,8 +348,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 				ElementOfFiniteFieldP<Prime>{ 42 },
 				ElementOfFiniteFieldP<Prime>{ 67 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	EXPECT_EQ( a+d, ad_expected );
@@ -383,8 +360,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 				ElementOfFiniteFieldP<Prime>{ 76 },
 				ElementOfFiniteFieldP<Prime>{ 88 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> ae_expected{
@@ -393,8 +369,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 				ElementOfFiniteFieldP<Prime>{ 80 },
 				ElementOfFiniteFieldP<Prime>{ 93 }
 			} 
-		},
-		irriducible
+		}
 	};
 
 	EXPECT_EQ( a+e, ae_expected );

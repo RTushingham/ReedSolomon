@@ -1,16 +1,12 @@
 load( "@rules_cc//cc:defs.bzl", "cc_library" )
 
 cc_library(
-    name = "finite-fields",
+    name = "polynomials-base",
     hdrs = glob([
         "*.h"
     ]),
     deps = [
-        "//container-helpers",
         "//cpp-helpers",
-        "//elementary-mathematical-functions",
-        "//elementary-number-theory",
-        "//polynomials-base",
     ],
     visibility = ["//visibility:public"],
 )
