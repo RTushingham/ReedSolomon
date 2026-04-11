@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BlockCodeParameters.h"
 #include "Codeword.h"
 #include "PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
@@ -30,12 +31,19 @@ public:
         : generating_elements{ generators }
     {}
 
-    constexpr static std::size_t n{ n };
-    constexpr static std::size_t k{ k };
-    constexpr static std::size_t hamming_distance = n - k + 1;
+    constexpr static BlockCodeParameters parameters{ 
+        BlockCodeParameters::CreateFromBlockLengthMessageLengthHammingDistance(
+            n,
+            k,
+            n-k+1
+        )
+    };
+    constexpr static std::size_t n{ parameters.n };
+    constexpr static std::size_t k{ parameters.k };
+    constexpr static std::size_t hamming_distance{ parameters.d };
 
     constexpr static std::size_t e()
     {
-        return hamming_distance-1 / 2;
+        return parameters.e;
     }
 };
