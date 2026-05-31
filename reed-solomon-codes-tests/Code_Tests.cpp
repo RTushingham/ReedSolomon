@@ -53,9 +53,8 @@ namespace
 
 TEST( CodeTests, BlockCodeParameters )
 {
-	EXPECT_EQ( code.n, n );
-	EXPECT_EQ( code.k, k );
-	EXPECT_EQ( code.hamming_distance, n-k+1 );
-	EXPECT_EQ( code.e(), (code.hamming_distance -1)/2 );
-	EXPECT_EQ( code.e(), (n-k)/2 );
+	EXPECT_EQ( code.parameters.n, n );
+	EXPECT_EQ( code.parameters.k, k );
+	EXPECT_EQ( code.parameters.d, n-k+1 );
+	EXPECT_EQ( code.parameters.e, (n-k)/2 );
 }

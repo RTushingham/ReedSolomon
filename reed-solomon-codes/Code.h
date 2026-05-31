@@ -9,13 +9,22 @@
 
 #include <array>
 
+constexpr static BlockCodeParameters GetReedSolomonParameters( std::size_t n, std::size_t k )
+{
+    return BlockCodeParameters::CreateFromBlockLengthMessageLengthHammingDistance(
+        n,
+        k,
+        n-k+1
+    );
+}
+
 template<std::size_t n, std::size_t k, integer Prime, integer Exponent>
 class Code
 {
 public:
     const std::array<ElementOfFiniteField<Prime,Exponent>, n> generating_elements;
 
-    Codeword<n, k, Prime, Exponent> GenerateCodeword( const PolynomialOverFiniteField<Prime,Exponent,k>& generator_polynomial ) const
+    Codeword<n, k, Prime, Exponent> GenerateCodeword( const PolynomialOverFiniteField<Prime,Exponent,k-1>& generator_polynomial ) const
     {
         std::array<ElementOfFiniteField<Prime,Exponent>, n> blocks{};
 
@@ -31,19 +40,5 @@ public:
         : generating_elements{ generators }
     {}
 
-    constexpr static BlockCodeParameters parameters{ 
-        BlockCodeParameters::CreateFromBlockLengthMessageLengthHammingDistance(
-            n,
-            k,
-            n-k+1
-        )
-    };
-    constexpr static std::size_t n{ parameters.n };
-    constexpr static std::size_t k{ parameters.k };
-    constexpr static std::size_t hamming_distance{ parameters.d };
-
-    constexpr static std::size_t e()
-    {
-        return parameters.e;
-    }
+    constexpr static BlockCodeParameters parameters{ GetReedSolomonParameters(n,k) };
 };

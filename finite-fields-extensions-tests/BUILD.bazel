@@ -8,7 +8,6 @@ cc_test(
     deps = [
         "//finite-fields-extensions",
         "//finite-fields-tests:test-data",
-        "//reed-solomon-codes",
         "//imports/thirdparty/GoogleTest:GoogleTest",
         "//imports/thirdparty/GoogleTest:GoogleTest-Main",
     ],

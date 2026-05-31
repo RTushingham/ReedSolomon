@@ -19,4 +19,8 @@ public:
     {
         return blocks == other.blocks;
     }
+	constexpr bool operator!=( const Codeword& a ) const
+	{
+		return ! operator==(a);
+	}
 };
