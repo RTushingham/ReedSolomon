@@ -9,7 +9,6 @@ constexpr std::size_t k{ 1 };
 
 namespace
 {
-	
 	const ElementOfFiniteField<Prime, Exponent> argument_one{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
 			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
@@ -57,4 +56,10 @@ TEST( CodeTests, BlockCodeParameters )
 	EXPECT_EQ( code.parameters.k, k );
 	EXPECT_EQ( code.parameters.d, n-k+1 );
 	EXPECT_EQ( code.parameters.e, (n-k)/2 );
+
+	constexpr auto retVal{ GetReedSolomonParameters( n, k ) };
+	EXPECT_EQ( code.parameters.n, retVal.n );
+	EXPECT_EQ( code.parameters.k, retVal.k );
+	EXPECT_EQ( code.parameters.e, retVal.e );
+	EXPECT_EQ( code.parameters.e, retVal.e );
 }

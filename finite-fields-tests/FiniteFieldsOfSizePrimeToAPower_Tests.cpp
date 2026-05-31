@@ -71,12 +71,11 @@ TEST( ElementOfFiniteFieldTests, GetMultiplicativeInvarient )
 	const auto one = ElementOfFiniteField<Prime, Exponent>::GetMultiplicativeInvarient();
 
 	EXPECT_EQ( one, a );
+	EXPECT_TRUE( a.IsOne() );
 }
 
 TEST( ElementOfFiniteFieldTests, Inversion )
 {
-	const auto one = ElementOfFiniteField<Prime, Exponent>::GetMultiplicativeInvarient();
-
 	const auto arbitrary = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
 		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
 			ElementOfFiniteFieldP<Prime>{ 46 },
@@ -86,7 +85,7 @@ TEST( ElementOfFiniteFieldTests, Inversion )
 	const auto unwound = ElementOfFiniteField<Prime, Exponent>{
 		arbitrary
 	};
-	EXPECT_EQ( unwound/unwound, one );
+	EXPECT_TRUE( (unwound/unwound).IsOne() );
 
 	for( integer loop_index_0 = 0; loop_index_0<Prime; loop_index_0++ )
 	{
@@ -103,10 +102,10 @@ TEST( ElementOfFiniteFieldTests, Inversion )
 				initializer
 			};
 
-			if( a == a.GetAdditionInvarient() )
+			if( a.IsZero() )
 				continue;
 
-			EXPECT_EQ( a/a, one );
+			EXPECT_TRUE( (a/a).IsOne() );
 		}
 	}
 }
@@ -117,6 +116,22 @@ TEST( ElementOfFiniteFieldTests, ClassIsValueInstantiable )
 
 	const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 	EXPECT_EQ( a, zero );
+}
+
+TEST( ElementOfFiniteFieldTests, AdditionInvariantIsZero )
+{
+	const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
+
+	EXPECT_TRUE( zero.IsZero() );
+	EXPECT_FALSE( zero.IsOne() );
+}
+
+TEST( ElementOfFiniteFieldTests, MultiplicativeInvariantIsOne )
+{
+	auto one{ ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient() };	
+
+	EXPECT_FALSE( one.IsZero() );
+	EXPECT_TRUE( one.IsOne() );
 }
 
 TEST( ElementOfFiniteFieldTests, AssignmentOverwritesValueInitialized )
@@ -151,8 +166,6 @@ TEST( ElementOfFiniteFieldTests, InversionForAnyIrriducible )
 	const auto original{ ElementOfFiniteField<Prime, Exponent>::irriducible_polynomial };
 	for( const auto poly : irriducibles )
 	{
-		const auto one = ElementOfFiniteField<Prime, Exponent>::GetMultiplicativeInvarient();
-
 		for( integer loop_index_0 = 0; loop_index_0<Prime; loop_index_0++ )
 		{
 			for( integer loop_index_1 = 0; loop_index_1<Prime; loop_index_1++ )
@@ -171,10 +184,10 @@ TEST( ElementOfFiniteFieldTests, InversionForAnyIrriducible )
 					initializer
 				};
 
-				if( a == a.GetAdditionInvarient() )
+				if( a.IsZero() )
 					continue;
 
-				EXPECT_EQ( a/a, one );
+				EXPECT_TRUE( (a/a).IsOne() );
 			}
 		}
 	}

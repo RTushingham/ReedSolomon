@@ -47,8 +47,7 @@ public:
             // check is divisible
             auto longDivisionRes{ polys.generator.LongDivideBy( polys.error_polynomial ) };
 
-            // TODO:
-            //   - make LongDivision more flexible?
+			static_assert( e > 0, "As polynomial lengths are template parameters we restrict our use cases to well defined ones." );
             if( longDivisionRes.remainder == PolynomialOverFiniteField<Prime,Exponent, e-1>::GetAdditionInvarient() )
             {
                 return schema.GenerateCodeword( longDivisionRes.quotient );
@@ -127,7 +126,7 @@ public:
 		std::size_t coeff_count{ 0 };
 		while( coeff_count <= k + error_value - 1 )
 		{
-			result.generator.coefficients.at( coeff_count ) = ( zero - matrix.Row( res.at(coeff_count) ).at( matrix.ColumnCount()-1 ) ) / matrix.Row( res.at(coeff_count) ).at( coeff_count );
+			result.generator.Coeff( coeff_count ) = ( zero - matrix.Row( res.at(coeff_count) ).at( matrix.ColumnCount()-1 ) ) / matrix.Row( res.at(coeff_count) ).at( coeff_count );
 			coeff_count++;
 		}
 
@@ -137,25 +136,24 @@ public:
 		std::size_t e_coeff_index{ 0 };
 		while( coeff_count <= e + k - 1 + e )
 		{
-			result.error_polynomial.coefficients.at( e_coeff_index ) = ( zero - matrix.Row( res.at(coeff_count) ).at( matrix.ColumnCount()-1 ) ) / matrix.Row( res.at(coeff_count) ).at( coeff_count );
+			result.error_polynomial.Coeff( e_coeff_index ) = ( zero - matrix.Row( res.at(coeff_count) ).at( matrix.ColumnCount()-1 ) ) / matrix.Row( res.at(coeff_count) ).at( coeff_count );
 			coeff_count++;
 			e_coeff_index++;
 		}
-		result.error_polynomial.coefficients.at( e_coeff_index ) = ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient();
+		result.error_polynomial.Coeff( e_coeff_index ) = ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient();
 
 		return result;
 	}
 
 
-	bool SSEHasFiniteNumberOfSolutions( ElementaryMatrix<n, n+1, ElementOfFiniteField<Prime,Exponent>>& matrix, std::size_t assumed_error_value, const std::array<std::size_t, n>& rows_for_leading_non_zeros ) const
+	bool SSEHasFiniteNumberOfSolutions( const ElementaryMatrix<n, n+1, ElementOfFiniteField<Prime,Exponent>>& matrix, std::size_t assumed_error_value, const std::array<std::size_t, n>& rows_for_leading_non_zeros ) const
 	{
 		const auto all_zero_row_count{ std::count( rows_for_leading_non_zeros.begin(), rows_for_leading_non_zeros.end(), (std::size_t)-1 ) };
 
 		return all_zero_row_count == 2*(e - assumed_error_value);
 	}
     
-    // allow matrix to be const?
-	bool SSEHasAtLeastOneSolution( ElementaryMatrix<n, n+1, ElementOfFiniteField<Prime,Exponent>>& matrix, const std::array<std::size_t, n>& rows_for_leading_non_zeros ) const
+	bool SSEHasAtLeastOneSolution( const ElementaryMatrix<n, n+1, ElementOfFiniteField<Prime,Exponent>>& matrix, const std::array<std::size_t, n>& rows_for_leading_non_zeros ) const
 	{
 		for( std::size_t row_index{ 0 }; row_index<rows_for_leading_non_zeros.size(); row_index++ )
 		{

@@ -98,8 +98,7 @@ TEST( ElementaryMatrixTests, RowSubtraction )
     EXPECT_EQ( matrix.Row( 0 ).at( 0 ), a );
     EXPECT_EQ( matrix.Row( 0 ).at( 1 ), a );
 
-    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
-    EXPECT_EQ( matrix.Row( 1 ).at( 0 ), zero );
+    EXPECT_TRUE( matrix.Row( 1 ).at( 0 ).IsZero() );
     EXPECT_EQ( matrix.Row( 1 ).at( 1 ), b-a );
 }
 
@@ -121,9 +120,8 @@ TEST( ElementaryMatrixTests, RowSubtractionUsingScalar )
     EXPECT_EQ( matrix.Row( 0 ).at( 0 ), one );
     EXPECT_EQ( matrix.Row( 0 ).at( 1 ), a );
 
-    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
-    EXPECT_EQ( matrix.Row( 1 ).at( 0 ), zero );
-    EXPECT_EQ( matrix.Row( 1 ).at( 0 ), zero );
+    EXPECT_TRUE( matrix.Row( 1 ).at( 0 ).IsZero() );
+    EXPECT_TRUE( matrix.Row( 1 ).at( 0 ).IsZero() );
     EXPECT_EQ( matrix.Row( 1 ).at( 1 ), b-(a*a) );
 }
 

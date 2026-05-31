@@ -113,3 +113,19 @@ TEST( PolynomialsOverPrimeFieldTests, AdditionInvarientHelperConstexpr )
 {
 	constexpr auto zero{ PolynomialOverPrimeSizeFiniteField<Prime,0>::GetAdditionInvarient() };
 }
+
+TEST( PolynomialsOverPrimeFieldTests, AdditionInvariantIsZero )
+{
+	const auto zero{ PolynomialOverPrimeSizeFiniteField<Prime,2>::GetAdditionInvarient() };
+
+	EXPECT_TRUE( zero.IsZero() );
+	EXPECT_FALSE( zero.IsOne() );
+}
+
+TEST( PolynomialsOverPrimeFieldTests, MultiplicativeInvariantIsOne )
+{
+	auto one{ PolynomialOverPrimeSizeFiniteField<Prime,2>::GetMultiplicativeInvarient() };	
+
+	EXPECT_FALSE( one.IsZero() );
+	EXPECT_TRUE( one.IsOne() );
+}

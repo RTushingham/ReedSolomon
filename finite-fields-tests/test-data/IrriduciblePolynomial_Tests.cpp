@@ -56,11 +56,9 @@ TEST( TestDataVerifictaion, IsIrriducible )
 
 		for( const auto i : irriducibles )
 		{
-			const auto zero = PolynomialOverPrimeSizeFiniteField<Prime,0>::GetAdditionInvarient();
-			EXPECT_NE(
-				i.LongDivideBy( normalised_poly ).remainder,
-				zero
-			) << "polynomial of the form X^2 - " << Prime - i.coefficients.at(0).value << " is not irriducible. This contradicts Lang [1984, p. 331, Theorem 9.1]." ;
+			EXPECT_FALSE(
+				i.LongDivideBy( normalised_poly ).remainder.IsZero()
+			) << "polynomial of the form X^2 - " << Prime - i.Coeff(0).value << " is not irriducible. This contradicts Lang [1984, p. 331, Theorem 9.1]." ;
 		}
 	}
 

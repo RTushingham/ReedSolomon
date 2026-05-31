@@ -65,7 +65,7 @@ public:
 
 	constexpr ElementOfFiniteField<Prime, Exponent> FindMultiplicativeInverse() const
 	{
-	    if( value == value.GetAdditionInvarient() )
+	    if( value.IsZero() )
 	    {
 	        throw;
 	    }
@@ -90,7 +90,7 @@ public:
 	    
 		const PolynomialOverPrimeSizeFiniteField<Prime, 0> final_correcting_factor( 
 			std::array<ElementOfFiniteFieldP<Prime>, PolynomialOverPrimeSizeFiniteField<Prime, 0>::GetCapacity()>{
-				smaller_remainder.coefficients.at( 0 ).FindMultiplicativeInverse()
+				smaller_remainder.Coeff( 0 ).FindMultiplicativeInverse()
 			}
 		);
  
@@ -130,9 +130,17 @@ public:
 	{
 		return ElementOfFiniteField<Prime, Exponent>( PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>::GetAdditionInvarient() );
 	}
+	constexpr bool IsZero() const
+	{
+		return value.IsZero();
+	}
 	constexpr static ElementOfFiniteField<Prime, Exponent> GetMultiplicativeInvarient()
 	{
 		return ElementOfFiniteField<Prime, Exponent>{ PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>::GetMultiplicativeInvarient() };
+	}
+	constexpr bool IsOne() const
+	{
+		return value.IsOne();
 	}
 };
 

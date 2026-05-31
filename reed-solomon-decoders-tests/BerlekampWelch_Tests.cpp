@@ -186,8 +186,8 @@ TEST( BerlekampWelchInternalsTests, ExampleWhereHadToShrinkPolynomialSize )
 	EXPECT_EQ( res.at( 3 ), (std::size_t)-1 );
 	
 	const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
-	EXPECT_EQ( matrix.Row( 2 ).at( 4 ), zero );
-	EXPECT_EQ( matrix.Row( 3 ).at( 4 ), zero );
+	EXPECT_TRUE( matrix.Row( 2 ).at( 4 ).IsZero() );
+	EXPECT_TRUE( matrix.Row( 3 ).at( 4 ).IsZero() );
 	
 	EXPECT_EQ( true, decoder.SSEHasAtLeastOneSolution( matrix, res ) );
 	EXPECT_EQ( true, decoder.SSEHasFiniteNumberOfSolutions( matrix, 0, res ) );
@@ -205,16 +205,15 @@ TEST( BerlekampWelchInternalsTests, ExampleWhereHadToShrinkPolynomialSize )
 	const auto Q_zero{ ( zero - matrix.Row( res.at(0) ).at( 4 ) ) / matrix.Row( res.at(0) ).at( 0 ) };
 	const auto Q_one{ ( zero - matrix.Row( res.at(MaxDegree) ).at( 4 ) ) / matrix.Row( res.at(MaxDegree) ).at( MaxDegree ) };
 
-	EXPECT_EQ( polynomial.coefficients.at( 0 ), Q_zero );
-	EXPECT_EQ( polynomial.coefficients.at( 1 ), Q_one );
+	EXPECT_EQ( polynomial.Coeff( 0 ), Q_zero );
+	EXPECT_EQ( polynomial.Coeff( 1 ), Q_one );
 
 	auto polys{ decoder.GetPolynomialsFromMatrix( matrix, 0, res ) };
  
-	EXPECT_EQ( polys.generator.coefficients.at( 0 ), Q_zero );
-	EXPECT_EQ( polys.generator.coefficients.at( 1 ), Q_one );
+	EXPECT_EQ( polys.generator.Coeff( 0 ), Q_zero );
+	EXPECT_EQ( polys.generator.Coeff( 1 ), Q_one );
 
 	auto longDivisionRes{ polys.generator.LongDivideBy( polys.error_polynomial ) };
 
-	const auto poly_zero{ PolynomialOverFiniteField<Prime,Exponent,0>::GetAdditionInvarient() };
-	EXPECT_EQ( longDivisionRes.remainder, poly_zero );
+	EXPECT_TRUE( longDivisionRes.remainder.IsZero() );
 }

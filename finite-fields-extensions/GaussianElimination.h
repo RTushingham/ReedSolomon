@@ -25,7 +25,7 @@ std::array<std::size_t, row_count> GaussianElimination( ElementaryMatrix<row_cou
             
             auto& eq = matrix.Row( equation_index );
             
-            if( eq.at( round_index ) != FieldElements::GetAdditionInvarient() )
+            if( ! eq.at( round_index ).IsZero() )
             {
                 non_zero_row_index.at( round_index ) = equation_index;
                 new_nonzero_leading_row_found = true;

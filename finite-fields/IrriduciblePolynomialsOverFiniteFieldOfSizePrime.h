@@ -74,8 +74,8 @@ constexpr PolynomialOverPrimeSizeFiniteField<Prime,Degree> GetIrriduciblePolynom
 			{
 				PolynomialOverPrimeSizeFiniteField<Prime,Degree> irriducible{ PolynomialOverPrimeSizeFiniteField<Prime,Degree>::GetAdditionInvarient() };
 
-				irriducible.coefficients.at( 0 ) = ElementOfFiniteFieldP<Prime>::GetAdditionInvarient() - b;
-				irriducible.coefficients.at( Degree ) = ElementOfFiniteFieldP<Prime>{ (integer)1 };
+				irriducible.Coeff( 0 ) = ElementOfFiniteFieldP<Prime>::GetAdditionInvarient() - b;
+				irriducible.Coeff( Degree ) = ElementOfFiniteFieldP<Prime>{ (integer)1 };
 
 				return irriducible;
 			}
@@ -94,8 +94,8 @@ constexpr PolynomialOverPrimeSizeFiniteField<Prime,Degree> GetIrriduciblePolynom
 			{
 				PolynomialOverPrimeSizeFiniteField<Prime,Degree> irriducible{ PolynomialOverPrimeSizeFiniteField<Prime,Degree>::GetAdditionInvarient() };
 
-				irriducible.coefficients.at( 0 ) = ElementOfFiniteFieldP<Prime>::GetAdditionInvarient() - b;
-				irriducible.coefficients.at( Degree ) = ElementOfFiniteFieldP<Prime>{ (integer)1 };
+				irriducible.Coeff( 0 ) = ElementOfFiniteFieldP<Prime>::GetAdditionInvarient() - b;
+				irriducible.Coeff( Degree ) = ElementOfFiniteFieldP<Prime>{ (integer)1 };
 
 				return irriducible;
 			}

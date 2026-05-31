@@ -85,15 +85,21 @@ public:
 		return (*this)*a.FindMultiplicativeInverse();
 	}
 	
-	// To illustrate that these are Fields
 	constexpr static ElementOfFiniteFieldP<Prime> GetAdditionInvarient()
 	{
 		return ElementOfFiniteFieldP<Prime>( 0 );
 	}
-	// To illustrate that these are Fields
+	constexpr bool IsZero() const
+	{
+		return operator==( GetAdditionInvarient() );
+	}
 	constexpr static ElementOfFiniteFieldP<Prime> GetMultiplicativeInvarient()
 	{
 		return ElementOfFiniteFieldP<Prime>( 1 );
+	}
+	constexpr bool IsOne() const
+	{
+		return operator==( GetMultiplicativeInvarient() );
 	}
 };
 

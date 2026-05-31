@@ -96,6 +96,5 @@ TEST( GaussianEliminationTests, ReorderedNonTrivialExample )
     
     EXPECT_THAT( res, ::testing::ContainerEq( expected ) );
 
-    const auto zero{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
-    EXPECT_EQ( matrix.Row( 0 ).at( matrix.ColumnCount()-1 ), zero );
+    EXPECT_TRUE( matrix.Row( 0 ).at( matrix.ColumnCount()-1 ).IsZero() );
 }

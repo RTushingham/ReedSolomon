@@ -24,6 +24,10 @@ public:
     {
         return m_Matrix.at( index );
     }
+    const std::array<FieldElements, columns>& Row( std::size_t index ) const
+    {
+        return m_Matrix.at( index );
+    }
     static constexpr std::size_t RowCount()
     {
         return rows;

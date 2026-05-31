@@ -115,3 +115,19 @@ TEST( PrimeFieldTests, AdditionInvarientHelperConstexpr )
 {
 	constexpr auto zero{ ElementOfFiniteFieldP<Prime>::GetAdditionInvarient() };
 }
+
+TEST( PrimeFieldTests, AdditionInvariantIsZero )
+{
+	const auto zero{ ElementOfFiniteFieldP<Prime>::GetAdditionInvarient() };
+
+	EXPECT_TRUE( zero.IsZero() );
+	EXPECT_FALSE( zero.IsOne() );
+}
+
+TEST( PrimeFieldTests, MultiplicativeInvariantIsOne )
+{
+	auto one{ ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient() };	
+
+	EXPECT_FALSE( one.IsZero() );
+	EXPECT_TRUE( one.IsOne() );
+}
