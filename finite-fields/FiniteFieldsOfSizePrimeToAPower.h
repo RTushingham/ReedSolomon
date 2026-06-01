@@ -12,13 +12,8 @@
 template <integer Prime, integer Exponent>
 class ElementOfFiniteField
 {
-	// static_assert( IsPrime(Prime) );
 	static_assert( Exponent > 0, "" );
 	
-	// // Polynomials over Galois Fields of size p
-	// template<integer Degree>
-	// using PolynomialOverPrimeSizeFiniteField<Prime,Degree> = PolynomialOverPrimeSizeFiniteField<Prime,Degree>;
-
 public:
 	inline static PolynomialOverPrimeSizeFiniteField<Prime,Exponent> irriducible_polynomial{ GetIrriduciblePolynomial<Prime,Exponent>() };
 
@@ -26,13 +21,9 @@ public:
 	PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1> value;
 	
 public:
-	template<integer OtherMaxDegree>
-	constexpr ElementOfFiniteField<Prime,Exponent>( const PolynomialOverPrimeSizeFiniteField<Prime,OtherMaxDegree>& value )
-		: value { value % irriducible_polynomial }
-	{
-		// if( !IsIrriducible( irriducible_polynomial ) )
-		// 	throw;
-	}
+	constexpr ElementOfFiniteField<Prime,Exponent>( const PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>& value )
+		: value { value }
+	{}
 
 	// Only used for value-initialization
 	//   - leaves class in an error state.

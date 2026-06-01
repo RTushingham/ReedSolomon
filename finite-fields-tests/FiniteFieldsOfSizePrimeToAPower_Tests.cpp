@@ -27,34 +27,6 @@ TEST( TestDataVerifictaion, ValueIsAsAssumed )
 	ASSERT_EQ( class_irriducible, assumed ) << "This layer of indirection is so that expensive tests which verify irriducibility can be kept separate and only run if irriducible changes.";
 }
 
-TEST( ElementOfFiniteFieldTests, Construction )
-{
-	const auto initializer = PolynomialOverPrimeSizeFiniteField<Prime,2>{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
-			ElementOfFiniteFieldP<Prime>{ 10 },
-			ElementOfFiniteFieldP<Prime>{ 11 },
-			ElementOfFiniteFieldP<Prime>{ 12 }
-		} 
-	};
-
-	const auto a = ElementOfFiniteField<Prime, Exponent>{
-		initializer
-	};
-
-	const auto equivalent_value = PolynomialOverPrimeSizeFiniteField<Prime,1>{
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-			ElementOfFiniteFieldP<Prime>{ 10 + 12 + 12 },
-			ElementOfFiniteFieldP<Prime>{ 11 }
-		} 
-	};
-
-	const auto expected = ElementOfFiniteField<Prime, Exponent>{
-		equivalent_value
-	};
-	
-	EXPECT_EQ( a, expected );
-}
-
 TEST( ElementOfFiniteFieldTests, GetMultiplicativeInvarient )
 {
 	const auto initializer = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 

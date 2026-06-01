@@ -82,12 +82,11 @@ public:
 
 	constexpr FieldElements operator()(const FieldElements& a) const
 	{
-		auto running_multiple = a;
-		FieldElements running_result = Coeff( 0 );
-		for( size_t coefficient_index =1; coefficient_index < GetMaxDegree()+1; coefficient_index++ )
+		auto running_result = Coeff( GetMaxDegree() );
+
+		for( size_t coeff_index = GetMaxDegree()-1; coeff_index != (size_t)-1; coeff_index-- )
 		{
-			running_result = running_result + ( Coeff( coefficient_index ) * running_multiple );
-			running_multiple = running_multiple * a;
+			running_result = ( running_result * a ) + Coeff( coeff_index );
 		}
 
 		return running_result;

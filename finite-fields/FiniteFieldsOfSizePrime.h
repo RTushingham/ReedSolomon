@@ -10,15 +10,13 @@
 
 template <integer Prime>
 class ElementOfFiniteFieldP
-{
-	// static_assert( IsPrime(Prime) );
-	
+{	
 public:
 	integer value;
 	
 public:
 	constexpr ElementOfFiniteFieldP(integer InputValue)
-		: value { ( (InputValue % Prime) + Prime) % Prime}
+		: value { ( InputValue + Prime) % Prime}
 	{};
 	
 	constexpr ElementOfFiniteFieldP()
@@ -78,6 +76,7 @@ public:
 			newer_nMultiplyer = new_nMultiplyer;
 		}
 		
+		// This can be negative, so I keep the extra modulo here
 		return ElementOfFiniteFieldP<Prime>{ newer_nMultiplyer % Prime };
 	}
 	
