@@ -4,6 +4,7 @@
 #include "PolynomialsOverFiniteFieldOfSizePrime.h"
 
 #include "cpp-helpers/Typedef.h"
+#include "elementary-number-theory/IsPrime.h"
 
 // As part of building the ability to create any read solomon codes we need to create elements of finite fields (aka Galois Fields)
 //   All finite fields are of the size p**k where p and k are positive integers, and p is a prime.
@@ -12,7 +13,8 @@
 template <integer Prime, integer Exponent>
 class ElementOfFiniteField
 {
-	static_assert( Exponent > 0, "" );
+	static_assert( IsPrime( Prime ), "A prime size Finite Field must have a size which is a prime." );
+	static_assert( Exponent > 0, "Size of Finite Field will be Prime**Exponent. As this must be a non-1 integer Exponent must be > 0." );
 	
 public:
 	inline static PolynomialOverPrimeSizeFiniteField<Prime,Exponent> irriducible_polynomial{ GetIrriduciblePolynomial<Prime,Exponent>() };
@@ -31,27 +33,27 @@ public:
 		: value{}
 	{}
 	
-	constexpr ElementOfFiniteField<Prime,Exponent>& operator=(const ElementOfFiniteField<Prime,Exponent>& a){
+	constexpr ElementOfFiniteField<Prime,Exponent>& operator=( const ElementOfFiniteField<Prime,Exponent>& a ){
 		value = a.value;
 		return *this;
 	}
 	
-	constexpr bool operator==(const ElementOfFiniteField<Prime, Exponent>& a) const{
+	constexpr bool operator==( const ElementOfFiniteField<Prime, Exponent>& a ) const{
 		return value == a.value;
 	}
-	constexpr bool operator!=(const ElementOfFiniteField<Prime, Exponent>& a) const
+	constexpr bool operator!=( const ElementOfFiniteField<Prime, Exponent>& a ) const
 	{
-		return ! operator==(a);
+		return ! operator==( a );
 	}
 	
-	constexpr ElementOfFiniteField<Prime, Exponent> operator+(const ElementOfFiniteField<Prime, Exponent>& a) const{
-		return {value + a.value};
+	constexpr ElementOfFiniteField<Prime, Exponent> operator+( const ElementOfFiniteField<Prime, Exponent>& a ) const{
+		return { value + a.value };
 	}
-	constexpr ElementOfFiniteField<Prime, Exponent> operator-(const ElementOfFiniteField<Prime, Exponent>& a) const{
-		return {value - a.value};
+	constexpr ElementOfFiniteField<Prime, Exponent> operator-( const ElementOfFiniteField<Prime, Exponent>& a ) const{
+		return { value - a.value };
 	}
-	constexpr ElementOfFiniteField<Prime, Exponent> operator*(const ElementOfFiniteField<Prime, Exponent>& a) const{
-		return {(value * a.value) % irriducible_polynomial};
+	constexpr ElementOfFiniteField<Prime, Exponent> operator*( const ElementOfFiniteField<Prime, Exponent>& a ) const{
+		return { ( value * a.value ) % irriducible_polynomial};
 	}
 
 	constexpr ElementOfFiniteField<Prime, Exponent> FindMultiplicativeInverse() const
@@ -107,14 +109,14 @@ public:
 		// However, at this stage I just want to create a version which works then refine later.
 	    for( std::size_t multiplying_factors_index = 0; multiplying_factors_index<multiplying_factors.size(); multiplying_factors_index++ )
 	    {
-	        nMultiplyer.push_back( nMultiplyer.at(multiplying_factors_index) - ( nMultiplyer.at(multiplying_factors_index+1) * multiplying_factors.at(multiplying_factors_index) ) % irriducible_polynomial );
+	        nMultiplyer.push_back( nMultiplyer.at( multiplying_factors_index ) - ( nMultiplyer.at( multiplying_factors_index + 1 ) * multiplying_factors.at( multiplying_factors_index ) ) % irriducible_polynomial );
 	    }
 
 	    return ElementOfFiniteField<Prime, Exponent>{ nMultiplyer.back() * final_correcting_factor };
 	}
 	
-	constexpr ElementOfFiniteField<Prime, Exponent> operator/(const ElementOfFiniteField<Prime, Exponent>& a) const{
-		return (*this)*a.FindMultiplicativeInverse();
+	constexpr ElementOfFiniteField<Prime, Exponent> operator/( const ElementOfFiniteField<Prime, Exponent>& a ) const{
+		return ( *this )*a.FindMultiplicativeInverse();
 	}
 	
 	constexpr static ElementOfFiniteField<Prime, Exponent> GetAdditionInvarient()

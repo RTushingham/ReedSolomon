@@ -6,13 +6,18 @@ const std::vector<unsigned> manually_calculated_up_to_121 {2,3,5,7,11,13,17,19,2
 
 TEST( IsPrimeTests, AllPrimesUntil121 )
 {
-	EXPECT_FALSE( IsPrime( 0 ) );
-	EXPECT_FALSE( IsPrime( 1 ) );
+	EXPECT_FALSE( IsPrime( 0 ) ) << "0 is a special case, so is being treates as not prime";
+	EXPECT_FALSE( IsPrime( 1 ) ) << "1 is a special case, so is being treates as not prime";
 
-	for( const auto prime : manually_calculated_up_to_121 )
+	for( unsigned candidate{ 2 }; candidate < 121; candidate++ )
 	{
-		EXPECT_TRUE( IsPrime( prime ) );
+		if( std::find( manually_calculated_up_to_121.begin(), manually_calculated_up_to_121.end(), candidate ) == manually_calculated_up_to_121.end() )
+		{
+			EXPECT_FALSE( IsPrime( candidate ) );
+		}
+		else
+		{
+			EXPECT_TRUE( IsPrime( candidate ) );
+		}
 	}
-	
-	EXPECT_FALSE( IsPrime( 4 ) );
 }

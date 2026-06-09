@@ -163,7 +163,7 @@ public:
 	}
 	
 	template<integer OtherMaxDegree>
-	constexpr PolynomialOverField<MaxDegree+OtherMaxDegree, FieldElements> operator*(const PolynomialOverField<OtherMaxDegree, FieldElements>& a) const
+	constexpr PolynomialOverField<MaxDegree+OtherMaxDegree, FieldElements> operator*( const PolynomialOverField<OtherMaxDegree, FieldElements>& a ) const
 	{
 		PolynomialOverField<MaxDegree+OtherMaxDegree, FieldElements> return_value{ PolynomialOverField<MaxDegree+OtherMaxDegree, FieldElements>::GetAdditionInvarient() };
 
@@ -230,7 +230,7 @@ public:
 	// In order to create a Finite Field of size p**k from polynomials over a Finite Filed of size p I need to have a modulo operator.
 	//   This is because Finite Fileds of size p**k are polynomials over a Finite Field of size p modulo an irriducible polynomial of degree k+1 over a Finite Field of size p.
 	template<integer OtherMaxDegree>
-	constexpr PolynomialOverField<OtherMaxDegree-1, FieldElements> operator%(const PolynomialOverField<OtherMaxDegree, FieldElements>& a) const
+	constexpr PolynomialOverField<OtherMaxDegree-1, FieldElements> operator%( const PolynomialOverField<OtherMaxDegree, FieldElements>& a ) const
 	{
 		return LongDivideBy( a ).remainder;
 	}

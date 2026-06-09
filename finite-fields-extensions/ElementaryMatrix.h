@@ -50,14 +50,4 @@ public:
             target_row.at( index ) = target_row.at( index ) - ( source_row.at( index ) * multiplyer );
         }
     }
-
-    void DivideRow( std::size_t target_index, FieldElements multiplyer )
-    {
-        auto& equation{ Row( target_index ) };
-        
-        for( auto& coeff : equation )
-        {
-            coeff = coeff / multiplyer;
-        }
-    }
 };

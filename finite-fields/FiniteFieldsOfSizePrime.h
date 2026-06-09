@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cpp-helpers/Typedef.h"
+#include "elementary-number-theory/IsPrime.h"
 
 // As part of building the ability to create any read solomon codes we need to create elements of finite fields (aka Galois Fields)
 //   All finite fields are of the size p**k where p and k are positive integers, and p is a prime.
@@ -10,35 +11,37 @@
 
 template <integer Prime>
 class ElementOfFiniteFieldP
-{	
+{
+	static_assert( IsPrime( Prime ), "A prime size Finite Field must have a size which is a prime." );
+	
 public:
 	integer value;
 	
 public:
-	constexpr ElementOfFiniteFieldP(integer InputValue)
-		: value { ( InputValue + Prime) % Prime}
+	constexpr ElementOfFiniteFieldP( integer InputValue )
+		: value { ( InputValue + Prime ) % Prime}
 	{};
 	
 	constexpr ElementOfFiniteFieldP()
 		: ElementOfFiniteFieldP( (integer)0 )
 	{};
 	
-	constexpr bool operator==(const ElementOfFiniteFieldP<Prime>& a) const{
+	constexpr bool operator==( const ElementOfFiniteFieldP<Prime>& a ) const{
 		return value == a.value;
 	}
-	constexpr bool operator!=(const ElementOfFiniteFieldP<Prime>& a) const
+	constexpr bool operator!=( const ElementOfFiniteFieldP<Prime>& a ) const
 	{
-		return ! operator==(a);
+		return ! operator==( a );
 	}
 	
-	constexpr ElementOfFiniteFieldP<Prime> operator+(const ElementOfFiniteFieldP<Prime>& a) const{
+	constexpr ElementOfFiniteFieldP<Prime> operator+( const ElementOfFiniteFieldP<Prime>& a ) const{
 		return ( value + a.value) % Prime;
 	}
-	constexpr ElementOfFiniteFieldP<Prime> operator-(const ElementOfFiniteFieldP<Prime>& a) const{
-		return (Prime - a.value + value) % Prime;
+	constexpr ElementOfFiniteFieldP<Prime> operator-( const ElementOfFiniteFieldP<Prime>& a ) const{
+		return ( Prime - a.value + value ) % Prime;
 	}
-	constexpr ElementOfFiniteFieldP<Prime> operator*(const ElementOfFiniteFieldP<Prime>& a) const{
-		return ((value * a.value) % Prime);
+	constexpr ElementOfFiniteFieldP<Prime> operator*( const ElementOfFiniteFieldP<Prime>& a ) const{
+		return ( ( value * a.value)  % Prime );
 	}
 	
 	constexpr ElementOfFiniteFieldP<Prime> FindMultiplicativeInverse() const
@@ -53,7 +56,7 @@ public:
 		// The current implementation of this function has been optimized.
 		//   For a more readable version see the corresponding test code.
 		
-		if( value==0 )
+		if( value == 0 )
 		{
 			throw;
 		}
@@ -64,7 +67,7 @@ public:
 		integer earlier_nMultiplyer = 0;
 		integer newer_nMultiplyer = 1;
         
-		while(smaller_remainder != 1)
+		while( smaller_remainder != 1 )
 		{
 			const auto new_remainder = larger_remainder % smaller_remainder;
 			const auto new_nMultiplyer = earlier_nMultiplyer - newer_nMultiplyer * ( larger_remainder / smaller_remainder );
@@ -80,8 +83,8 @@ public:
 		return ElementOfFiniteFieldP<Prime>{ newer_nMultiplyer % Prime };
 	}
 	
-	constexpr ElementOfFiniteFieldP<Prime> operator/(const ElementOfFiniteFieldP<Prime>& a) const{
-		return (*this)*a.FindMultiplicativeInverse();
+	constexpr ElementOfFiniteFieldP<Prime> operator/( const ElementOfFiniteFieldP<Prime>& a ) const{
+		return ( *this )*a.FindMultiplicativeInverse();
 	}
 	
 	constexpr static ElementOfFiniteFieldP<Prime> GetAdditionInvarient()
