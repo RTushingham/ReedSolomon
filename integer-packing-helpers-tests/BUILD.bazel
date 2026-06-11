@@ -1,0 +1,14 @@
+load( "@rules_cc//cc:defs.bzl", "cc_test", "cc_library" )
+
+cc_test(
+    name = "integer-packing-helpers-tests",
+    srcs = glob([
+        "*.cpp"
+    ]),
+    deps = [
+        "//integer-packing-helpers",
+        "//imports/thirdparty/GoogleTest:GoogleTest",
+        "//imports/thirdparty/GoogleTest:GoogleTest-Main",
+    ],
+    visibility = ["//visibility:public"],
+)

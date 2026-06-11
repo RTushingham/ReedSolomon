@@ -1,12 +1,34 @@
-load( "@rules_cc//cc:defs.bzl", "cc_binary" )
+load( "@rules_cc//cc:defs.bzl", "cc_library", "cc_binary", "cc_test" )
 
-cc_binary(
-    name = "functional-tests-file-based",
-    srcs = glob([
-        "*.cpp",
+cc_library(
+    name = "main-loop",
+    hdrs = glob([
+        "loop.h"
     ]),
     deps = [
         "//reed-solomon-codes",
         "//reed-solomon-decoders",
+    ],
+)
+
+cc_binary(
+    name = "functional-tests-file-based",
+    srcs = glob([
+        "main.cpp",
+    ]),
+    deps = [
+        ":main-loop",
+    ],
+)
+
+cc_test(
+    name = "file-based-benchmark-test",
+    srcs = glob([
+        "test.cpp",
+    ]),
+    deps = [
+        ":main-loop",
+        "//imports/thirdparty/GoogleTest:GoogleTest",
+        "//imports/thirdparty/GoogleTest:GoogleTest-Main",
     ],
 )

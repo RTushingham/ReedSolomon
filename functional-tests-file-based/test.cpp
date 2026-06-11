@@ -1,8 +1,8 @@
 #include "loop.h"
 
-#include <iostream>
+#include "gtest/gtest.h"
 
-void main()
+TEST( FileBasedBenchmarkTest, TestCase )
 {
 	const auto outputs{ main_loop() };
 

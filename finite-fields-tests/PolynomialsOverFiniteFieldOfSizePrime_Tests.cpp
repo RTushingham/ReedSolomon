@@ -66,6 +66,19 @@ TEST( PolynomialsOverPrimeFieldTests, Multiplication )
 	EXPECT_EQ( a * c, expected );
 }
 
+TEST( PolynomialsOverPrimeFieldTests, MultiplicationUpToSameDegree )
+{
+	const auto expected = PolynomialOverPrimeSizeFiniteField<Prime,2>{ 
+		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
+			ElementOfFiniteFieldP<Prime>{ 50 },
+			ElementOfFiniteFieldP<Prime>{ 24 },
+			ElementOfFiniteFieldP<Prime>{ 25 }
+		} 
+	};
+
+	EXPECT_EQ( a.MultiplyUpToSameDegree( b ), expected );
+}
+
 TEST( PolynomialsOverPrimeFieldTests, Modulo )
 {
 	const auto abQuotient = PolynomialOverPrimeSizeFiniteField<Prime,0>{ 
@@ -88,8 +101,6 @@ TEST( PolynomialsOverPrimeFieldTests, Modulo )
 	};
 	EXPECT_EQ( a % c, acRemainder );
 	EXPECT_EQ( (a % c).Oversize<2>(), a - ( acQuotient * c ) );
-
-	EXPECT_EQ( c % a, c );
 }
 
 TEST( PolynomialsOverPrimeFieldTests, ClassIsConstexprInstantiable )

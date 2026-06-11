@@ -101,7 +101,6 @@ public:
 		return ! operator==(a);
 	}
 	
-	// Polynomials over prime sized Finite Field are a Ring.
 	constexpr static PolynomialOverField<MaxDegree, FieldElements> GetAdditionInvarient()
 	{
 		return PolynomialOverField<MaxDegree, FieldElements>{ std::array<FieldElements, GetCapacity()>{ FieldElements::GetAdditionInvarient() } };
@@ -161,12 +160,27 @@ public:
 		
 		return return_value;
 	}
+
+	constexpr PolynomialOverField<MaxDegree, FieldElements> MultiplyUpToSameDegree( const PolynomialOverField<MaxDegree, FieldElements>& a ) const
+	{
+		auto return_value{ PolynomialOverField<MaxDegree, FieldElements>::GetAdditionInvarient() };
+		
+		for( size_t a_index = 0; a_index < a.GetMaxDegree()+1; a_index++ )
+		{
+			for( size_t this_index = 0; this_index < GetMaxDegree()+1 - a_index; this_index++ )
+			{
+				return_value.Coeff( a_index + this_index ) = return_value.Coeff( a_index + this_index ) + ( a.Coeff( a_index ) * Coeff( this_index ) );
+			}
+		}
+
+		return return_value;
+	}
 	
 	template<integer OtherMaxDegree>
 	constexpr PolynomialOverField<MaxDegree+OtherMaxDegree, FieldElements> operator*( const PolynomialOverField<OtherMaxDegree, FieldElements>& a ) const
 	{
-		PolynomialOverField<MaxDegree+OtherMaxDegree, FieldElements> return_value{ PolynomialOverField<MaxDegree+OtherMaxDegree, FieldElements>::GetAdditionInvarient() };
-
+		auto return_value{ PolynomialOverField<MaxDegree+OtherMaxDegree, FieldElements>::GetAdditionInvarient() };
+		
 		for( size_t a_index = 0; a_index < a.GetMaxDegree()+1; a_index++ )
 		{
 			for( size_t this_index = 0; this_index < GetMaxDegree()+1; this_index++ )
@@ -175,7 +189,7 @@ public:
 			}
 		}
 		
-		return return_value;		
+		return return_value;
 	}
 
 	template<integer DivisorMaxDegree>
@@ -186,12 +200,11 @@ public:
 		PolynomialOverField<DivisorMaxDegree-1, FieldElements> remainder{ PolynomialOverField<DivisorMaxDegree-1, FieldElements>::GetAdditionInvarient() };
 	};
 	
-	// Additionally, in order to find MultiplicativeInverses in Finite Fileds of size p**k we need to use a variation of the Extended Euclidean Algorithm.
-	//   My intended implementation of that algorithm uses polynomial long division.
 	template<integer DivisorMaxDegree>
 	constexpr PolynomialLongDivisionRemainder<DivisorMaxDegree> LongDivideBy( const PolynomialOverField<DivisorMaxDegree, FieldElements>& divisor ) const
 	{
 		static_assert( DivisorMaxDegree > 0, "" );
+		static_assert( MaxDegree >= DivisorMaxDegree, "To focus code maintainance time I am restricting ovvered use cases. MaxDegree isn't actualy degree, so this unsupported case can be non-trivial." );
 		
 		// Long division by 0 is undefined.
 		if( divisor.IsZero() )
@@ -200,25 +213,19 @@ public:
 		}
 		const size_t divisor_degree{ (size_t)divisor.GetDegree() };
 
-		// Due the a being an argument a.GetDegree cannot be a constant-expression.
-		//   So, it can't be used in the return size to return less data.
-		//   It can't be used to assign less data due to the multiplication within this function.
-		// While finding a multiplicative inverse of an element of a Finite Fileds of size p**k this function will be used on polymonials of unknown degree.
-		//   If we could assume that the degree of a was its MaxDegree then we could assign less data due to the multiplication in this function.
-		//   However, the layers above this can't GetDegree to assign a smaller array and use that to pass a polynomial with smaller maxDegree to this.
-		PolynomialOverField<MaxDegree+DivisorMaxDegree-1, FieldElements> running_remainder{ Oversize<MaxDegree+DivisorMaxDegree-1>() };
+		PolynomialOverField<MaxDegree, FieldElements> running_remainder{ coefficients };
 		auto running_quotient{ PolynomialOverField<MaxDegree-1, FieldElements>::GetAdditionInvarient() };
 
 		const auto inverse_of_divisor_leading_coefficient = divisor.Coeff( divisor_degree ).FindMultiplicativeInverse();
 
 		while( ( ! running_remainder.IsZero() ) && ( running_remainder.GetDegree() >= divisor_degree ) )
 		{
-			auto new_quotient{ PolynomialOverField<MaxDegree-1, FieldElements>::GetAdditionInvarient() };
+			auto new_quotient{ PolynomialOverField<MaxDegree, FieldElements>::GetAdditionInvarient() };
 
 			new_quotient.Coeff( (std::size_t)running_remainder.GetDegree() - divisor_degree ) = running_remainder.Coeff( (std::size_t)running_remainder.GetDegree() ) * inverse_of_divisor_leading_coefficient;
 
-			running_remainder = running_remainder - ( new_quotient * divisor );
-			running_quotient = running_quotient + new_quotient;
+			running_remainder = running_remainder - ( new_quotient.MultiplyUpToSameDegree( divisor.Oversize<MaxDegree>() ) );
+			running_quotient = running_quotient + new_quotient.Downsize<MaxDegree-1>();
 		}
 
 		PolynomialLongDivisionRemainder<DivisorMaxDegree> result{};
@@ -227,8 +234,6 @@ public:
 		return { result };
 	}
 	
-	// In order to create a Finite Field of size p**k from polynomials over a Finite Filed of size p I need to have a modulo operator.
-	//   This is because Finite Fileds of size p**k are polynomials over a Finite Field of size p modulo an irriducible polynomial of degree k+1 over a Finite Field of size p.
 	template<integer OtherMaxDegree>
 	constexpr PolynomialOverField<OtherMaxDegree-1, FieldElements> operator%( const PolynomialOverField<OtherMaxDegree, FieldElements>& a ) const
 	{

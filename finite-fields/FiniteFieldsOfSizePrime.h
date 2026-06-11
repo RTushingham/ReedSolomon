@@ -2,31 +2,36 @@
 
 #include "cpp-helpers/Typedef.h"
 #include "elementary-number-theory/IsPrime.h"
-
-// As part of building the ability to create any read solomon codes we need to create elements of finite fields (aka Galois Fields)
-//   All finite fields are of the size p**k where p and k are positive integers, and p is a prime.
-//   If k > 1 then the elements need to be expressable as polynomials modulo an irriducible polynomial over a finite filed of size p.
-// In order to do that I need to start off with finite fields of size p.
-//   This is just integers modulo p.
+#include "integer-packing-helpers/UIntAtLeast.h"
+#include "integer-packing-helpers/MaxValueToBits.h"
 
 template <integer Prime>
 class ElementOfFiniteFieldP
 {
 	static_assert( IsPrime( Prime ), "A prime size Finite Field must have a size which is a prime." );
+
+	constexpr static unsigned GetMaxStoredValue() { return Prime-1; };
+
+	using value_type = u_atleast_t<max_value_to_bits(GetMaxStoredValue() * GetMaxStoredValue())>;
+
+	constexpr static bool CanStoreValue( unsigned required_value ){ return 8*sizeof( value ) >= max_value_to_bits( required_value ); };
 	
 public:
-	integer value;
+	value_type value;
 	
 public:
 	constexpr ElementOfFiniteFieldP( integer InputValue )
-		: value { ( InputValue + Prime ) % Prime}
-	{};
+		: value { (value_type) ( ( InputValue + Prime ) % Prime ) }
+	{
+		static_assert( CanStoreValue( GetMaxStoredValue() + Prime ), "To prevent correctness losing integer overflow the storage type must be able to store the widest possible value for this function." );
+	};
 	
 	constexpr ElementOfFiniteFieldP()
-		: ElementOfFiniteFieldP( (integer)0 )
+		: ElementOfFiniteFieldP( (value_type)0 )
 	{};
 	
-	constexpr bool operator==( const ElementOfFiniteFieldP<Prime>& a ) const{
+	constexpr bool operator==( const ElementOfFiniteFieldP<Prime>& a ) const
+	{
 		return value == a.value;
 	}
 	constexpr bool operator!=( const ElementOfFiniteFieldP<Prime>& a ) const
@@ -34,14 +39,23 @@ public:
 		return ! operator==( a );
 	}
 	
-	constexpr ElementOfFiniteFieldP<Prime> operator+( const ElementOfFiniteFieldP<Prime>& a ) const{
+	constexpr ElementOfFiniteFieldP<Prime> operator+( const ElementOfFiniteFieldP<Prime>& a ) const
+	{
+		static_assert( CanStoreValue( 2 * GetMaxStoredValue() ), "To prevent correctness losing integer overflow the storage type must be able to store the widest possible value for this function." );
+
 		return ( value + a.value) % Prime;
 	}
-	constexpr ElementOfFiniteFieldP<Prime> operator-( const ElementOfFiniteFieldP<Prime>& a ) const{
+	constexpr ElementOfFiniteFieldP<Prime> operator-( const ElementOfFiniteFieldP<Prime>& a ) const
+	{
+		static_assert( CanStoreValue( Prime + GetMaxStoredValue() ), "To prevent correctness losing integer overflow the storage type must be able to store the widest possible value for this function." );
+
 		return ( Prime - a.value + value ) % Prime;
 	}
-	constexpr ElementOfFiniteFieldP<Prime> operator*( const ElementOfFiniteFieldP<Prime>& a ) const{
-		return ( ( value * a.value)  % Prime );
+	constexpr ElementOfFiniteFieldP<Prime> operator*( const ElementOfFiniteFieldP<Prime>& a ) const
+	{
+		static_assert( CanStoreValue( GetMaxStoredValue() * GetMaxStoredValue() ), "To prevent correctness losing integer overflow the storage type must be able to store the widest possible value for this function." );
+
+		return ( value * a.value ) % Prime;
 	}
 	
 	constexpr ElementOfFiniteFieldP<Prime> FindMultiplicativeInverse() const
@@ -52,10 +66,7 @@ public:
 		//   Using the Extended Euclidean Algorithm we can find an a and b such that a*p + b*n = 1.
 		//   Which is equivalent to 1 = a*p + (-b)n which implies (-b)n = 1 modulo p
 		//   So ( -b % p ) will be multiplicative inverse of n within this finite field.
-		//
-		// The current implementation of this function has been optimized.
-		//   For a more readable version see the corresponding test code.
-		
+
 		if( value == 0 )
 		{
 			throw;
@@ -78,7 +89,7 @@ public:
 			earlier_nMultiplyer = newer_nMultiplyer;
 			newer_nMultiplyer = new_nMultiplyer;
 		}
-		
+
 		// This can be negative, so I keep the extra modulo here
 		return ElementOfFiniteFieldP<Prime>{ newer_nMultiplyer % Prime };
 	}

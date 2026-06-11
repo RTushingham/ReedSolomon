@@ -96,6 +96,11 @@ TEST( PrimeFieldTests, AllInversesAreInverses )
 	}
 }
 
+TEST( PrimeFieldTests, PackingIsTight )
+{
+    EXPECT_EQ( sizeof(ElementOfFiniteFieldP<Prime>), 2 );
+}
+
 TEST( PrimeFieldTests, InverseFindingClassMethodAndOriginalImplAgree )
 {
 	for( integer non_zero_element = 1; non_zero_element < Prime; non_zero_element++ )

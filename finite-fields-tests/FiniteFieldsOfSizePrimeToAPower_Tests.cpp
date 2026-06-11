@@ -27,6 +27,11 @@ TEST( TestDataVerifictaion, ValueIsAsAssumed )
 	ASSERT_EQ( class_irriducible, assumed ) << "This layer of indirection is so that expensive tests which verify irriducibility can be kept separate and only run if irriducible changes.";
 }
 
+TEST( ElementOfFiniteFieldTests, PackedTightlyWithRespectToValueSize )
+{
+	EXPECT_EQ( sizeof( ElementOfFiniteField<Prime, Exponent> ), Exponent * sizeof( ElementOfFiniteFieldP<Prime> ) );
+}
+
 TEST( ElementOfFiniteFieldTests, GetMultiplicativeInvarient )
 {
 	const auto initializer = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
@@ -82,6 +87,36 @@ TEST( ElementOfFiniteFieldTests, Inversion )
 	}
 }
 
+TEST( ElementOfFiniteFieldTests, MultiplicationIsConstexpr )
+{
+	constexpr auto arbitrary = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
+		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			ElementOfFiniteFieldP<Prime>{ 46 },
+			ElementOfFiniteFieldP<Prime>{ 99 }
+		}
+	};
+	constexpr auto unwound = ElementOfFiniteField<Prime, Exponent>{
+		arbitrary
+	};
+	constexpr auto inverse{ unwound*unwound };
+	EXPECT_FALSE( inverse.IsZero() );
+}
+
+TEST( ElementOfFiniteFieldTests, InversionIsConstexpr )
+{
+	constexpr auto arbitrary = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
+		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			ElementOfFiniteFieldP<Prime>{ 46 },
+			ElementOfFiniteFieldP<Prime>{ 99 }
+		}
+	};
+	constexpr auto unwound = ElementOfFiniteField<Prime, Exponent>{
+		arbitrary
+	};
+	constexpr auto inverse{ unwound.FindMultiplicativeInverse() };
+	EXPECT_FALSE( inverse.IsZero() );
+}
+
 TEST( ElementOfFiniteFieldTests, ClassIsValueInstantiable )
 {
 	ElementOfFiniteField<Prime, Exponent> a{};
@@ -113,59 +148,6 @@ TEST( ElementOfFiniteFieldTests, AssignmentOverwritesValueInitialized )
 
 	a = zero;
 	EXPECT_EQ( a, zero );
-}
-
-TEST( ElementOfFiniteFieldTests, InversionForAnyIrriducible )
-{
-	std::vector<ElementOfFiniteFieldP<Prime>> nonSquares{ 2,3,7,8,10,11,12,15,18,26,27,28,29,32,34,35,38,39,40,41,42,44,46,48,50,51,53,55,57,59,60,61,62,63,66,67,69,72,73,74,75,83,86,89,90,91,93,94,98,99 };
-	
-	std::vector<PolynomialOverPrimeSizeFiniteField<Prime,2>> irriducibles;
-	for( const auto nonSquare : nonSquares )
-	{
-		irriducibles.push_back(
-			PolynomialOverPrimeSizeFiniteField<Prime,2>{
-				std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
-					ElementOfFiniteFieldP<Prime>{ -nonSquare.value },
-					ElementOfFiniteFieldP<Prime>{ 0 },
-					ElementOfFiniteFieldP<Prime>{ 1 }
-				} 
-			}
-		);
-	}
-
-	unsigned testCount{ 0 };
-
-	const auto original{ ElementOfFiniteField<Prime, Exponent>::irriducible_polynomial };
-	for( const auto poly : irriducibles )
-	{
-		for( integer loop_index_0 = 0; loop_index_0<Prime; loop_index_0++ )
-		{
-			for( integer loop_index_1 = 0; loop_index_1<Prime; loop_index_1++ )
-			{
-				testCount++;
-
-				const auto initializer = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
-					std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-						ElementOfFiniteFieldP<Prime>{ loop_index_0 },
-						ElementOfFiniteFieldP<Prime>{ loop_index_1 }
-					}
-				};
-
-				ElementOfFiniteField<Prime, Exponent>::irriducible_polynomial = poly;
-				const auto a = ElementOfFiniteField<Prime, Exponent>{
-					initializer
-				};
-
-				if( a.IsZero() )
-					continue;
-
-				EXPECT_TRUE( (a/a).IsOne() );
-			}
-		}
-	}
-
-	ElementOfFiniteField<Prime, Exponent>::irriducible_polynomial = original;
-	EXPECT_EQ( testCount, irriducibles.size()*Prime*Prime );
 }
 
 TEST( ElementOfFiniteFieldTests, Multiplication )

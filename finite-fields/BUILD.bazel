@@ -10,6 +10,7 @@ cc_library(
         "//cpp-helpers",
         "//elementary-mathematical-functions",
         "//elementary-number-theory",
+        "//integer-packing-helpers",
         "//polynomials-base",
     ],
     visibility = ["//visibility:public"],
