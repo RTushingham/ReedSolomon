@@ -1,6 +1,7 @@
 #include "reed-solomon-codes/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include "finite-fields-tests/test-data/IrriduciblePolynomial.h"
+#include "polynomials-base-tests/helpers/InitializerHelper.h"
 
 #include "gtest/gtest.h"
 
@@ -13,20 +14,10 @@ namespace
 
 	const std::array<ElementOfFiniteField<Prime, Exponent>,MaxDegree+1> initializer{
 		ElementOfFiniteField<Prime, Exponent>{
-			PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
-				std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-					ElementOfFiniteFieldP<Prime>{ 4 },
-					ElementOfFiniteFieldP<Prime>{ 5 }
-				} 
-			}
+			( x_to(  4,0 ) + x_to(  5, 1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
 		},
 		ElementOfFiniteField<Prime, Exponent>{
-			PolynomialOverPrimeSizeFiniteField<Prime,1>{
-				std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-					ElementOfFiniteFieldP<Prime>{ 7 },
-					ElementOfFiniteFieldP<Prime>{ 6 }
-				} 
-			}
+			( x_to(  7,0 ) + x_to(  6, 1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
 		}
 	};
 
@@ -38,104 +29,80 @@ namespace
 
 TEST( TestDataVerifictaion, IrriducibleIsAsAssumed )
 {
-	const auto assumed = PolynomialOverPrimeSizeFiniteField<Prime,2>{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
-			ElementOfFiniteFieldP<Prime>{ -2 },
-			ElementOfFiniteFieldP<Prime>{ 0 },
-			ElementOfFiniteFieldP<Prime>{ 1 }
-		} 
+	const auto assumed{
+		( x_to( -2,0 ) + x_to(  1, 2 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,2>>()
 	};
 	ASSERT_EQ( irriducible, assumed ) << "This layer of indirection is so that expensive tests which verify irriducibility can be kept separate and only run if irriducible changes.";
 }
 
-TEST( PolynomialOverFiniteFieldTests, Evaluation )
+TEST( PolynomialOverFiniteFieldTests, EvaluationOne )
 {
 	const ElementOfFiniteField<Prime, Exponent> argument{
-		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-				ElementOfFiniteFieldP<Prime>{ 9 },
-				ElementOfFiniteFieldP<Prime>{ 8 }
-			} 
-		}
+		( x_to(  9,0 ) + x_to(  8, 1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> expected{
-		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-				ElementOfFiniteFieldP<Prime>{ 62 },
-				ElementOfFiniteFieldP<Prime>{ 14 }
-			} 
-		}
+		( x_to( 62,0 ) + x_to( 14, 1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
 	};
 
 	EXPECT_EQ( polynomial( argument ), expected );
 }
 
-TEST( PolynomialOverFiniteFieldTests, b )
+TEST( PolynomialOverFiniteFieldTests, EvaluationTwo )
 {
 	const ElementOfFiniteField<Prime, Exponent> argument{
-		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-				ElementOfFiniteFieldP<Prime>{ 10 },
-				ElementOfFiniteFieldP<Prime>{ 11 }
-			} 
-		}
+		( x_to( 10,0 ) + x_to( 11, 1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> expected{
-		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-				ElementOfFiniteFieldP<Prime>{ 4 },
-				ElementOfFiniteFieldP<Prime>{ 41 }
-			} 
-		}
+		( x_to(  4,0 ) + x_to( 41, 1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
 	};
 
 	EXPECT_EQ( polynomial( argument ), expected );
 }
 
-TEST( PolynomialOverFiniteFieldTests, c )
+TEST( PolynomialOverFiniteFieldTests, EvaluationThree )
 {
 	const ElementOfFiniteField<Prime, Exponent> argument{
-		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-				ElementOfFiniteFieldP<Prime>{ 12 },
-				ElementOfFiniteFieldP<Prime>{ 13 }
-			} 
-		}
+		( x_to( 12,0 ) + x_to( 13, 1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> expected{
-		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-				ElementOfFiniteFieldP<Prime>{ 42 },
-				ElementOfFiniteFieldP<Prime>{ 67 }
-			} 
-		}
+		( x_to( 42,0 ) + x_to( 67, 1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
 	};
 
 	EXPECT_EQ( polynomial( argument ), expected );
 }
 
-TEST( PolynomialOverFiniteFieldTests, d )
+TEST( PolynomialOverFiniteFieldTests, EvaluationFour )
 {
 	const ElementOfFiniteField<Prime, Exponent> argument{
-		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-				ElementOfFiniteFieldP<Prime>{ 14 },
-				ElementOfFiniteFieldP<Prime>{ 15 }
-			} 
-		}
+		( x_to( 14,0 ) + x_to( 15, 1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> expected{
-		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
-				ElementOfFiniteFieldP<Prime>{ 80 },
-				ElementOfFiniteFieldP<Prime>{ 93 }
-			} 
-		}
+		( x_to( 80,0 ) + x_to( 93, 1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
 	};
 
 	EXPECT_EQ( polynomial( argument ), expected );
+}
+
+TEST( PolynomialsOverPrimeFieldTests, LongDivision )
+{
+	PolynomialOverFiniteField<Prime,Exponent,MaxDegree> c
+	{
+        std::array<ElementOfFiniteField<Prime, Exponent>, MaxDegree+1>
+        {
+            ElementOfFiniteField<Prime, Exponent>{
+                (x_to( 11,0 ) + x_to( 13, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+            },
+            ElementOfFiniteField<Prime, Exponent>{
+                (x_to( 17,0 ) + x_to( 19, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+            }
+        }
+	};
+	constexpr auto zero{ PolynomialOverFiniteField<Prime,Exponent,MaxDegree+1>::GetAdditionInvarient() };
+
+	EXPECT_TRUE( zero.LongDivideBy( c ).remainder.IsZero() );
+	EXPECT_TRUE( zero.LongDivideBy( c ).quotient.IsZero() );
 }

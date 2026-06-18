@@ -1,0 +1,13 @@
+load( "@rules_cc//cc:defs.bzl", "cc_test", "cc_library" )
+
+cc_library(
+    name = "test-helpers",
+    testonly = True,
+    srcs = glob([
+        "helpers/*.h",
+    ]),
+    deps = [
+        "//polynomials-base",
+    ],
+    visibility = ["//visibility:public"],
+)

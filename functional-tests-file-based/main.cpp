@@ -10,7 +10,8 @@ void main()
 	{
 		for( int64_t index{0}; index < outputs.recieved.size(); index++ )
 		{
-			if( outputs.sent.at( index ) != decoder.Decode( outputs.recieved.at( index ) ) )
+			const auto decode_res{ decoder.Decode( outputs.recieved.at( index ) ) };
+			if(! decode_res.has_value() || outputs.sent.at( index ) != code.GenerateCodeword( decode_res.value() ) )
 			{
 				std::cout << "Test failed." << std::endl;
 				return;

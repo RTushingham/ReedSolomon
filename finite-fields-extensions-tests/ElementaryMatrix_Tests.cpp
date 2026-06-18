@@ -15,7 +15,7 @@ namespace
 {
 	const ElementOfFiniteField<Prime, Exponent> a{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 9 },
 				ElementOfFiniteFieldP<Prime>{ 8 }
 			} 
@@ -23,7 +23,7 @@ namespace
 	};
 	const ElementOfFiniteField<Prime, Exponent> b{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 62 },
 				ElementOfFiniteFieldP<Prime>{ 14 }
 			} 

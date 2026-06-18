@@ -4,6 +4,7 @@
 #include "Codeword.h"
 #include "PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
+#include "container-helpers/ArrayExtensions.h"
 #include "cpp-helpers/Typedef.h"
 #include "finite-fields/FiniteFieldsOfSizePrimeToAPower.h"
 
@@ -38,7 +39,17 @@ public:
 
     Code( const std::array<ElementOfFiniteField<Prime,Exponent>, n>& generators )
         : generating_elements{ generators }
-    {}
+    {
+        if( array_contains( generators, ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() ) )
+        {
+            throw;
+        }
+
+        if( false == array_is_all_mutually_distinct( generators ) )
+        {
+            throw;
+        }
+    }
 
     constexpr static BlockCodeParameters parameters{ GetReedSolomonParameters(n,k) };
 };

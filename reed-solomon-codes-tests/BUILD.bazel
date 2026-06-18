@@ -8,6 +8,7 @@ cc_test(
     deps = [
         "//reed-solomon-codes",
         "//finite-fields-tests:test-data",
+        "//polynomials-base-tests:test-helpers",
         "//imports/thirdparty/GoogleTest:GoogleTest",
         "//imports/thirdparty/GoogleTest:GoogleTest-Main",
     ],

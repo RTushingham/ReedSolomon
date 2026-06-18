@@ -15,6 +15,20 @@ class ElementOfFiniteField
 public:
 	inline static constexpr PolynomialOverPrimeSizeFiniteField<Prime,Exponent> irriducible_polynomial{ GetIrriduciblePolynomial<Prime,Exponent>() };
 
+private:
+	static constexpr std::array<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>, Exponent-1> CreateModuloMultiplicationResidues( const PolynomialOverPrimeSizeFiniteField<Prime,Exponent> & for_modulo )
+    {
+		std::array<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>, Exponent-1> residues{};
+        for( std::size_t index{ 0 }; index < residues.size(); index++ )
+        {
+            PolynomialOverPrimeSizeFiniteField<Prime,2*(Exponent-1)> seed_polynomial{};
+            seed_polynomial.SetCoeff( 1, Exponent + index );
+            residues.at( index ) = seed_polynomial % for_modulo;
+        }
+		return residues;
+	};
+	static constexpr std::array<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>, Exponent-1> residues{ CreateModuloMultiplicationResidues( irriducible_polynomial ) };
+
 public:
 	PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1> value;
 	
@@ -49,7 +63,19 @@ public:
 		return { value - a.value };
 	}
 	constexpr ElementOfFiniteField<Prime, Exponent> operator*( const ElementOfFiniteField<Prime, Exponent>& a ) const{
-		return { ( value * a.value ) % irriducible_polynomial};
+		auto product{ value * a.value };
+
+        auto running_sum{ product.Downsize<Exponent-1>() };
+
+		PolynomialOverPrimeSizeFiniteField<Prime,0> scallar_multiplyer;
+		for( std::size_t residues_index{ 0 }; residues_index < residues.size(); residues_index++ )
+		{
+			scallar_multiplyer.SetCoeff( product.GetCoeff( Exponent + residues_index ), 0 );
+
+			running_sum = running_sum + ( scallar_multiplyer * residues.at( residues_index ) );
+		}
+
+		return running_sum;
 	}
 
 	constexpr ElementOfFiniteField<Prime, Exponent> FindMultiplicativeInverse() const
@@ -59,36 +85,15 @@ public:
 	        throw;
 	    }
 
-	    auto first_nMultiplyer{ PolynomialOverPrimeSizeFiniteField<Prime, Exponent-1>::GetAdditionInvarient() };
-	    auto second_nMultiplyer{ PolynomialOverPrimeSizeFiniteField<Prime, Exponent-1>::GetMultiplicativeInvarient() };
-	    
-	    PolynomialOverPrimeSizeFiniteField<Prime,Exponent> larger_remainder{ irriducible_polynomial };
-	    PolynomialOverPrimeSizeFiniteField<Prime,Exponent> smaller_remainder{ value.Oversize<Exponent>() };
-	    
-	    while( smaller_remainder.GetDegree() > 0)
-	    {
-			const auto result = larger_remainder.LongDivideBy( smaller_remainder );
+		const auto eea_result{ ExtendedEuclideanAlgorithm( 0, irriducible_polynomial, value ) };
 
-			const auto temp_remainder{ result.remainder.Oversize<Exponent>() };
-
-			const PolynomialOverPrimeSizeFiniteField<Prime, Exponent-1> new_nMultiplyer{ 
-				first_nMultiplyer - second_nMultiplyer.MultiplyUpToSameDegree( result.quotient )
-			};
-	        
-	        larger_remainder = smaller_remainder;
-	        smaller_remainder = temp_remainder;
-
-			first_nMultiplyer = second_nMultiplyer;
-			second_nMultiplyer = new_nMultiplyer;
-	    }
-	    
 		const PolynomialOverPrimeSizeFiniteField<Prime, 0> final_correcting_factor( 
-			std::array<ElementOfFiniteFieldP<Prime>, PolynomialOverPrimeSizeFiniteField<Prime, 0>::GetCapacity()>{
-				smaller_remainder.Coeff( 0 ).FindMultiplicativeInverse()
+			std::array<ElementOfFiniteFieldP<Prime>, PolynomialOverPrimeSizeFiniteField<Prime, 0>::GetCoeffCount()>{
+				eea_result.remainder.GetCoeff( 0 ).FindMultiplicativeInverse()
 			}
 		);
  
-	    return ElementOfFiniteField<Prime, Exponent>{ second_nMultiplyer * final_correcting_factor };
+	    return ElementOfFiniteField<Prime, Exponent>{ eea_result.divisor_multiplyer * final_correcting_factor };
 	}
 	
 	constexpr ElementOfFiniteField<Prime, Exponent> operator/( const ElementOfFiniteField<Prime, Exponent>& a ) const{

@@ -1,6 +1,6 @@
 #include "finite-fields/PolynomialsOverFiniteFieldOfSizePrime.h"
 
-#include "polynomials-base/InitializerHelper.h"
+#include "polynomials-base-tests/helpers/InitializerHelper.h"
 
 #include "gtest/gtest.h"
 
@@ -8,12 +8,8 @@ constexpr integer Prime{ 101 };
 
 TEST( InitializerHelperTests, EvaluationOneTerm )
 {
-	PolynomialOverPrimeSizeFiniteField<Prime,2> a_first_term{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
-			ElementOfFiniteFieldP<Prime>{ 10 },
-			ElementOfFiniteFieldP<Prime>{ 0 },
-			ElementOfFiniteFieldP<Prime>{ 0 }
-		} 
+	auto a_first_term{
+		( x_to( 10,0 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,2>>()
 	};
 
 	PolynomialOverPrimeSizeFiniteField<Prime,2> base{};
@@ -24,12 +20,8 @@ TEST( InitializerHelperTests, EvaluationOneTerm )
 
 TEST( InitializerHelperTests, EvaluationMultipleTerms )
 {
-	PolynomialOverPrimeSizeFiniteField<Prime,2> a_first_term{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
-			ElementOfFiniteFieldP<Prime>{ 10 },
-			ElementOfFiniteFieldP<Prime>{ 0 },
-			ElementOfFiniteFieldP<Prime>{ 12 }
-		} 
+	auto a_first_term{
+		( x_to( 10,0 ) + x_to( 12,2 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,2>>()
 	};
 
 	PolynomialOverPrimeSizeFiniteField<Prime,2> base{};
@@ -40,12 +32,8 @@ TEST( InitializerHelperTests, EvaluationMultipleTerms )
 
 TEST( InitializerHelperTests, ConstructContexpr )
 {
-	PolynomialOverPrimeSizeFiniteField<Prime,2> a_first_term{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
-			ElementOfFiniteFieldP<Prime>{ 10 },
-			ElementOfFiniteFieldP<Prime>{ 11 },
-			ElementOfFiniteFieldP<Prime>{ 12 }
-		} 
+	auto a_first_term{
+		( x_to( 10,0 ) + x_to( 11,1 ) + x_to( 12,2 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,2>>()
 	};
 
 	constexpr auto val{ ( x_to( 10, 0 ) + x_to( 12, 2 ) + x_to( 11, 1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,2>>() };

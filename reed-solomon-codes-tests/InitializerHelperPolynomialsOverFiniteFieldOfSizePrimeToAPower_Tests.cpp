@@ -1,6 +1,6 @@
 #include "reed-solomon-codes/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
-#include "polynomials-base/InitializerHelper.h"
+#include "polynomials-base-tests/helpers/InitializerHelper.h"
 
 #include "gtest/gtest.h"
 
@@ -13,7 +13,7 @@ TEST( InitializerHelperTests, ConstructContexpr )
 	const std::array<ElementOfFiniteField<Prime, Exponent>,MaxDegree+1> initializer{
 		ElementOfFiniteField<Prime, Exponent>{
 			PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
-				std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 					ElementOfFiniteFieldP<Prime>{ 4 },
 					ElementOfFiniteFieldP<Prime>{ 5 }
 				} 
@@ -21,7 +21,7 @@ TEST( InitializerHelperTests, ConstructContexpr )
 		},
 		ElementOfFiniteField<Prime, Exponent>{
 			PolynomialOverPrimeSizeFiniteField<Prime,1>{
-				std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 					ElementOfFiniteFieldP<Prime>{ 7 },
 					ElementOfFiniteFieldP<Prime>{ 6 }
 				} 

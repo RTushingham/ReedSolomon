@@ -17,7 +17,7 @@ TEST( TestDataVerifictaion, DegreeIsAppropriate )
 TEST( TestDataVerifictaion, ValueIsAsAssumed )
 {
 	const auto assumed = PolynomialOverPrimeSizeFiniteField<Prime,2>{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
+		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCoeffCount()>{
 			ElementOfFiniteFieldP<Prime>{ -2 },
 			ElementOfFiniteFieldP<Prime>{ 0 },
 			ElementOfFiniteFieldP<Prime>{ 1 }
@@ -35,7 +35,7 @@ TEST( ElementOfFiniteFieldTests, PackedTightlyWithRespectToValueSize )
 TEST( ElementOfFiniteFieldTests, GetMultiplicativeInvarient )
 {
 	const auto initializer = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 			ElementOfFiniteFieldP<Prime>{ 1 },
 			ElementOfFiniteFieldP<Prime>{ 0 }
 		}
@@ -54,7 +54,7 @@ TEST( ElementOfFiniteFieldTests, GetMultiplicativeInvarient )
 TEST( ElementOfFiniteFieldTests, Inversion )
 {
 	const auto arbitrary = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 			ElementOfFiniteFieldP<Prime>{ 46 },
 			ElementOfFiniteFieldP<Prime>{ 99 }
 		}
@@ -69,7 +69,7 @@ TEST( ElementOfFiniteFieldTests, Inversion )
 		for( integer loop_index_1 = 0; loop_index_1<Prime; loop_index_1++ )
 		{
 			const auto initializer = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
-				std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+				std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 					ElementOfFiniteFieldP<Prime>{ loop_index_0 },
 					ElementOfFiniteFieldP<Prime>{ loop_index_1 }
 				}
@@ -90,7 +90,7 @@ TEST( ElementOfFiniteFieldTests, Inversion )
 TEST( ElementOfFiniteFieldTests, MultiplicationIsConstexpr )
 {
 	constexpr auto arbitrary = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 			ElementOfFiniteFieldP<Prime>{ 46 },
 			ElementOfFiniteFieldP<Prime>{ 99 }
 		}
@@ -105,7 +105,7 @@ TEST( ElementOfFiniteFieldTests, MultiplicationIsConstexpr )
 TEST( ElementOfFiniteFieldTests, InversionIsConstexpr )
 {
 	constexpr auto arbitrary = PolynomialOverPrimeSizeFiniteField<Prime,1>{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 			ElementOfFiniteFieldP<Prime>{ 46 },
 			ElementOfFiniteFieldP<Prime>{ 99 }
 		}
@@ -154,7 +154,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 {
 	ElementOfFiniteField<Prime, Exponent> a{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 7 },
 				ElementOfFiniteFieldP<Prime>{ 6 }
 			} 
@@ -164,7 +164,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 
 	const ElementOfFiniteField<Prime, Exponent> b{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 9 },
 				ElementOfFiniteFieldP<Prime>{ 8 }
 			} 
@@ -173,7 +173,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 
 	const ElementOfFiniteField<Prime, Exponent> ab_expected{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 58 },
 				ElementOfFiniteFieldP<Prime>{ 9 }
 			} 
@@ -185,7 +185,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 
 	const ElementOfFiniteField<Prime, Exponent> c{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 10 },
 				ElementOfFiniteFieldP<Prime>{ 11 }
 			} 
@@ -194,7 +194,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 
 	const ElementOfFiniteField<Prime, Exponent> ac_expected{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 0 },
 				ElementOfFiniteFieldP<Prime>{ 36 }
 			} 
@@ -206,7 +206,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 
 	const ElementOfFiniteField<Prime, Exponent> d{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 12 },
 				ElementOfFiniteFieldP<Prime>{ 13 }
 			} 
@@ -215,7 +215,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 
 	const ElementOfFiniteField<Prime, Exponent> ad_expected{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 38 },
 				ElementOfFiniteFieldP<Prime>{ 62 }
 			} 
@@ -227,7 +227,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 
 	const ElementOfFiniteField<Prime, Exponent> e{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 14 },
 				ElementOfFiniteFieldP<Prime>{ 15 }
 			} 
@@ -236,7 +236,7 @@ TEST( ElementOfFiniteFieldTests, Multiplication )
 
 	const ElementOfFiniteField<Prime, Exponent> ae_expected{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 76 },
 				ElementOfFiniteFieldP<Prime>{ 88 }
 			} 
@@ -250,7 +250,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 {
 	ElementOfFiniteField<Prime, Exponent> a{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 4 },
 				ElementOfFiniteFieldP<Prime>{ 5 }
 			} 
@@ -260,7 +260,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 
 	const ElementOfFiniteField<Prime, Exponent> b{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 58 },
 				ElementOfFiniteFieldP<Prime>{ 9 }
 			} 
@@ -269,7 +269,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 
 	const ElementOfFiniteField<Prime, Exponent> ab_expected{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 62 },
 				ElementOfFiniteFieldP<Prime>{ 14 }
 			} 
@@ -281,7 +281,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 
 	const ElementOfFiniteField<Prime, Exponent> c{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 0 },
 				ElementOfFiniteFieldP<Prime>{ 36 }
 			} 
@@ -290,7 +290,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 
 	const ElementOfFiniteField<Prime, Exponent> ac_expected{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 4 },
 				ElementOfFiniteFieldP<Prime>{ 41 }
 			} 
@@ -302,7 +302,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 
 	const ElementOfFiniteField<Prime, Exponent> d{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 38 },
 				ElementOfFiniteFieldP<Prime>{ 62 }
 			} 
@@ -311,7 +311,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 
 	const ElementOfFiniteField<Prime, Exponent> ad_expected{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 42 },
 				ElementOfFiniteFieldP<Prime>{ 67 }
 			} 
@@ -323,7 +323,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 
 	const ElementOfFiniteField<Prime, Exponent> e{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 76 },
 				ElementOfFiniteFieldP<Prime>{ 88 }
 			} 
@@ -332,7 +332,7 @@ TEST( ElementOfFiniteFieldTests, Addition )
 
 	const ElementOfFiniteField<Prime, Exponent> ae_expected{
 		PolynomialOverPrimeSizeFiniteField<Prime,1>{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ 80 },
 				ElementOfFiniteFieldP<Prime>{ 93 }
 			} 

@@ -36,7 +36,7 @@ TEST( TestDataVerifictaion, IsIrriducible )
 	{
 		irriducibles.push_back(
 			PolynomialOverPrimeSizeFiniteField<Prime,2>{
-				std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCapacity()>{
+				std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,2>::GetCoeffCount()>{
 					ElementOfFiniteFieldP<Prime>{ -nonSquare.value },
 					ElementOfFiniteFieldP<Prime>{ 0 },
 					ElementOfFiniteFieldP<Prime>{ 1 }
@@ -48,7 +48,7 @@ TEST( TestDataVerifictaion, IsIrriducible )
 	for( std::size_t index=0; index<Prime; index++ )
 	{
 		const PolynomialOverPrimeSizeFiniteField<Prime,1> normalised_poly{
-			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCapacity()>{
+			std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,1>::GetCoeffCount()>{
 				ElementOfFiniteFieldP<Prime>{ (integer)index },
 				ElementOfFiniteFieldP<Prime>{ 1 }
 			} 
@@ -58,7 +58,7 @@ TEST( TestDataVerifictaion, IsIrriducible )
 		{
 			EXPECT_FALSE(
 				i.LongDivideBy( normalised_poly ).remainder.IsZero()
-			) << "polynomial of the form X^2 - " << Prime - i.Coeff(0).value << " is not irriducible. This contradicts Lang [1984, p. 331, Theorem 9.1]." ;
+			) << "polynomial of the form X^2 - " << Prime - i.GetCoeff(0).value << " is not irriducible. This contradicts Lang [1984, p. 331, Theorem 9.1]." ;
 		}
 	}
 

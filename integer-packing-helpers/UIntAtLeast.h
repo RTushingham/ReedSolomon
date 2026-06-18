@@ -6,6 +6,7 @@
 template<size_t bits>
 class u_atleast
 {
+    static_assert( bits <= 64 );
 public:
     using type = std::conditional_t<
         bits <= 8,

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "cpp-helpers/Sentinal.h"
 #include "cpp-helpers/Typedef.h"
 
 #include <array>
@@ -10,33 +11,55 @@ class PolynomialOverField
 	static_assert( MaxDegree >= 0, "" );
 
 public:
-	static constexpr size_t GetCapacity()
+	static constexpr size_t GetCoeffCount()
 	{
 		return MaxDegree+1;
 	}
 
 private:
-	std::array<FieldElements, GetCapacity()> coefficients;
+	std::array<FieldElements, GetCoeffCount()> coefficients;
 	
 public:
-	constexpr FieldElements& Coeff( std::size_t index )
+	constexpr FieldElements GetCoeff( std::size_t index ) const
 	{
 		return coefficients.at( index );
 	}
-	constexpr const FieldElements& Coeff( std::size_t index ) const
+	constexpr void SetCoeff( const FieldElements& value, std::size_t index )
 	{
-		return coefficients.at( index );
+		coefficients.at( index ) = value;
 	}
 
 	static constexpr size_t GetMaxDegree()
 	{
 		return MaxDegree;
 	}
+	constexpr Sentinal<size_t, size_t, (size_t)-1> tmp_GetDegree() const
+	{
+		for( size_t reverse_index = 0; reverse_index<GetMaxDegree()+1; reverse_index++ )
+		{
+			if( ! GetCoeff( GetMaxDegree() - reverse_index ).IsZero() )
+			{
+				return (GetMaxDegree() - reverse_index);
+			}
+		}
+		
+		return (size_t)-1;
+	}
+	constexpr DefaultSentinal<FieldElements> Coeff_Safe( Sentinal<size_t, size_t, (size_t)-1> degree ) const
+	{
+		if( degree.has_value() )
+		{
+			return { GetCoeff( degree.value() )};
+		}
+		
+		return { DefaultSentinal<FieldElements>{} };
+	}
+	
 	constexpr integer GetDegree() const
 	{
 		for( size_t reverse_index = 0; reverse_index<GetMaxDegree()+1; reverse_index++ )
 		{
-			if( ! Coeff( GetMaxDegree() - reverse_index ).IsZero() )
+			if( ! GetCoeff( GetMaxDegree() - reverse_index ).IsZero() )
 			{
 				return (integer)(GetMaxDegree() - reverse_index);
 			}
@@ -48,32 +71,51 @@ public:
 	template<integer SmallerDegree>
 	constexpr PolynomialOverField<SmallerDegree, FieldElements> Downsize() const
 	{
-		static_assert( SmallerDegree <= MaxDegree , "" );
+		static_assert( SmallerDegree <= MaxDegree , "Downsize cannot increase the size of a polynomial." );
 		
 		std::array<FieldElements, SmallerDegree+1> downsize_data{ FieldElements::GetAdditionInvarient() };
 		for( size_t downsize_index=0; downsize_index < downsize_data.size(); downsize_index++ )
 		{
-			downsize_data.at( downsize_index ) = Coeff( downsize_index );
+			downsize_data.at( downsize_index ) = GetCoeff( downsize_index );
 		}
 		
 		return { downsize_data };
 	}
-
 	template<integer LargerDegree>
-	constexpr PolynomialOverField<LargerDegree, FieldElements>Oversize() const
+	constexpr PolynomialOverField<LargerDegree, FieldElements> Oversize() const
 	{
-		static_assert( LargerDegree >= MaxDegree, "" );
-		
-		std::array<FieldElements, LargerDegree+1> oversize_result_data{ FieldElements::GetAdditionInvarient() };
-		for( size_t coefficient_index=0; coefficient_index < GetMaxDegree()+1; coefficient_index++ )
+		static_assert( LargerDegree >= MaxDegree, "Oversize cannot decrease the size of a polynomial." );
+
+		PolynomialOverField<LargerDegree, FieldElements> oversized{};
+
+		for( size_t coefficient_index{ 0 }; coefficient_index < GetMaxDegree()+1; coefficient_index++ )
 		{
-			oversize_result_data.at( coefficient_index ) = Coeff( coefficient_index );
+			oversized.SetCoeff( GetCoeff( coefficient_index ), coefficient_index );
 		}
 		
-		return { oversize_result_data };
+		return oversized;
+	}
+	template<integer OtherDegree>
+	constexpr PolynomialOverField<OtherDegree, FieldElements> ToSize() const
+	{
+		PolynomialOverField<OtherDegree, FieldElements> output{};
+
+		const size_t a{ GetMaxDegree()+1 > output.GetMaxDegree()+1 ? output.GetMaxDegree()+1 : GetMaxDegree()+1 };
+
+		for( size_t coefficient_index{ 0 }; coefficient_index < a; coefficient_index++ )
+		{
+			output.SetCoeff( GetCoeff( coefficient_index ), coefficient_index );
+		}
+		
+		return output;
+	}
+	template<>
+	constexpr PolynomialOverField<MaxDegree, FieldElements> ToSize() const
+	{
+		return *this;
 	}
 
-	constexpr PolynomialOverField( std::array<FieldElements, GetCapacity()> Input )
+	constexpr PolynomialOverField( std::array<FieldElements, GetCoeffCount()> Input )
 		: coefficients( Input )
 	{};
 	constexpr PolynomialOverField()
@@ -82,11 +124,11 @@ public:
 
 	constexpr FieldElements operator()(const FieldElements& a) const
 	{
-		auto running_result = Coeff( GetMaxDegree() );
+		auto running_result = GetCoeff( GetMaxDegree() );
 
 		for( size_t coeff_index = GetMaxDegree()-1; coeff_index != (size_t)-1; coeff_index-- )
 		{
-			running_result = ( running_result * a ) + Coeff( coeff_index );
+			running_result = ( running_result * a ) + GetCoeff( coeff_index );
 		}
 
 		return running_result;
@@ -103,7 +145,7 @@ public:
 	
 	constexpr static PolynomialOverField<MaxDegree, FieldElements> GetAdditionInvarient()
 	{
-		return PolynomialOverField<MaxDegree, FieldElements>{ std::array<FieldElements, GetCapacity()>{ FieldElements::GetAdditionInvarient() } };
+		return PolynomialOverField<MaxDegree, FieldElements>{ std::array<FieldElements, GetCoeffCount()>{ FieldElements::GetAdditionInvarient() } };
 	}
 	constexpr bool IsZero() const
 	{
@@ -119,18 +161,18 @@ public:
 	constexpr static PolynomialOverField<MaxDegree, FieldElements> GetMultiplicativeInvarient()
 	{
 		auto addition_invarient = GetAdditionInvarient();
-		addition_invarient.Coeff( 0 ) = FieldElements::GetMultiplicativeInvarient();
+		addition_invarient.SetCoeff( FieldElements::GetMultiplicativeInvarient(), 0 );
 		return addition_invarient;
 	}
 	constexpr bool IsOne() const
 	{
-		if( ! Coeff( 0 ).IsOne() )
+		if( ! GetCoeff( 0 ).IsOne() )
 		{
 			return false;
 		}
 		for( std::size_t index{ 1 }; index<GetMaxDegree()+1; index++ )
 		{
-			if( ! Coeff( index ).IsZero() )
+			if( ! GetCoeff( index ).IsZero() )
 			{
 				return false;
 			}
@@ -144,7 +186,7 @@ public:
 		
 		for( size_t coefficient_index = 0; coefficient_index < GetMaxDegree()+1; coefficient_index++ )
 		{
-			return_value.Coeff(coefficient_index) = Coeff( coefficient_index ) + a.Coeff( coefficient_index );
+			return_value.SetCoeff( GetCoeff( coefficient_index ) + a.GetCoeff( coefficient_index ), coefficient_index );
 		}
 		
 		return return_value;
@@ -155,7 +197,7 @@ public:
 
 		for( size_t coefficient_index = 0; coefficient_index < GetMaxDegree()+1; coefficient_index++ )
 		{
-			return_value.Coeff(coefficient_index) = Coeff( coefficient_index ) - a.Coeff( coefficient_index );
+			return_value.SetCoeff( GetCoeff( coefficient_index ) - a.GetCoeff( coefficient_index ), coefficient_index );
 		}
 		
 		return return_value;
@@ -169,13 +211,13 @@ public:
 		{
 			for( size_t this_index = 0; this_index < GetMaxDegree()+1 - a_index; this_index++ )
 			{
-				return_value.Coeff( a_index + this_index ) = return_value.Coeff( a_index + this_index ) + ( a.Coeff( a_index ) * Coeff( this_index ) );
+				return_value.SetCoeff( return_value.GetCoeff( a_index + this_index ) + ( a.GetCoeff( a_index ) * GetCoeff( this_index ) ), a_index + this_index );
 			}
 		}
 
 		return return_value;
 	}
-	
+
 	template<integer OtherMaxDegree>
 	constexpr PolynomialOverField<MaxDegree+OtherMaxDegree, FieldElements> operator*( const PolynomialOverField<OtherMaxDegree, FieldElements>& a ) const
 	{
@@ -185,7 +227,7 @@ public:
 		{
 			for( size_t this_index = 0; this_index < GetMaxDegree()+1; this_index++ )
 			{
-				return_value.Coeff( a_index + this_index ) = return_value.Coeff( a_index + this_index ) + ( a.Coeff( a_index ) * Coeff( this_index ) );
+				return_value.SetCoeff( return_value.GetCoeff( a_index + this_index ) + ( a.GetCoeff( a_index ) * GetCoeff( this_index ) ), a_index + this_index );
 			}
 		}
 		
@@ -205,32 +247,71 @@ public:
 	{
 		static_assert( DivisorMaxDegree > 0, "" );
 		static_assert( MaxDegree >= DivisorMaxDegree, "To focus code maintainance time I am restricting ovvered use cases. MaxDegree isn't actualy degree, so this unsupported case can be non-trivial." );
-		
-		// Long division by 0 is undefined.
-		if( divisor.IsZero() )
+
+		const auto divisor_degree{ divisor.tmp_GetDegree() };
+		if( !divisor_degree.has_value() )
 		{
 			throw;
 		}
-		const size_t divisor_degree{ (size_t)divisor.GetDegree() };
+		const auto divisor_leading_coefficient = divisor.GetCoeff( divisor_degree.value() );
 
-		PolynomialOverField<MaxDegree, FieldElements> running_remainder{ coefficients };
+		auto remainder_degree{ tmp_GetDegree() };
+		auto remainder_leading_coefficient{ Coeff_Safe( remainder_degree ) };
+
+		auto old_result{ LongDivideBy_Internal( 
+			remainder_degree,
+			remainder_leading_coefficient,
+			Downsize<MaxDegree-1>(),
+			divisor_degree.value(),
+			divisor_leading_coefficient,
+			divisor.ToSize<MaxDegree-1>()
+		) };
+
+		if constexpr( DivisorMaxDegree == MaxDegree )
+		{
+			return old_result;
+		}
+		else
+		{
+			PolynomialLongDivisionRemainder<DivisorMaxDegree> result{};
+			result.quotient = old_result.quotient;
+			result.remainder = old_result.remainder.ToSize<DivisorMaxDegree-1>();
+
+			return result;
+		}
+	}
+
+	static constexpr PolynomialLongDivisionRemainder<MaxDegree> LongDivideBy_Internal(
+		Sentinal<size_t, size_t, (size_t)-1> remainder_degree,
+		DefaultSentinal<FieldElements> remainder_leading_coefficient,
+		const PolynomialOverField<MaxDegree - 1, FieldElements>& numerator,
+		const size_t divisor_degree,
+		const FieldElements divisor_leading_coefficient,
+		const PolynomialOverField<MaxDegree - 1, FieldElements>& divisor
+	)
+	{
+		PolynomialLongDivisionRemainder<MaxDegree> result{};
+
+		PolynomialOverField<MaxDegree-1, FieldElements> running_remainder{ numerator };
 		auto running_quotient{ PolynomialOverField<MaxDegree-1, FieldElements>::GetAdditionInvarient() };
 
-		const auto inverse_of_divisor_leading_coefficient = divisor.Coeff( divisor_degree ).FindMultiplicativeInverse();
+		const auto inverse_of_divisor_leading_coefficient{ divisor_leading_coefficient.FindMultiplicativeInverse() };
 
-		while( ( ! running_remainder.IsZero() ) && ( running_remainder.GetDegree() >= divisor_degree ) )
+		while( remainder_degree.has_value() && ( remainder_degree.value() >= divisor_degree ) )
 		{
-			auto new_quotient{ PolynomialOverField<MaxDegree, FieldElements>::GetAdditionInvarient() };
+			auto new_quotient{ PolynomialOverField<MaxDegree-1, FieldElements>::GetAdditionInvarient() };
 
-			new_quotient.Coeff( (std::size_t)running_remainder.GetDegree() - divisor_degree ) = running_remainder.Coeff( (std::size_t)running_remainder.GetDegree() ) * inverse_of_divisor_leading_coefficient;
+			new_quotient.SetCoeff( remainder_leading_coefficient.value() * inverse_of_divisor_leading_coefficient, remainder_degree.value() - divisor_degree );
 
-			running_remainder = running_remainder - ( new_quotient.MultiplyUpToSameDegree( divisor.Oversize<MaxDegree>() ) );
-			running_quotient = running_quotient + new_quotient.Downsize<MaxDegree-1>();
+			running_remainder = running_remainder - ( new_quotient.MultiplyUpToSameDegree( divisor ) );
+			running_quotient = running_quotient + new_quotient;
+
+			remainder_degree = running_remainder.tmp_GetDegree();
+			remainder_leading_coefficient = running_remainder.Coeff_Safe( remainder_degree );
 		}
 
-		PolynomialLongDivisionRemainder<DivisorMaxDegree> result{};
 		result.quotient = running_quotient;
-		result.remainder = running_remainder.Downsize<DivisorMaxDegree-1>();
+		result.remainder = running_remainder;
 		return { result };
 	}
 	
@@ -240,3 +321,61 @@ public:
 		return LongDivideBy( a ).remainder;
 	}
 };
+
+
+template<std::size_t LargerMaxDegree, std::size_t SmalerMaxDegree, typename FieldElements>
+struct EEAResult
+{
+	PolynomialOverField<SmalerMaxDegree, FieldElements> remainder{};
+	PolynomialOverField<LargerMaxDegree-1, FieldElements> divisor_multiplyer{};
+};
+
+template<std::size_t LargerMaxDegree, typename FieldElements>
+static constexpr EEAResult<LargerMaxDegree, LargerMaxDegree-1, FieldElements> ExtendedEuclideanAlgorithm(
+	std::size_t stopping_degree,
+	const PolynomialOverField<LargerMaxDegree, FieldElements>& larger_term,
+	// To focus impl.
+	const PolynomialOverField<LargerMaxDegree-1, FieldElements>& smaller_term
+)
+{
+	EEAResult<LargerMaxDegree,LargerMaxDegree-1, FieldElements> result{};
+
+	auto first_nMultiplyer{ PolynomialOverField<LargerMaxDegree-1, FieldElements>::GetAdditionInvarient() };
+	result.divisor_multiplyer = PolynomialOverField<LargerMaxDegree-1, FieldElements>::GetMultiplicativeInvarient();
+	
+	auto larger_remainder{ larger_term.Downsize<LargerMaxDegree-1>() };
+	result.remainder = smaller_term;
+
+	auto larger_remainder_degree{ larger_term.tmp_GetDegree() };
+	auto larger_remainder_leading_term{ larger_term.Coeff_Safe( larger_remainder_degree ) };
+	auto smaller_remainder_degree{ result.remainder.tmp_GetDegree() };
+	
+	while( smaller_remainder_degree.has_value() && smaller_remainder_degree.value() > stopping_degree )
+	{
+		const auto long_div_res = larger_term.LongDivideBy_Internal( 
+			larger_remainder_degree,
+			larger_remainder_leading_term,
+			larger_remainder,
+			smaller_remainder_degree.value(),
+			result.remainder.GetCoeff( smaller_remainder_degree.value() ),
+			result.remainder
+		);
+
+		const PolynomialOverField<LargerMaxDegree-1, FieldElements> new_nMultiplyer{ 
+			first_nMultiplyer - result.divisor_multiplyer.MultiplyUpToSameDegree( long_div_res.quotient )
+		};
+		
+		larger_remainder = result.remainder;
+		result.remainder = long_div_res.remainder;
+
+		larger_remainder_degree = larger_remainder.tmp_GetDegree();
+		larger_remainder_leading_term = larger_remainder.Coeff_Safe( larger_remainder_degree );
+		smaller_remainder_degree = result.remainder.tmp_GetDegree();
+
+		first_nMultiplyer = result.divisor_multiplyer;
+		result.divisor_multiplyer = new_nMultiplyer;
+	}
+	
+	return result;
+}
+

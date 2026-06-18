@@ -10,10 +10,11 @@ TEST( FileBasedBenchmarkTest, TestCase )
 	{
 		for( int64_t index{0}; index < outputs.recieved.size(); index++ )
 		{
-			if( outputs.sent.at( index ) != decoder.Decode( outputs.recieved.at( index ) ) )
+			const auto decode_res{ decoder.Decode( outputs.recieved.at( index ) ) };
+			EXPECT_TRUE( decode_res.has_value() );
+			if( decode_res.has_value() )
 			{
-				std::cout << "Test failed." << std::endl;
-				return;
+				EXPECT_EQ( outputs.sent.at( index ), code.GenerateCodeword( decode_res.value() ) );
 			}
 		}
 	}

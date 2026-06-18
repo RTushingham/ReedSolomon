@@ -7,7 +7,20 @@ cc_library(
         "test-data/*.h"
     ]),
     deps = [
-        "//finite-fields"
+        "//finite-fields",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "binary-helpers",
+    testonly = True,
+    hdrs = glob([
+        "binary-helpers/*.h"
+    ]),
+    deps = [
+        "//finite-fields",
+        "//integer-packing-helpers",
     ],
     visibility = ["//visibility:public"],
 )
@@ -30,8 +43,9 @@ cc_test(
         "*.cpp",
     ]),
     deps = [
-        "//finite-fields",
         ":test-data",
+        "//finite-fields",
+        "//polynomials-base-tests:test-helpers",
         "//imports/thirdparty/GoogleTest:GoogleTest",
         "//imports/thirdparty/GoogleTest:GoogleTest-Main",
     ],

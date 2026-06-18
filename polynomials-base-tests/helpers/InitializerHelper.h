@@ -1,4 +1,6 @@
-#include "PolynomialsOverField.h"
+#pragma once
+
+#include "polynomials-base/PolynomialsOverField.h"
 
 template <typename E1, typename E2>
 class x_to_ref
@@ -55,8 +57,7 @@ public:
     template <typename PolyType>
     constexpr void mod( PolyType& poly ) const
     {
-        auto& coeff{ poly.Coeff( coeff_index ) };
-        coeff = construction_value;
+        poly.SetCoeff( construction_value, coeff_index );
     }
 
     template <typename PolyType>

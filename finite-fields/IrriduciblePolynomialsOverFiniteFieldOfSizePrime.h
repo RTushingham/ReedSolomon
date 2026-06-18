@@ -52,6 +52,48 @@ constexpr PolynomialOverPrimeSizeFiniteField<Prime,Degree> GetIrriduciblePolynom
 		squares.at(0).at(index) = ElementOfFiniteFieldP<Prime>{ (integer)index };
 	}
 
+	if( Prime == 2 )
+	{
+		if( Degree == 2 )
+		{
+			PolynomialOverPrimeSizeFiniteField<Prime,Degree> irriducible{ PolynomialOverPrimeSizeFiniteField<Prime,Degree>::GetAdditionInvarient() };
+
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 0 );
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 1 );
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 2 );
+
+			return irriducible;
+		}
+		else if( Degree == 8 )
+		{
+			PolynomialOverPrimeSizeFiniteField<Prime,Degree> irriducible{ PolynomialOverPrimeSizeFiniteField<Prime,Degree>::GetAdditionInvarient() };
+
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 0 );
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 2 );
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 3 );
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 4 );
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 8 );
+
+			return irriducible;
+		}
+		else if( Degree == 16 )
+		{
+			PolynomialOverPrimeSizeFiniteField<Prime,Degree> irriducible{ PolynomialOverPrimeSizeFiniteField<Prime,Degree>::GetAdditionInvarient() };
+
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 0 );
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 1 );
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 3 );
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 12 );
+			irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetMultiplicativeInvarient(), 16 );
+
+			return irriducible;
+		}
+		else
+		{
+			throw;
+		}
+	}
+
 	const auto degree_factorization{ PrimeFactorisation_SingleFactor( Degree ) };
 	if( Degree != int_pow( degree_factorization.PrimeFactor, degree_factorization.Weight ) )
 		throw;	
@@ -74,8 +116,8 @@ constexpr PolynomialOverPrimeSizeFiniteField<Prime,Degree> GetIrriduciblePolynom
 			{
 				PolynomialOverPrimeSizeFiniteField<Prime,Degree> irriducible{ PolynomialOverPrimeSizeFiniteField<Prime,Degree>::GetAdditionInvarient() };
 
-				irriducible.Coeff( 0 ) = ElementOfFiniteFieldP<Prime>::GetAdditionInvarient() - b;
-				irriducible.Coeff( Degree ) = ElementOfFiniteFieldP<Prime>{ (integer)1 };
+				irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetAdditionInvarient() - b, 0 );
+				irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>{ (integer)1 }, Degree );
 
 				return irriducible;
 			}
@@ -94,8 +136,8 @@ constexpr PolynomialOverPrimeSizeFiniteField<Prime,Degree> GetIrriduciblePolynom
 			{
 				PolynomialOverPrimeSizeFiniteField<Prime,Degree> irriducible{ PolynomialOverPrimeSizeFiniteField<Prime,Degree>::GetAdditionInvarient() };
 
-				irriducible.Coeff( 0 ) = ElementOfFiniteFieldP<Prime>::GetAdditionInvarient() - b;
-				irriducible.Coeff( Degree ) = ElementOfFiniteFieldP<Prime>{ (integer)1 };
+				irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>::GetAdditionInvarient() - b, 0 );
+				irriducible.SetCoeff( ElementOfFiniteFieldP<Prime>{ (integer)1 }, Degree );
 
 				return irriducible;
 			}

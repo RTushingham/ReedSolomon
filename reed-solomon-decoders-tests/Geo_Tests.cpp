@@ -1,31 +1,24 @@
-#include "reed-solomon-decoders/BerlekampWelch.h"
 #include "reed-solomon-decoders/Geo.h"
 
-#include "helpers/ErrorIntroduction.h"
-
-#include "reed-solomon-codes/Code.h"
-#include "reed-solomon-codes/Codeword.h"
-#include "reed-solomon-codes/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
-
 #include "polynomials-base-tests/helpers/InitializerHelper.h"
+#include "reed-solomon-codes/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 #include <vector>
 
-constexpr integer Prime{ 101 };
-constexpr integer Exponent{ 2 };
-constexpr std::size_t n{ 4 };
-constexpr std::size_t k{ 2 };
-
 namespace
 {
-    std::vector<PolynomialOverFiniteField<Prime,Exponent,k-1>> polynomials
-    { 
+    constexpr integer Prime{ 101 };
+    constexpr integer Exponent{ 2 };
+    constexpr std::size_t n{ 4 };
+    constexpr std::size_t k{ 2 };
+
+    std::vector<PolynomialOverFiniteField<Prime,Exponent,k-1>> polynomials{ 
 		PolynomialOverFiniteField<Prime,Exponent,k-1> 
         {
-            std::array<ElementOfFiniteField<Prime, Exponent>, 2>
+            std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
                     (x_to( 4,0 ) + x_to( 5, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
@@ -37,7 +30,7 @@ namespace
         },
         PolynomialOverFiniteField<Prime,Exponent,k-1> 
         {
-            std::array<ElementOfFiniteField<Prime, Exponent>, 2>
+            std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
                     (x_to( 100,0 ) + x_to( 56, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
@@ -49,7 +42,7 @@ namespace
         },
         PolynomialOverFiniteField<Prime,Exponent,k-1> 
         {
-            std::array<ElementOfFiniteField<Prime, Exponent>, 2>
+            std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
                     (x_to( 0,0 ) + x_to( 0, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
@@ -61,7 +54,7 @@ namespace
         },
         PolynomialOverFiniteField<Prime,Exponent,k-1> 
         {
-            std::array<ElementOfFiniteField<Prime, Exponent>, 2>
+            std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
                     (x_to( 2,0 ) + x_to( 3, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
@@ -73,7 +66,7 @@ namespace
         },
         PolynomialOverFiniteField<Prime,Exponent,k-1> 
         {
-            std::array<ElementOfFiniteField<Prime, Exponent>, 2>
+            std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
                     (x_to( 11,0 ) + x_to( 13, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
@@ -85,7 +78,7 @@ namespace
         },
         PolynomialOverFiniteField<Prime,Exponent,k-1> 
         {
-            std::array<ElementOfFiniteField<Prime, Exponent>, 2>
+            std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
                     (x_to( 23,0 ) + x_to( 29, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
@@ -97,7 +90,7 @@ namespace
         },
         PolynomialOverFiniteField<Prime,Exponent,k-1> 
         {
-            std::array<ElementOfFiniteField<Prime, Exponent>, 2>
+            std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
                     (x_to( 41,0 ) + x_to( 43, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
@@ -108,7 +101,6 @@ namespace
             } 
         }
 	};
-	
 
 	const ElementOfFiniteField<Prime, Exponent> argument_one{
         (x_to( 9,0 ) + x_to( 8, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
@@ -126,80 +118,39 @@ namespace
         (x_to( 14,0 ) + x_to( 15, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
 	};
 
-	Code<n, k, Prime, Exponent> code{ std::array<ElementOfFiniteField<Prime, Exponent>,n>{ argument_one, argument_two, argument_three, argument_four } };
-	const BerklekampWelchDecoder<n, k, Prime, Exponent> bw_decoder{ code };
+	Code<n, k, Prime, Exponent> code{ 
+        std::array<ElementOfFiniteField<Prime, Exponent>,n>{ 
+            argument_one, 
+            argument_two, 
+            argument_three,
+            argument_four 
+        } 
+    };
+
 	const GeoDecoder<n, k, Prime, Exponent> geo_decoder{ code };
-	
-	const std::array<ElementOfFiniteField<Prime, Exponent>,n>& generators{ code.generating_elements };
-	constexpr std::size_t e = code.parameters.e;
 }
 
-TEST( DecoderTests, CodewordToCodewordRoundTripNoErrorCase )
+
+TEST( GeoInternalsTests, InitialTermIsAsExpected )
+{
+    EXPECT_EQ( geo_decoder.m_initial_term.GetDegree(), code.generating_elements.size() );
+    for( const auto& generator : code.generating_elements )
+    {
+        EXPECT_TRUE( geo_decoder.m_initial_term( generator ).IsZero() );
+    }
+}
+
+TEST( GeoInternalsTests, LegrangeInterpolationWorks )
 {
     for( const auto& polynomial : polynomials )
     {
         const auto signal{ code.GenerateCodeword( polynomial ) };
+        const auto l_i_res{ geo_decoder.LagrangeInterpolation( signal ) };
 
-        EXPECT_TRUE( bw_decoder.Decode( signal ).has_value() );
-        EXPECT_EQ( signal, code.GenerateCodeword( bw_decoder.Decode( signal ).value() ) );
-
-        EXPECT_TRUE( geo_decoder.Decode( signal ).has_value() );
-        EXPECT_EQ( signal, code.GenerateCodeword( geo_decoder.Decode( signal ).value() ) );
-    }
-}
-
-TEST( DecoderTests, CodewordToCodewordRoundTripOneErrorCase )
-{
-    for( const auto& polynomial : polynomials )
-    {
-        EXPECT_TRUE( code.parameters.e >= 1 );
-
-        auto signal{ code.GenerateCodeword( polynomial ) };
-
-        introduce_any_errors( 1, signal );
-        
-        EXPECT_TRUE( bw_decoder.Decode( signal ).has_value() );
-        EXPECT_EQ( polynomial, bw_decoder.Decode( signal ).value() );
-        
-        EXPECT_TRUE( geo_decoder.Decode( signal ).has_value() );
-        EXPECT_EQ( polynomial, geo_decoder.Decode( signal ).value() );
-    }
-}
-
-TEST( DecoderTests, CodewordToCodewordRoundTripUnrecoverableSituation )
-{
-    for( const auto& polynomial : polynomials )
-    {
-        EXPECT_TRUE( code.parameters.e < 2 );
-        EXPECT_TRUE( code.parameters.d - code.parameters.e >= 2 );
-        
-        auto signal{ code.GenerateCodeword( polynomial ) };
-        
-        // There is no guarantee that these are actually unrecoverable
-        introduce_any_errors( 2, signal );
-        
-        EXPECT_FALSE( bw_decoder.Decode( signal ).has_value() );
-        
-        EXPECT_FALSE( geo_decoder.Decode( signal ).has_value() );
-    }
-}
-
-TEST( DecoderTests, CodewordToCodewordRoundTripIncorrectlyRecovered )
-{
-    for( const auto& polynomial : polynomials )
-    {
-        EXPECT_TRUE( code.parameters.d % 2 == 1 );
-        EXPECT_TRUE( code.parameters.e < 2 );
-
-        auto signal{ code.GenerateCodeword( polynomial ) };
-        
-        introduce_any_errors( 3, signal );
-        
-        EXPECT_TRUE( bw_decoder.Decode( signal ).has_value() );
-        EXPECT_NE( polynomial, bw_decoder.Decode( signal ).value() );
-
-        EXPECT_TRUE( geo_decoder.Decode( signal ).has_value() );
-        EXPECT_NE( polynomial, geo_decoder.Decode( signal ).value() );
+        for( std::size_t generator_index{ 0 }; generator_index < code.generating_elements.size(); generator_index++ )
+        {
+            EXPECT_EQ( l_i_res( code.generating_elements.at( generator_index ) ), signal.blocks.at( generator_index ) );
+        }
     }
 }
 

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "elementary-mathematical-functions/DiscreteLog.h"
 
 constexpr unsigned max_value_to_bits( unsigned max_value )
