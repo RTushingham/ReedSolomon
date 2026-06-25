@@ -23,7 +23,7 @@ private:
         {
             PolynomialOverPrimeSizeFiniteField<Prime,2*(Exponent-1)> seed_polynomial{};
             seed_polynomial.SetCoeff( 1, Exponent + index );
-            residues.at( index ) = seed_polynomial % for_modulo;
+            residues.at( index ) = LongDivideBy( seed_polynomial, for_modulo ).remainder.Downsize<Exponent-1>();
         }
 		return residues;
 	};
@@ -43,12 +43,10 @@ public:
 		: value{}
 	{}
 	
-	constexpr ElementOfFiniteField<Prime,Exponent>& operator=( const ElementOfFiniteField<Prime,Exponent>& a ){
-		value = a.value;
-		return *this;
-	}
+	constexpr ElementOfFiniteField<Prime,Exponent>& operator=( const ElementOfFiniteField<Prime,Exponent>& a ) = default;
 	
-	constexpr bool operator==( const ElementOfFiniteField<Prime, Exponent>& a ) const{
+	constexpr bool operator==( const ElementOfFiniteField<Prime, Exponent>& a ) const
+	{
 		return value == a.value;
 	}
 	constexpr bool operator!=( const ElementOfFiniteField<Prime, Exponent>& a ) const
@@ -67,12 +65,9 @@ public:
 
         auto running_sum{ product.Downsize<Exponent-1>() };
 
-		PolynomialOverPrimeSizeFiniteField<Prime,0> scallar_multiplyer;
 		for( std::size_t residues_index{ 0 }; residues_index < residues.size(); residues_index++ )
 		{
-			scallar_multiplyer.SetCoeff( product.GetCoeff( Exponent + residues_index ), 0 );
-
-			running_sum = running_sum + ( scallar_multiplyer * residues.at( residues_index ) );
+			running_sum = running_sum + residues.at( residues_index ).ScalarMultiplication( product.GetCoeff( Exponent + residues_index ) );
 		}
 
 		return running_sum;
@@ -87,13 +82,7 @@ public:
 
 		const auto eea_result{ ExtendedEuclideanAlgorithm( 0, irriducible_polynomial, value ) };
 
-		const PolynomialOverPrimeSizeFiniteField<Prime, 0> final_correcting_factor( 
-			std::array<ElementOfFiniteFieldP<Prime>, PolynomialOverPrimeSizeFiniteField<Prime, 0>::GetCoeffCount()>{
-				eea_result.remainder.GetCoeff( 0 ).FindMultiplicativeInverse()
-			}
-		);
- 
-	    return ElementOfFiniteField<Prime, Exponent>{ eea_result.divisor_multiplyer * final_correcting_factor };
+	    return ElementOfFiniteField<Prime, Exponent>{ eea_result.divisor_multiplyer.ScalarMultiplication( eea_result.remainder.GetCoeff( 0 ).FindMultiplicativeInverse() ) };
 	}
 	
 	constexpr ElementOfFiniteField<Prime, Exponent> operator/( const ElementOfFiniteField<Prime, Exponent>& a ) const{

@@ -57,7 +57,7 @@ TEST( TestDataVerifictaion, IsIrriducible )
 		for( const auto i : irriducibles )
 		{
 			EXPECT_FALSE(
-				i.LongDivideBy( normalised_poly ).remainder.IsZero()
+				LongDivideBy( i, normalised_poly ).remainder.IsZero()
 			) << "polynomial of the form X^2 - " << Prime - i.GetCoeff(0).value << " is not irriducible. This contradicts Lang [1984, p. 331, Theorem 9.1]." ;
 		}
 	}

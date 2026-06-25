@@ -17,7 +17,7 @@ public:
 
         PolynomialOverField<node_count-1, FieldElements> setup_multiplyer{};
         setup_multiplyer.SetCoeff( FieldElements::GetMultiplicativeInvarient(), 1 );
-        PolynomialOverField<0, FieldElements> scalar_poly_for_multiplying{};
+        
         for( std::size_t outer_node_index{ 0 }; outer_node_index < nodes.size(); outer_node_index++ )
         {
             legrange_basis.at( outer_node_index ) = PolynomialOverField<node_count-1, FieldElements>::GetMultiplicativeInvarient();
@@ -35,11 +35,7 @@ public:
                 }
             }
             
-            correcting_term = correcting_term.FindMultiplicativeInverse();
-
-            scalar_poly_for_multiplying.SetCoeff( correcting_term, 0 );
-
-            legrange_basis.at( outer_node_index ) = legrange_basis.at( outer_node_index ) * scalar_poly_for_multiplying;
+            legrange_basis.at( outer_node_index ) = legrange_basis.at( outer_node_index ).ScalarMultiplication( correcting_term.FindMultiplicativeInverse() );
         }
 
         return legrange_basis;
@@ -58,12 +54,9 @@ public:
     {
         PolynomialOverField<node_count-1, FieldElements> interpolated_polynomial{};
 
-        PolynomialOverField<0, FieldElements> scalar_poly_for_multiplying{};
-
         for( std::size_t generator_element_index{ 0 }; generator_element_index < values.size(); generator_element_index++ )
         {
-            scalar_poly_for_multiplying.SetCoeff( values.at( generator_element_index ), 0 );
-            interpolated_polynomial = interpolated_polynomial + ( legrange_basis.at( generator_element_index ) * scalar_poly_for_multiplying );
+            interpolated_polynomial = interpolated_polynomial + ( legrange_basis.at( generator_element_index ).ScalarMultiplication( values.at( generator_element_index ) ) );
         }
 
         return interpolated_polynomial;

@@ -73,6 +73,12 @@ TEST( PolynomialsOverPrimeFieldTests, MultiplicationUpToSameDegree )
 
 namespace
 {
+	const PolynomialOverPrimeSizeFiniteField<Prime,0> abQuotient{
+ 		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,0>::GetCoeffCount()>{
+ 			ElementOfFiniteFieldP<Prime>{ 12 }/ElementOfFiniteFieldP<Prime>{ 9 }
+ 		} 
+ 	};
+
 	const auto acQuotient{
 		( x_to(  1,0 ) + x_to(  4,1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
 	};
@@ -83,13 +89,16 @@ namespace
 
 TEST( PolynomialsOverPrimeFieldTests, LongDivision )
 {
-	EXPECT_EQ( a.LongDivideBy( c ).remainder, acRemainder );
-	EXPECT_EQ( a.LongDivideBy( c ).quotient, acQuotient );
+	EXPECT_EQ( LongDivideBy( a, c ).remainder, acRemainder.Oversize<1>() );
+	EXPECT_EQ( LongDivideBy( a, c ).quotient, acQuotient );
+	
+	EXPECT_EQ( LongDivideBy( a, b ).quotient, abQuotient.Oversize<1>() );
+	EXPECT_EQ( a, LongDivideBy( a, b ).remainder.Oversize<2>() + ( LongDivideBy( a, b ).quotient.Downsize<0>() * b ) );
 
 	constexpr auto zero{ PolynomialOverPrimeSizeFiniteField<Prime,2>::GetAdditionInvarient() };
 
-	EXPECT_TRUE( zero.LongDivideBy( c ).remainder.IsZero() );
-	EXPECT_TRUE( zero.LongDivideBy( c ).quotient.IsZero() );
+	EXPECT_TRUE( LongDivideBy( zero, c ).remainder.IsZero() );
+	EXPECT_TRUE( LongDivideBy( zero, c ).quotient.IsZero() );
 }
 
 TEST( PolynomialsOverPrimeFieldTests, LongDivisionMaxPossibleQuotientSize )
@@ -107,19 +116,6 @@ TEST( PolynomialsOverPrimeFieldTests, LongDivisionMaxPossibleQuotientSize )
 	//       - ATM this case never comes up. Long division is only used for % irr_poly or in
 	// const auto a_div_d_result{ a.LongDivideBy( d ) };
 	// EXPECT_EQ( a, ( d*a_div_d_result.quotient ).ToSize<a.GetMaxDegree()>() + a_div_d_result.remainder.ToSize<a.GetMaxDegree()>() );
-}
-
-TEST( PolynomialsOverPrimeFieldTests, Modulo )
-{
-	const auto abQuotient = PolynomialOverPrimeSizeFiniteField<Prime,0>{ 
-		std::array<ElementOfFiniteFieldP<Prime>,PolynomialOverPrimeSizeFiniteField<Prime,0>::GetCoeffCount()>{
-			ElementOfFiniteFieldP<Prime>{ 12 }/ElementOfFiniteFieldP<Prime>{ 9 }
-		} 
-	};
-	EXPECT_EQ( (a % b).Oversize<2>(), a - ( abQuotient * b ) );
-
-	EXPECT_EQ( a % c, acRemainder );
-	EXPECT_EQ( (a % c).Oversize<2>(), a - ( acQuotient * c ) );
 }
 
 TEST( PolynomialsOverPrimeFieldTests, ClassIsConstexprInstantiable )

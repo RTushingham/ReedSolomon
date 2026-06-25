@@ -1,7 +1,6 @@
 #pragma once
 
 #include "container-helpers/ArrayExtensions.h"
-#include "finite-fields-extensions/GaussianElimination.h"
 #include "finite-fields-extensions/LagrangeInterpolation.h"
 #include "reed-solomon-codes/Code.h"
 #include "reed-solomon-codes/Codeword.h"
@@ -49,14 +48,12 @@ public:
 
     std::optional<PolynomialOverFiniteField<Prime,Exponent,k-1>> Decode( const Codeword<n, k, Prime, Exponent>& recieved_signal ) const
     {
-        auto initial_term{ m_initial_term };
-        
         auto interpolated_polynomial{ LagrangeInterpolation( recieved_signal ) };
 
         static_assert( k+e == n-e, "" );
-        const auto eea_result{ ExtendedEuclideanAlgorithm( k+e-1, initial_term, interpolated_polynomial ) };
+        const auto eea_result{ ExtendedEuclideanAlgorithm( k+e-1, m_initial_term, interpolated_polynomial ) };
 
-        auto longDivisionRes{ eea_result.remainder.LongDivideBy( eea_result.divisor_multiplyer ) };
+        auto longDivisionRes{ LongDivideBy( eea_result.remainder, eea_result.divisor_multiplyer ) };
         
         if( ! longDivisionRes.remainder.IsZero() )
         {

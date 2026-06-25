@@ -63,7 +63,7 @@ struct TestOutputs
 
 TestOutputs main_loop()
 {
-	std::fstream stream( R"(D:\ReedSolomon\functional-tests-file-based\text.txt)" );
+	std::fstream stream( R"(D:\ReedSolomon\functional-test-data\error-correcting\text.txt)" );
 	std::string text{};
 
 	if( !stream.is_open() )

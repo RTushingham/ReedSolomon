@@ -218,6 +218,18 @@ public:
 		return return_value;
 	}
 
+	constexpr PolynomialOverField<MaxDegree, FieldElements> ScalarMultiplication( const FieldElements& scalar ) const
+	{
+		auto return_value{ GetAdditionInvarient() };
+		
+		for( size_t index = 0; index < GetMaxDegree()+1; index++ )
+		{
+			return_value.SetCoeff( GetCoeff( index ) * scalar, index );
+		}
+	
+		return return_value;
+	}
+
 	template<integer OtherMaxDegree>
 	constexpr PolynomialOverField<MaxDegree+OtherMaxDegree, FieldElements> operator*( const PolynomialOverField<OtherMaxDegree, FieldElements>& a ) const
 	{
@@ -233,94 +245,91 @@ public:
 		
 		return return_value;
 	}
-
-	template<integer DivisorMaxDegree>
-	struct PolynomialLongDivisionRemainder
-	{
-		static_assert( DivisorMaxDegree > 0, "" );
-		PolynomialOverField<MaxDegree-1, FieldElements> quotient{ PolynomialOverField<MaxDegree-1, FieldElements>::GetAdditionInvarient() };
-		PolynomialOverField<DivisorMaxDegree-1, FieldElements> remainder{ PolynomialOverField<DivisorMaxDegree-1, FieldElements>::GetAdditionInvarient() };
-	};
-	
-	template<integer DivisorMaxDegree>
-	constexpr PolynomialLongDivisionRemainder<DivisorMaxDegree> LongDivideBy( const PolynomialOverField<DivisorMaxDegree, FieldElements>& divisor ) const
-	{
-		static_assert( DivisorMaxDegree > 0, "" );
-		static_assert( MaxDegree >= DivisorMaxDegree, "To focus code maintainance time I am restricting ovvered use cases. MaxDegree isn't actualy degree, so this unsupported case can be non-trivial." );
-
-		const auto divisor_degree{ divisor.tmp_GetDegree() };
-		if( !divisor_degree.has_value() )
-		{
-			throw;
-		}
-		const auto divisor_leading_coefficient = divisor.GetCoeff( divisor_degree.value() );
-
-		auto remainder_degree{ tmp_GetDegree() };
-		auto remainder_leading_coefficient{ Coeff_Safe( remainder_degree ) };
-
-		auto old_result{ LongDivideBy_Internal( 
-			remainder_degree,
-			remainder_leading_coefficient,
-			Downsize<MaxDegree-1>(),
-			divisor_degree.value(),
-			divisor_leading_coefficient,
-			divisor.ToSize<MaxDegree-1>()
-		) };
-
-		if constexpr( DivisorMaxDegree == MaxDegree )
-		{
-			return old_result;
-		}
-		else
-		{
-			PolynomialLongDivisionRemainder<DivisorMaxDegree> result{};
-			result.quotient = old_result.quotient;
-			result.remainder = old_result.remainder.ToSize<DivisorMaxDegree-1>();
-
-			return result;
-		}
-	}
-
-	static constexpr PolynomialLongDivisionRemainder<MaxDegree> LongDivideBy_Internal(
-		Sentinal<size_t, size_t, (size_t)-1> remainder_degree,
-		DefaultSentinal<FieldElements> remainder_leading_coefficient,
-		const PolynomialOverField<MaxDegree - 1, FieldElements>& numerator,
-		const size_t divisor_degree,
-		const FieldElements divisor_leading_coefficient,
-		const PolynomialOverField<MaxDegree - 1, FieldElements>& divisor
-	)
-	{
-		PolynomialLongDivisionRemainder<MaxDegree> result{};
-
-		PolynomialOverField<MaxDegree-1, FieldElements> running_remainder{ numerator };
-		auto running_quotient{ PolynomialOverField<MaxDegree-1, FieldElements>::GetAdditionInvarient() };
-
-		const auto inverse_of_divisor_leading_coefficient{ divisor_leading_coefficient.FindMultiplicativeInverse() };
-
-		while( remainder_degree.has_value() && ( remainder_degree.value() >= divisor_degree ) )
-		{
-			auto new_quotient{ PolynomialOverField<MaxDegree-1, FieldElements>::GetAdditionInvarient() };
-
-			new_quotient.SetCoeff( remainder_leading_coefficient.value() * inverse_of_divisor_leading_coefficient, remainder_degree.value() - divisor_degree );
-
-			running_remainder = running_remainder - ( new_quotient.MultiplyUpToSameDegree( divisor ) );
-			running_quotient = running_quotient + new_quotient;
-
-			remainder_degree = running_remainder.tmp_GetDegree();
-			remainder_leading_coefficient = running_remainder.Coeff_Safe( remainder_degree );
-		}
-
-		result.quotient = running_quotient;
-		result.remainder = running_remainder;
-		return { result };
-	}
-	
-	template<integer OtherMaxDegree>
-	constexpr PolynomialOverField<OtherMaxDegree-1, FieldElements> operator%( const PolynomialOverField<OtherMaxDegree, FieldElements>& a ) const
-	{
-		return LongDivideBy( a ).remainder;
-	}
 };
+
+
+template<std::size_t NumeratorMaxDegree, std::size_t DivisorMaxDegree, typename FieldElements>
+struct PolynomialLongDivisionRemainder
+{
+	static_assert( DivisorMaxDegree > 0, "" );
+	PolynomialOverField<NumeratorMaxDegree-1, FieldElements> quotient{ PolynomialOverField<NumeratorMaxDegree-1, FieldElements>::GetAdditionInvarient() };
+	PolynomialOverField<DivisorMaxDegree-1, FieldElements> remainder{ PolynomialOverField<DivisorMaxDegree-1, FieldElements>::GetAdditionInvarient() };
+};
+
+template<std::size_t OpFormMaxDegree, typename FieldElements>
+constexpr PolynomialLongDivisionRemainder<OpFormMaxDegree, OpFormMaxDegree, FieldElements> LongDivideBy_Internal(
+	Sentinal<size_t, size_t, (size_t)-1> remainder_degree,
+	DefaultSentinal<FieldElements> remainder_leading_coefficient,
+	const PolynomialOverField<OpFormMaxDegree - 1, FieldElements>& numerator,
+	const size_t divisor_degree,
+	const FieldElements divisor_leading_coefficient,
+	const PolynomialOverField<OpFormMaxDegree - 1, FieldElements>& divisor
+)
+{
+	PolynomialLongDivisionRemainder<OpFormMaxDegree, OpFormMaxDegree, FieldElements> result{};
+
+	PolynomialOverField<OpFormMaxDegree-1, FieldElements> running_remainder{ numerator };
+	auto running_quotient{ PolynomialOverField<OpFormMaxDegree-1, FieldElements>::GetAdditionInvarient() };
+
+	const auto inverse_of_divisor_leading_coefficient{ divisor_leading_coefficient.FindMultiplicativeInverse() };
+
+	while( remainder_degree.has_value() && ( remainder_degree.value() >= divisor_degree ) )
+	{
+		auto new_quotient{ PolynomialOverField<OpFormMaxDegree-1, FieldElements>::GetAdditionInvarient() };
+
+		new_quotient.SetCoeff( remainder_leading_coefficient.value() * inverse_of_divisor_leading_coefficient, remainder_degree.value() - divisor_degree );
+
+		running_remainder = running_remainder - ( new_quotient.MultiplyUpToSameDegree( divisor ) );
+		running_quotient = running_quotient + new_quotient;
+
+		remainder_degree = running_remainder.tmp_GetDegree();
+		remainder_leading_coefficient = running_remainder.Coeff_Safe( remainder_degree );
+	}
+
+	result.quotient = running_quotient;
+	result.remainder = running_remainder;
+	return { result };
+}
+
+template<std::size_t NumeratorMaxDegree, std::size_t DivisorMaxDegree, typename FieldElements>
+constexpr PolynomialLongDivisionRemainder<NumeratorMaxDegree, NumeratorMaxDegree, FieldElements> LongDivideBy( const PolynomialOverField<NumeratorMaxDegree, FieldElements>& numerator, const PolynomialOverField<DivisorMaxDegree, FieldElements>& divisor )
+{
+	static_assert( DivisorMaxDegree > 0, "" );
+	static_assert( NumeratorMaxDegree >= DivisorMaxDegree, "To focus code maintainance time I am restricting ovvered use cases. NumeratorMaxDegree isn't actualy degree, so this unsupported case can be non-trivial." );
+
+	const auto divisor_degree{ divisor.tmp_GetDegree() };
+	if( !divisor_degree.has_value() )
+	{
+		// Long division by 0 is undefined.
+		throw;
+	}
+	const auto divisor_leading_coefficient = divisor.GetCoeff( divisor_degree.value() );
+
+	auto remainder_degree{ numerator.tmp_GetDegree() };
+	auto remainder_leading_coefficient{ numerator.Coeff_Safe( remainder_degree ) };
+
+	auto old_result{ LongDivideBy_Internal<NumeratorMaxDegree,FieldElements>( 
+		remainder_degree,
+		remainder_leading_coefficient,
+		numerator.Downsize<NumeratorMaxDegree-1>(),
+		divisor_degree.value(),
+		divisor_leading_coefficient,
+		divisor.ToSize<NumeratorMaxDegree-1>()
+	) };
+
+	if constexpr( DivisorMaxDegree == NumeratorMaxDegree )
+	{
+		return old_result;
+	}
+	else
+	{
+		PolynomialLongDivisionRemainder<NumeratorMaxDegree,NumeratorMaxDegree,FieldElements> result{};
+		result.quotient = old_result.quotient;
+		result.remainder = old_result.remainder.ToSize<NumeratorMaxDegree-1>();
+
+		return result;
+	}
+}
 
 
 template<std::size_t LargerMaxDegree, std::size_t SmalerMaxDegree, typename FieldElements>
@@ -352,7 +361,7 @@ static constexpr EEAResult<LargerMaxDegree, LargerMaxDegree-1, FieldElements> Ex
 	
 	while( smaller_remainder_degree.has_value() && smaller_remainder_degree.value() > stopping_degree )
 	{
-		const auto long_div_res = larger_term.LongDivideBy_Internal( 
+		const auto long_div_res = LongDivideBy_Internal<LargerMaxDegree, FieldElements>( 
 			larger_remainder_degree,
 			larger_remainder_leading_term,
 			larger_remainder,

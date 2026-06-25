@@ -103,6 +103,6 @@ TEST( PolynomialsOverPrimeFieldTests, LongDivision )
 	};
 	constexpr auto zero{ PolynomialOverFiniteField<Prime,Exponent,MaxDegree+1>::GetAdditionInvarient() };
 
-	EXPECT_TRUE( zero.LongDivideBy( c ).remainder.IsZero() );
-	EXPECT_TRUE( zero.LongDivideBy( c ).quotient.IsZero() );
+	EXPECT_TRUE( LongDivideBy( zero, c ).remainder.IsZero() );
+	EXPECT_TRUE( LongDivideBy( zero, c ).quotient.IsZero() );
 }

@@ -12,11 +12,7 @@ TEST( FileBasedBenchmarkTest, TestCase )
 		for( const auto& output : outputs )
 		{
 			const auto decode_res{ decoder.Decode( output.recived_block ) };
-			EXPECT_TRUE( decode_res.has_value() ) << "Seed: \"" << output.message_seed << "\", Errors: " << std::endl;
-			if( decode_res.has_value() )
-			{
-				EXPECT_EQ( output.sent_codeword, code.GenerateCodeword( decode_res.value() ) ) << "Seed: \"" << output.message_seed << "\", Errors: " << std::endl;
-			}
+			EXPECT_EQ( output.message, decode_res ) << "Seed: \"" << output.message_seed << "\"";
 		}
 	}
 }

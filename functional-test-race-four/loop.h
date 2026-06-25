@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CodeSchema.h"
-#include "reed-solomon-decoders-tests/helpers/TestData.h"
 
 #include "finite-fields-tests/binary-helpers/CharToElm.h"
 #include "integer-packing-helpers/UIntAtLeast.h"
@@ -12,9 +11,9 @@
 
 using namespace TestCaseTwo;
 
-std::vector<TestData<n, k, Exponent>> main_loop()
+std::vector<Erasure_TestData> main_loop()
 {
-	std::fstream stream( R"(D:\ReedSolomon\functional-test-data\error-correcting\text.txt)" );
+	std::fstream stream( R"(D:\ReedSolomon\functional-test-data\erasure-correcting\text.txt)" );
 	std::string text{};
 
 	if( !stream.is_open() )
@@ -34,11 +33,9 @@ std::vector<TestData<n, k, Exponent>> main_loop()
 		throw std::exception( "Test invalid." );
 	}
 
-    std::vector<TestData<n, k, Exponent>> outputs{};
+    std::vector<Erasure_TestData> outputs{};
 	for( int64_t index{0}; index<text.size(); index++ )
 	{
-		// TODO:
-		//   - Make this into splitter/span thing
 		std::array<char,4> next_codeword{};
 		bool b{false};
 		for( std::size_t next_codeword_index{}; next_codeword_index<next_codeword.size(); next_codeword_index++ )
@@ -62,7 +59,7 @@ std::vector<TestData<n, k, Exponent>> main_loop()
 			break;
 		}
 
-		TestData<n, k, Exponent> new_output;
+		Erasure_TestData new_output;
 
 		new_output.message_seed = {
 			next_codeword.at( 0 ),
@@ -71,8 +68,6 @@ std::vector<TestData<n, k, Exponent>> main_loop()
 			next_codeword.at( 3 )
 		};
 
-		// TODO:
-		//   - Move this into encoder util
 		const std::array<ElementOfFiniteField<Prime, Exponent>,k> initializer{
 			char_to_elm<Exponent>( next_codeword.at( 0 ) ),
 			char_to_elm<Exponent>( next_codeword.at( 1 ) ),
@@ -84,20 +79,18 @@ std::vector<TestData<n, k, Exponent>> main_loop()
 
 		new_output.sent_codeword = 
 			code.GenerateCodeword(
-				PolynomialOverFiniteField<Prime,Exponent,k-1>{ 
-					initializer 
-				}
+				initializer
 			);
-
-		new_output.recived_block = new_output.sent_codeword;
-
-		// TODO:
-		//   - Move this into util
-		new_output.twiddled_bits.push_back( 6 );
-		new_output.recived_block.blocks.at( 6 ) = ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient();
-		new_output.twiddled_bits.push_back( 7 );
-		new_output.recived_block.blocks.at( 7 ) = ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient();
 		
+		for( std::size_t target_index{ 0 }, source_index{ 0 }; target_index < new_output.recived_block.size() && source_index < new_output.sent_codeword.blocks.size(); source_index++ )
+		{
+			if( false == Erasures.test( source_index ) )
+			{
+				new_output.recived_block.at( target_index ) = new_output.sent_codeword.blocks.at( source_index );
+				target_index++;
+			}
+		}
+
 		outputs.push_back( new_output );
 	}
 

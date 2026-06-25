@@ -40,7 +40,7 @@ TEST( irriduciblePolynomialGenerationTest, RaceOneSetupTest )
 			test_divisor.SetCoeff( bitset.test( coeff_index ), coeff_index );
 		}
 
-		const auto result{ irr_poly_candidate.LongDivideBy( test_divisor ) };
+		const auto result{ LongDivideBy( irr_poly_candidate, test_divisor ) };
 		EXPECT_NE( result.remainder, zero ) << "Divisible to seed: " << seed;
 	}
 }
@@ -60,7 +60,7 @@ TEST( irriduciblePolynomialGenerationTest, RaceTwoSetupTest )
 			test_divisor.SetCoeff( bitset.test( coeff_index ), coeff_index );
 		}
 
-		const auto result{ irr_poly_candidate.LongDivideBy( test_divisor ) };
+		const auto result{ LongDivideBy( irr_poly_candidate, test_divisor ) };
 		EXPECT_NE( result.remainder, zero ) << "Divisible to seed: " << seed;
 	}
 }

@@ -11,7 +11,7 @@ struct TestData
     std::string message_seed{};
     std::vector<std::size_t> twiddled_bits{};
     
-    PolynomialOverFiniteField<2, Exponent, k-1> message{};
+    std::array<ElementOfFiniteField<2, Exponent>, k> message{};
     Codeword<n, k, 2, Exponent> sent_codeword{ std::array<ElementOfFiniteField<2, Exponent>, n>{} };
     Codeword<n, k, 2, Exponent> recived_block{ std::array<ElementOfFiniteField<2, Exponent>, n>{} };
 };

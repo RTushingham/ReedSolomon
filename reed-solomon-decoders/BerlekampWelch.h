@@ -55,7 +55,7 @@ class BerklekampWelchDecoder
 	//   In particular as e=0 in this case:
 	// layout = q0, ..., q(k-1), 0, ..., 0, 0, ..., 0, "const"
 
-	
+
 public:
     constexpr BerklekampWelchDecoder( const Code<n, k, Prime, Exponent>& defining_schema )
         : schema{ defining_schema }
@@ -87,10 +87,10 @@ public:
 
             // 5.
             // check is divisible
-            auto longDivisionRes{ polys.generator.LongDivideBy( polys.error_polynomial ) };
+            auto longDivisionRes{ LongDivideBy( polys.generator, polys.error_polynomial ) };
 
 			static_assert( e > 0, "As polynomial lengths are template parameters we restrict our use cases to well defined ones." );
-            if( longDivisionRes.remainder == PolynomialOverFiniteField<Prime,Exponent, e-1>::GetAdditionInvarient() )
+            if( longDivisionRes.remainder.IsZero() )
             {
                 return longDivisionRes.quotient.Downsize<k-1>();
             }
