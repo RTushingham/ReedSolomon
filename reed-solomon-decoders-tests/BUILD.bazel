@@ -24,7 +24,7 @@ cc_test(
         "//reed-solomon-decoders",
         "//functional-test-race-one:main-loop",
         "//functional-test-race-two:main-loop",
-        "//polynomials-base-tests:test-helpers",
+        "//finite-fields-tests:test-helpers",
         "//imports/thirdparty/GoogleTest:GoogleTest",
         "//imports/thirdparty/GoogleTest:GoogleTest-Main",
     ],

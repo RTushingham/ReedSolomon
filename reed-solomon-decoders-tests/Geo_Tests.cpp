@@ -1,6 +1,6 @@
 #include "reed-solomon-decoders/Geo.h"
 
-#include "polynomials-base-tests/helpers/InitializerHelper.h"
+#include "finite-fields-tests/helpers/InitializerHelper.h"
 #include "reed-solomon-codes/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include "gmock/gmock.h"

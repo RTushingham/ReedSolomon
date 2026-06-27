@@ -1,6 +1,6 @@
 #pragma once
 
-#include "polynomials-base/PolynomialsOverField.h"
+#include "finite-fields/PolynomialsOverField.h"
 
 template <typename E1, typename E2>
 class x_to_ref

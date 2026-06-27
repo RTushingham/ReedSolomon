@@ -25,6 +25,18 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
+cc_library(
+    name = "test-helpers",
+    testonly = True,
+    srcs = glob([
+        "helpers/*.h",
+    ]),
+    deps = [
+        "//finite-fields",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 cc_test(
     name = "test-data-tests",
     srcs = glob([
@@ -45,7 +57,7 @@ cc_test(
     deps = [
         ":test-data",
         "//finite-fields",
-        "//polynomials-base-tests:test-helpers",
+        "//finite-fields-tests:test-helpers",
         "//imports/thirdparty/GoogleTest:GoogleTest",
         "//imports/thirdparty/GoogleTest:GoogleTest-Main",
     ],

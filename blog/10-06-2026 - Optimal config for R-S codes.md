@@ -3,7 +3,6 @@ This follows on from my last entry.
 
 My last entry was entirely about block codes, a classification of error-correcting and error-detecting codes which the Reed-Solomon codes classify as.
 
-
 ## Reed-Solomon code block code parameters
 
 First and foremost, Reed-Solomon codes are MDS codes, meaning `d = n - k + 1`, which means that `d` is equal to the theoretical maximum. This is one of the appeals of the Reed-Solomon codes.
@@ -14,7 +13,7 @@ In our case `q = 2**w`, and so each block will be `w*n <= w*(2**w)` bits long wi
 
 If `w` is equal to `8` then each alphabet entry is the size of the smallest registry size, a byte. In this case `w*(2**w) = 2048`, so each block (and therefore each message) can be at most 256 bytes long.
 
-Other codes such as _Geometric Goppa codes on the Rational Function Field_ exist which are MDS but have that `n <= q + 1`. From what I have seen that particular code is used far less use than the Reed-Solomon codes. Both codes are "linear codes" and so (from what I understand) have encoding and decoding algorithms in common with one another, but nevertheless one is more popular than the other. What this seems to imply is that specialist highly practical algorithms exist for encoding or decoding specifically Reed-Solomon codes. Otherwise, some other property (such as being cyclic, being highly list decodable, or something unknown to me at the moment) must be more useful in practice. I hope that through my investigation I am able to find out why.
+Other codes such as _Geometric Goppa codes on the Rational Function Field_ exist which are MDS but have that `n <= q + 1`. From what I have seen that particular code is used far less use than the Reed-Solomon codes. Both codes are "linear codes" and therefore have encoding and decoding algorithms in common with one another (from what I understand). Nevertheless one is more popular than the other. What this seems to imply is that specialist highly practical algorithms exist for encoding or decoding specifically Reed-Solomon codes. Otherwise, some other property (such as being cyclic, being highly list decodable, or something unknown to me at the moment) must be more useful in practice. I hope that through my investigation I am able to find out why.
 
 
 ## How do I pick a Reed-Solomon code configuration which optimizes performance? _- Computational complexity of finite field operations_
@@ -33,19 +32,41 @@ Each alphabet entry is a series of `w` bits, and is modelled as a polynomial deg
 
 In our case where `p = 2` addition and subtraction on an alphabet entry are easy, it is just a logical `xor` on each of the bits which make up the alphabet entry.
 
-For multiplication the simplest way of explaining what this boils down to is to contrast the modulo polynomial for of multiplication with normal binary integer multiplication modulo some power of `2`:
+For multiplication the simplest way of explaining what this boils down to is to contrast the modulo polynomial for of multiplication with normal binary integer multiplication modulo some power of `2` and the _carry-less product_ of two binary integers:
 
-1. For integer multiplication of `a` and `b` each bit in `a*b` has a position `j`. Each bit in the final representation corresponds the `xor` combination of all pairs of bits in `a` and `b` where the sum of their positions in `a` and `b` sum to `j`. This is known as the Cauchy product.
+1. For integer multiplication of `a` and `b` each bit in `a*b` has a position `j`. Each bit in the final representation can be computed by firstly finding the `xor` combination of all pairs of bits in `a` and `b` where the sum of their positions in `a` and `b` sum to `j` (this is known as the _Cauchy product_) then finding all the terms for which one or more of the combinations of pairs of bits where the sum of their positions are equal, then adding on the remaining bits (half the number of bits whose index summed to that position, shifted to the left by one bit), and this process continues recursively.
+
+    - For example, `3*3 = ( 2 + 1 )*( 2 + 1 ) = 4 + 2 + 2 + 1 = 0b100 + 0b010 + 0b010 + 0b001 = 4 + 4 + 1 = 0b100 + 0b100 + 0b001 = 8 + 1 = 0b1000 + 0b0001 = 0b1001 = 9`. Here the `xor` combination of bits ( `0b100 + 0b001 = 0b101` ) has additional terms added on ( `0b010 + 0b010 = 0b100` ) which then recurred for ( `0b100 + 0b100 = 0b1000` ) resulting in a final bit representation of `0b1001`. 
+    
+    - In another example `7*7 = 0b111 * 0b111 = 0b11100 + 0b1110 + 0b111 = 0b10101 + 0b100 + 0b1000 + 0b10000 = 0b110001 = 49`.
+
+    - When one of the numbers is a power of 2 this recursion step never happens, so the product as integers is equal to the _Cauchy product_.
 
 2. For integer multiplication given `l` there exists `c` and `d < 2**l` such that `a*b = c*(2**l) + d`, and indeed `d = a*b % 2**l`. 
 
 3. For integer multiplication modulo some power of two (say `2**l`) all bits corresponding to the term `c*(2**l)` are discarded and have no impact on `d`.
 
-4. In this case `d` is said to be the "carry-less product" of `a` and `b`.
+    - For example, `3*3 % 4 = 0b1101 % 0b100 = 0b01 = 1`, resulting in a final bit representation of `0b01`. 
+    
+    - In another example `7*7 % 8 = 0b110001 % 0b1000 = 0b001 = 1`. 
+
+To consider the _Cauchy product_ modulo some power of 2:
+
+1. As stated above for the _Cauchy product_ each bit in the final representation is the `xor` combination of all pairs of bits in `a` and `b` where the sum of their positions in `a` and `b` sum to `j`.
+
+    - For example, `CauchyProduct( 3, 3 ) = 0b1*( 0b1 && 0b1 ) + 0b10*( 0b10 && 0b1 xor 0b1 && 0b10 ) + 0b100*( 0b10 && 0b10 ) = 0b1*( true ) + 0b10*( true xor true ) + 0b100*( true ) = 0b1*( true ) + 0b10*( false ) + 0b100*( true ) = 0b101`. Here, instead of the final bit representation being equal to `9` for ordinary multiplication it is equal to `5`.
+
+    - For example, `CauchyProduct( 7, 7 ) = 0b11100 xor 0b1110 xor 0b111 = 0b10101 = 25`.
+
+2. When this is taken modulo some power of 2 all bits in positions larger than the bit representation of that power of 2 are discarded. In this case the final value is called the _carry-less product_ of the two numbers being multiplied together.
+
+    - For example, `CauchyProduct( 3, 3 ) % 4 = 0b101 % 0b100 = 0b01`. Here the _carry-less product_ of `3` and `3` up to two bits is `1`.
+
+    - For example, `CauchyProduct( 7, 7 ) % 8 = 0b10101 % 0b1000 = 0b101 = 5`. Here the _carry-less product_ of `7` and `7` up to two bits is `5` and significantly ` != 7*7 % 8`.
 
 To change our focus to finite field multiplication:
 
-1. If `l` is the degree of the irreducible polynomial `irr_pol(x)` then the previous calculation of `a*b = c*(2**l) + d` happens.
+1. If `l` is the degree of the irreducible polynomial `irr_pol(x)` then the previous calculation of `CauchyProduct( a, b ) = c*(2**l) + d` happens.
 
 2. When `c` is non-zero the terms corresponding to `c*(2**l)` correspond to a polynomial `F(x)` of degree `> l-1` and `< 2*l`, specifically one in the form `F(x) = f(x) * x**(l-1)` where `f(x)` is a polynomial of degree `< l`.
 
@@ -75,7 +96,7 @@ class ElementOfBinaryFiniteField<w, GF2Polynomial<w> irriducible_polynomial>
         {
             GF2Polynomial<2*(w-1)> seed_polynomial{};
             seed_polynomial.Coeff( w + index ) = 1;
-            residues.at( seed_polynomial % for_modulo );
+            residues.at( index ) = seed_polynomial % for_modulo;
         }
 		return residues;
 	};
@@ -97,7 +118,7 @@ public:
 		{
             if( discarded_terms.test( residues_index ) )
             {
-                running_sum += residues.at( residues_index );
+                running_sum ^= residues.at( residues_index );
             }
 		}
 
@@ -108,11 +129,23 @@ public:
 };
 ```
 
+- For example, `x^2 + x + 1` is an irriducible polynomial, which as binary will be represented by `0b111`. `PolyModulo( PolyMul( 0b11, 0b11 ), 0b111 ) = PolyModulo( 0b101, 0b111 ) = PolyModulo( 0b100, 0b111 ) xor PolyModulo( 0b001, 0b111 )`. As in polynomial form `0b001 = 1` and `1 = 1 + 0*( x^2+x+1 )` we have `PolyModulo( 0b001, 0b111 ) = 1 = 0b01`. As `0b100 = x^2` and `x^2 = 1*(x^2+x+1) + x+1` we have `PolyModulo( 0b001, 0b111 ) = x + 1 = 0b11`. Therefore `PolyModulo( PolyMul( 0b11, 0b11 ), 0b111 ) = 0b01 xor 0b11 = 0b10`.
+
+- To sumarise:
+    - All of the forms of multiplication and product finding here are distinct:
+        - To compare _integer multiplication_ to _Cauchy Products_: `3*3=9` `!=` `5=CauchyProduct( 3,3 )`.
+        - To compare _integer multipcliation modulo a power of two_ and the _carry-less products_: `7*7%8 = 1` `!=` `5 = CauchyProduct( 7, 7 ) % 8`. 
+        - To compare _integer multiplication modulo a power of two_ and _polynomial multiplication modulo an irriducible polynomial_: `3*3%4 = 1` `!=` `2=0b10 = PolyModulo( PolyMul( 0b11, 0b11 ), 0b111 )`.
+        - And finally, to compare _carry-less products_ and _polynomial multiplication modulo an irriducible polynomial_: `CauchyProduct( 3, 3 ) % 4 = 0b01` `!=` `0b10 = PolyModulo( PolyMul( 0b11, 0b11 ), 0b111 )`.
+
+    - Three operate over a finite number of elements (_integer multipcliation modulo a power of two_, _carry-less product_, and _polynomial multiplication modulo an irriducible polynomial_):
+        - Of the three of those _polynomial multiplication modulo an irriducible polynomial_ is the most computationally expensive (through my frame of analysis) because common hardware does not support performing this in one instruction, unlike the others.
+        - Of the three of those _polynomial multiplication modulo an irriducible polynomial_ has the benefit that it that every input value is reversable a.k.a. invertable.
+
+
 ## Computational complexity of multiplication in finite fields.
 
-_Lots of specialist hardware exists in the world, and hardware with instructions designed to perform finite field multiplication almost certainly exist already. I will talk about the general case here, especially because that corresponds to the general application development practice where binary are compiled to be run on all hardware and therefore do not make use of such specialist instructions._
-
-_This is a topic of ongoing study for me and will not reflect my complete understanding even in the near future._
+_Lots of specialist hardware exists in the world, and hardware with instructions designed to perform finite field multiplication almost certainly exist already. I will talk about the general case. This is a topic of ongoing study for me and will not reflect my complete understanding even in the near future._
 
 The computationally expensive part of this is the modulo portion of the calculation. This is because the problem is equivalent to long dividing the product of the two polynomials we wished to multiply by the irreducible polynomial which defines our schema. There are different ways of calculating this:
 - One method is by performing long division by the irreducible polynomial on the polynomial you wish to find the modulo value of. This is the current methodology used in my implementation.
@@ -121,7 +154,7 @@ The computationally expensive part of this is the modulo portion of the calculat
     - This is a `w-1` step process which at each step which effectively performs one integers modulo `2` scalar multiplication by a `w-1` degree polynomial over integers modulo `2` and one polynomial addition for two polynomials of degree `w-1` over the integers modulo `2`. In big-O notation it is `O(w)` in scalar multiplication for a `w-1` degree polynomial and addition for `w-1` degree polynomials. 
     - This is similar to the long division above, but unlike the above this only works when the polynomial is known ahead of time. Additionally, for our `q = 2**w` example this takes up at least `(w-1)*w**2 = w**3 - w**2` bits in memory.
 
-I do not know how calculating the carry-less product scales. It can either be done by a multiplication command which when `w` is equal to a register size does not require any modulo reduction.
+I do not know how calculating the carry-less product scales. If it is not done by a single specialist hardware instruction then it needs to be done as a `w` stage process where at each step a scalar multiplication and a xor command are performed. When `w` is equal to a register size no modulo command is required, otherwise one is needed at the end.
 
 Based on my current understanding, setting `w` to be equal to a register size is also significant because the form where a block is loaded into a form where arithmetic operations can be performed on it does not necessarily require any deserializing and unpacking relative to the form it was transferred in.
 
@@ -139,7 +172,7 @@ I want to test this, I am going to test two configs, `W,N,K` and `w,n,k`, agains
  - `W=16`, `N=4`, `K=2` - denoted with upper case letters
  - `w=8`, `n=8`, `k=4` - denoted with lower case letters
 
-I want to test this on my own implementation and on a highly optimized third-party implementation of the Reed-Solomon codes. I think the latter will win.
+I want to test this on my own implementation and on a highly optimized third-party implementation of the Reed-Solomon codes. I think the smaller alphabet version will win. 
 
 Here `W = 2*w`, but `2*N = n` and `2*K = k` so that the size in memory of messages and blocks stays the same. For both of these the message size is 32 bits, and the block size is 64 bits.
 
@@ -149,6 +182,8 @@ The question is, can multiplication operations be performed in a SIMD way? If no
 
 For this reason I want to test this on different implementations, specifically a highly optimized one, because if these operations could be performed in a SIMD way then they are more likely to be done so in a highly performant environment.
 
+Does hardware which supports SIMD operations on larger registers support carry-less product instructions on registries of that size? If not smaller codeword sizes may be more more performant, as the `xor` and `shift` based version of the carry-less product command is a `w` step operation.
+
 Additionally, I have studied some methodologies for encoding and decoding Reed-Solomon codes, however there are many more, and an optimal decoder may have a different order of complexity relative to the block code parameters than mine. Additionally, because the basis for my hypothesis rests on if pseudo-SIMD operations are able to happen, it will be interesting to see how and when the compiler on my machine is able to optimize my implementation enough to do that for me.
 
 The results of this test will inform how I may want to change my implementation to move closer to a more optimal implementation.
@@ -156,7 +191,7 @@ The results of this test will inform how I may want to change my implementation 
 
 ## Ramifications of `w` on error correcting capabilities _- how `e` scales in the previously proposed configs_
 
-The configs in this test share a fixed block length in bits and message length in bits, so investigating how the parameters have scaled will inform if there is any advantage to adjusting the 
+The configs in this test share a fixed block length in bits and message length in bits, so investigating how the parameters have scaled will inform if there is any advantage to adjusting the alphabet size on other properties for that config.
 
 Interestingly, for the first config `D = N-K+1 = 3`, while for the second config `d = n-k+1 = 5 = 2N-2K+1 < 2*(N-K+1) = 2*D`. so, `d` scales sub-linearly with `n` and `k`.
 
@@ -179,7 +214,7 @@ Therefore, irrespective of my previous hypothesis about decreasing the alphabet 
 
 ## Digression _- Brief illustration of why binary integer multiplication is not invertible and why for Finite field multiplication the modulo polynomial needs to be irreducible_
 
-Regular integer multiplication isn't invertible - `2*` anything is uninvertable.
+Regular integer multiplication isn't invertible - `2*` anything is uninvertable. Therefore the Cauchy Product isn't invertible either as `2*a = CauchyProduct( 2, a )`.
 
 From my example multiplication in `GF(4) == Z2[x]/(x^2 + x + 1)` will be invertible, and for this to be so `x^2 + x + 1` must be irreducible in `Z2[x]`.
 

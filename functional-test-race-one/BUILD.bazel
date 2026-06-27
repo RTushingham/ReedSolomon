@@ -9,7 +9,7 @@ cc_library(
     ]),
     deps = [
         "//finite-fields-tests:binary-helpers",
-        "//polynomials-base-tests:test-helpers",
+        "//finite-fields-tests:test-helpers",
         "//reed-solomon-codes",
         "//reed-solomon-decoders",
         "//reed-solomon-decoders-tests:test-helpers",

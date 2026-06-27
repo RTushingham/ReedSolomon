@@ -1,7 +1,7 @@
 #pragma once
 
 #include "container-helpers/ArrayExtensions.h"
-#include "polynomials-base/PolynomialsOverField.h"
+#include "finite-fields/PolynomialsOverField.h"
 
 #include <array>
 

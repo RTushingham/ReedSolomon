@@ -6,7 +6,7 @@
 #include "functional-test-race-two/CodeSchema.h"
 #include "finite-fields-tests/binary-helpers/CharToElm.h"
 
-#include "polynomials-base-tests/helpers/InitializerHelper.h"
+#include "finite-fields-tests/helpers/InitializerHelper.h"
 #include "integer-packing-helpers/UIntAtLeast.h"
 
 #include "gmock/gmock.h"

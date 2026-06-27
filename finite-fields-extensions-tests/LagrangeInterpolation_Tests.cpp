@@ -1,7 +1,7 @@
 #include "finite-fields-extensions/LagrangeInterpolation.h"
 
 #include "container-helpers/ArrayExtensions.h"
-#include "polynomials-base-tests/helpers/InitializerHelper.h"
+#include "finite-fields-tests/helpers/InitializerHelper.h"
 #include "reed-solomon-codes/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include "gmock/gmock.h"

@@ -2,7 +2,7 @@
 
 #include "FiniteFieldsOfSizePrime.h"
 
-#include "polynomials-base/PolynomialsOverField.h"
+#include "finite-fields/PolynomialsOverField.h"
 
 template <integer Prime, integer MaxDegree>
 using PolynomialOverPrimeSizeFiniteField = PolynomialOverField<MaxDegree, ElementOfFiniteFieldP<Prime>>;

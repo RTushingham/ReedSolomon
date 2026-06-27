@@ -6,7 +6,7 @@
 #include "reed-solomon-codes/Codeword.h"
 #include "reed-solomon-codes/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
-#include "polynomials-base-tests/helpers/InitializerHelper.h"
+#include "finite-fields-tests/helpers/InitializerHelper.h"
 
 namespace TestCaseOne
 {
