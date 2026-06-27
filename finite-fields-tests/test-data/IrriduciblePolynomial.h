@@ -1,3 +1,5 @@
+#pragma once
+
 #include "finite-fields/FiniteFieldsOfSizePrimeToAPower.h"
 
 constexpr PolynomialOverPrimeSizeFiniteField<101,2> irriducible{

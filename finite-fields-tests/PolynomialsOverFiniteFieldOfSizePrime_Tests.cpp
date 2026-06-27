@@ -1,3 +1,4 @@
+
 #include "finite-fields/PolynomialsOverFiniteFieldOfSizePrime.h"
 
 #include "finite-fields-tests/helpers/InitializerHelper.h"

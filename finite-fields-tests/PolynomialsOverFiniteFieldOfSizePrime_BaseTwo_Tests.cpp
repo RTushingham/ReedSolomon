@@ -3,6 +3,8 @@
 
 #include "gtest/gtest.h"
 
+#include <bitset>
+
 namespace
 {
 	constexpr integer Prime{ 2 };

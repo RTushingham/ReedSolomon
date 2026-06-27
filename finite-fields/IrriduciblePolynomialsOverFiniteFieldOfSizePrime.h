@@ -14,7 +14,7 @@ void constexpr populate_squares_up_to( std::array<std::array<ElementOfFiniteFiel
 	{
 		for( std::size_t index = 0; index<Prime; index++ )
 		{
-			squares.at(index_of_arrays).at(index) = squares.at(index_of_arrays-1).at(index)*squares.at(index_of_arrays-1).at(index);
+			squares.at(index_of_arrays).at(index) = squares.at(index_of_arrays-1).at(index) * squares.at(index_of_arrays-1).at(index);
 		}
 	}
 };
@@ -150,3 +150,4 @@ constexpr PolynomialOverPrimeSizeFiniteField<Prime,Degree> GetIrriduciblePolynom
 
 	throw;
 }
+
