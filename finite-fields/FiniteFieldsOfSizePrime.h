@@ -167,8 +167,6 @@ public:
 		tmp_coefficients &= b;
 	}
 
-	// TODO:
-	//   - Remove tmp_
 	constexpr Sentinal<size_t, size_t, (size_t)-1> tmp_GetDegree() const
 	{
 		for( size_t reverse_index = 0; reverse_index < GetCoeffCount(); reverse_index++ )
@@ -321,8 +319,6 @@ public:
 		return *this;
 	}
 
-	// TODO:
-	//   - Replace these with single C.L.P. operation versions
 	constexpr PolynomialOverField<MaxDegree, ElementOfFiniteFieldP<2>> MultiplyUpToSameDegree( const PolynomialOverField<MaxDegree, ElementOfFiniteFieldP<2>>& a ) const
 	{
 		u_atleast_t<GetCoeffCount()> running_xor{ 0 };

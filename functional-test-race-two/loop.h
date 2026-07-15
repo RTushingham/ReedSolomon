@@ -12,7 +12,7 @@
 
 using namespace TestCaseTwo;
 
-std::vector<TestData<n, k, Exponent>> main_loop()
+std::vector<TestData<n, k, Prime, Exponent>> main_loop()
 {
 	std::fstream stream( R"(D:\ReedSolomon\functional-test-data\error-correcting\text.txt)" );
 	std::string text{};
@@ -34,7 +34,7 @@ std::vector<TestData<n, k, Exponent>> main_loop()
 		throw std::exception( "Test invalid." );
 	}
 
-    std::vector<TestData<n, k, Exponent>> outputs{};
+    std::vector<TestData<n, k, Prime, Exponent>> outputs{};
 	for( int64_t index{0}; index<text.size(); index++ )
 	{
 		// TODO:
@@ -62,7 +62,7 @@ std::vector<TestData<n, k, Exponent>> main_loop()
 			break;
 		}
 
-		TestData<n, k, Exponent> new_output;
+		TestData<n, k, Prime, Exponent> new_output;
 
 		new_output.message_seed = {
 			next_codeword.at( 0 ),
@@ -84,9 +84,7 @@ std::vector<TestData<n, k, Exponent>> main_loop()
 
 		new_output.sent_codeword = 
 			code.GenerateCodeword(
-				PolynomialOverFiniteField<Prime,Exponent,k-1>{ 
-					initializer 
-				}
+				initializer
 			);
 
 		new_output.recived_block = new_output.sent_codeword;
@@ -94,9 +92,9 @@ std::vector<TestData<n, k, Exponent>> main_loop()
 		// TODO:
 		//   - Move this into util
 		new_output.twiddled_bits.push_back( 6 );
-		new_output.recived_block.blocks.at( 6 ) = ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient();
+		new_output.recived_block.at( 6 ) = ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient();
 		new_output.twiddled_bits.push_back( 7 );
-		new_output.recived_block.blocks.at( 7 ) = ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient();
+		new_output.recived_block.at( 7 ) = ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient();
 		
 		outputs.push_back( new_output );
 	}

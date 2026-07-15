@@ -24,16 +24,10 @@ public:
             throw;
     }
 
-    std::array<ElementOfFiniteField<2, Exponent>, k> Decode( const std::array<ElementOfFiniteField<Prime,Exponent>, k>& recieved_signal ) const
+    Message<n, k, Prime, Exponent> Decode( const std::array<ElementOfFiniteField<Prime,Exponent>, k>& recieved_signal ) const
     {
         auto poly{ first_k_non_erasure_generators_interpolator.Interpolate( recieved_signal ) };
 
-        std::array<ElementOfFiniteField<2, Exponent>, k> arry{};
-        for( std::size_t generator_index{ 0 }; generator_index < arry.size(); generator_index++ )
-        {
-            arry.at( generator_index ) = poly( schema.generating_elements.at( generator_index ) );
-        }
-
-        return arry;
+        return schema.PolynomialToMessage( poly );
     }
 };

@@ -1,6 +1,7 @@
 
 #include "finite-fields/PolynomialsOverFiniteFieldOfSizePrime.h"
 
+#include "finite-fields/PolynomialsOverFieldAlgorithms.h"
 #include "finite-fields-tests/helpers/InitializerHelper.h"
 
 #include "gtest/gtest.h"

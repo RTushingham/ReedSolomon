@@ -1,55 +1,8 @@
 #pragma once
 
-#include "BlockCodeParameters.h"
-#include "Codeword.h"
-#include "PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
-
-#include "container-helpers/ArrayExtensions.h"
-#include "cpp-helpers/Typedef.h"
-#include "finite-fields/FiniteFieldsOfSizePrimeToAPower.h"
-
-#include <array>
-
-constexpr static BlockCodeParameters GetReedSolomonParameters( std::size_t n, std::size_t k )
-{
-    return BlockCodeParameters::CreateFromBlockLengthMessageLengthHammingDistance(
-        n,
-        k,
-        n-k+1
-    );
-}
+#include "EncoderBase.h"
+#include "SimpleEncoderSchema.h"
 
 template<std::size_t n, std::size_t k, integer Prime, integer Exponent>
-class Code
-{
-public:
-    const std::array<ElementOfFiniteField<Prime,Exponent>, n> generating_elements;
+using Code = EncoderBase<SimpleEncoderSchema<n,k,Prime,Exponent>, n,k,Prime,Exponent>;
 
-    Codeword<n, k, Prime, Exponent> GenerateCodeword( const PolynomialOverFiniteField<Prime,Exponent,k-1>& generator_polynomial ) const
-    {
-        std::array<ElementOfFiniteField<Prime,Exponent>, n> blocks{};
-
-        for( std::size_t block_index{ 0 }; block_index<blocks.size(); block_index++ )
-        {
-            blocks.at( block_index ) = generator_polynomial( generating_elements.at( block_index ) );
-        }
-
-        return Codeword<n, k, Prime, Exponent>{ blocks };
-    }
-
-    Code( const std::array<ElementOfFiniteField<Prime,Exponent>, n>& generators )
-        : generating_elements{ generators }
-    {
-        if( array_contains( generators, ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() ) )
-        {
-            throw;
-        }
-
-        if( false == array_is_all_mutually_distinct( generators ) )
-        {
-            throw;
-        }
-    }
-
-    constexpr static BlockCodeParameters parameters{ GetReedSolomonParameters(n,k) };
-};

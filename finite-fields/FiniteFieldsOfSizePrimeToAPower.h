@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IrriduciblePolynomialsOverFiniteFieldOfSizePrime.h"
+#include "PolynomialsOverFieldAlgorithms.h"
 #include "PolynomialsOverFiniteFieldOfSizePrime.h"
 
 #include "cpp-helpers/Typedef.h"
@@ -60,13 +61,22 @@ public:
 		return { value - a.value };
 	}
 	constexpr ElementOfFiniteField<Prime, Exponent> operator*( const ElementOfFiniteField<Prime, Exponent>& a ) const{
-		auto product{ value * a.value };
+		const auto excess_terms{ value.MultiplicationExcessTerms( a.value ) };
+		// auto product{ value * a.value };
 	
-        auto running_sum{ product.Downsize<Exponent-1>() };
-	
+        auto running_sum{ value.MultiplyUpToSameDegree( a.value ) };
+		// auto running_sum{ product.Downsize<Exponent-1>() };
+		
+		// Why is MultiplicationExcessTerms better despite creating twice the number of operations?
+		//   + Avoids Downsize = avoids copy of data.
+		//   + RVO? 
+		//       - Requires 
+		//   - Doubles the number of operations 
+
 		for( std::size_t residues_index{ 0 }; residues_index < residues.size(); residues_index++ )
 		{
-			running_sum = running_sum + residues.at( residues_index ).ScalarMultiplication( product.GetCoeff( Exponent + residues_index ) );
+			running_sum = running_sum + residues.at( residues_index ).ScalarMultiplication( excess_terms.GetCoeff( residues_index ) );
+			// running_sum = running_sum + residues.at( residues_index ).ScalarMultiplication( product.GetCoeff( Exponent + residues_index ) );
 		}
 	
 		return running_sum;
@@ -159,8 +169,6 @@ public:
 		*target_u8 = value.value.tmp_coefficients;
 	}
 
-	// TODO:
-	//   - Remove tmp_
 	constexpr Sentinal<size_t, size_t, (size_t)-1> tmp_GetDegree() const
 	{
 		for( size_t reverse_index = 0; reverse_index < GetCoeffCount(); reverse_index++ )
@@ -340,6 +348,20 @@ public:
 			for( size_t this_index = 0; this_index < GetCoeffCount() - a_index; this_index++ )
 			{
 				return_value.SetCoeff( return_value.GetCoeff( a_index + this_index ) + ( a.GetCoeff( a_index ) * GetCoeff( this_index ) ), a_index + this_index );
+			}
+		}
+
+		return return_value;
+	}
+	constexpr PolynomialOverField<MaxDegree-1, ElementOfFiniteField<2,Exponent>> MultiplicationExcessTerms( const PolynomialOverField<MaxDegree, ElementOfFiniteField<2,Exponent>>& a ) const
+	{
+		auto return_value{ PolynomialOverField<MaxDegree-1, ElementOfFiniteField<2,Exponent>>::GetAdditionInvarient() };
+		
+		for( size_t a_index = 1; a_index < a.GetCoeffCount(); a_index++ )
+		{
+			for( size_t this_index = GetCoeffCount() - a_index; this_index < GetCoeffCount(); this_index++ )
+			{
+				return_value.SetCoeff( return_value.GetCoeff( a_index + this_index - GetCoeffCount() ) + ( a.GetCoeff( a_index ) * GetCoeff( this_index ) ), a_index + this_index - GetCoeffCount() );
 			}
 		}
 

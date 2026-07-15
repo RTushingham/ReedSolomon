@@ -8,6 +8,8 @@
 template <std::size_t node_count, typename FieldElements>
 class LagrangeInterpolation
 {
+    static_assert( node_count != 1, "Case not currently supported." );
+
     std::array<PolynomialOverField<node_count-1, FieldElements>, node_count> legrange_basis{};
 
 public:

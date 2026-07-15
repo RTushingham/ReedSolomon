@@ -132,16 +132,14 @@ TestOutputs main_loop()
 
 		outputs.sent.push_back(
 			code.GenerateCodeword(
-				PolynomialOverFiniteField<Prime,Exponent,k-1>{ 
-					initializer 
-				}
+				initializer
 			)
 		);
 
 		outputs.recieved.push_back(
 			outputs.sent.back()
 		);
-		outputs.recieved.back().blocks.at( 0 ) = ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient();
+		outputs.recieved.back().at( 0 ) = ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient();
 	}
 
     return outputs;

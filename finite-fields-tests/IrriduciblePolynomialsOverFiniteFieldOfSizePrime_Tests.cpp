@@ -1,6 +1,7 @@
 
 #include "finite-fields/IrriduciblePolynomialsOverFiniteFieldOfSizePrime.h"
 
+#include "finite-fields/PolynomialsOverFieldAlgorithms.h"
 #include "test-data/IrriduciblePolynomial.h"
 
 #include "gtest/gtest.h"

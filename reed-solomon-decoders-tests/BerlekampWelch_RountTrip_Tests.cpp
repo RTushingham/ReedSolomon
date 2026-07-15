@@ -20,94 +20,94 @@ constexpr integer Prime{ 2 };
 namespace TestCaseTwo
 {
     std::vector<Codeword<n, k, Prime, Exponent>> codewords{
-        code.GenerateCodeword( PolynomialOverFiniteField<Prime,Exponent,k-1>{
+        code.GenerateCodeword(
             std::array<ElementOfFiniteField<Prime,Exponent>, k>{
                 char_to_elm<Exponent>( (uint8_t)-1 ),
                 char_to_elm<Exponent>( (uint8_t)-1 ),
                 char_to_elm<Exponent>( (uint8_t)-1 ),
                 char_to_elm<Exponent>( (uint8_t)-1 )
             }
-        } ),
-        code.GenerateCodeword( PolynomialOverFiniteField<Prime,Exponent,k-1>{
+        ),
+        code.GenerateCodeword(
             std::array<ElementOfFiniteField<Prime,Exponent>, k>{
                 char_to_elm<Exponent>( (uint8_t)0b10000000 ),
                 char_to_elm<Exponent>( (uint8_t)0b10001110 ),
                 char_to_elm<Exponent>( (uint8_t)0b00010101 ),
                 char_to_elm<Exponent>( (uint8_t)0b11010001 )
             }
-        } ),
-        code.GenerateCodeword( PolynomialOverFiniteField<Prime,Exponent,k-1>{
+        ),
+        code.GenerateCodeword(
             std::array<ElementOfFiniteField<Prime,Exponent>, k>{
                 char_to_elm<Exponent>( (uint8_t)0b00000101 ),
                 char_to_elm<Exponent>( (uint8_t)0b00000010 ),
                 char_to_elm<Exponent>( (uint8_t)0b11100001 ),
                 char_to_elm<Exponent>( (uint8_t)0b11110111 )
             }
-        } ),
-        code.GenerateCodeword( PolynomialOverFiniteField<Prime,Exponent,k-1>{
+        ),
+        code.GenerateCodeword(
             std::array<ElementOfFiniteField<Prime,Exponent>, k>{
                 char_to_elm<Exponent>( (uint8_t)0b00110000 ),
                 char_to_elm<Exponent>( (uint8_t)0b01101110 ),
                 char_to_elm<Exponent>( (uint8_t)0b11101110 ),
                 char_to_elm<Exponent>( (uint8_t)0b10001110 )
             }
-        } ),
-        code.GenerateCodeword( PolynomialOverFiniteField<Prime,Exponent,k-1>{
+        ),
+        code.GenerateCodeword(
             std::array<ElementOfFiniteField<Prime,Exponent>, k>{
                 char_to_elm<Exponent>( (uint8_t)0b01100001 ),
                 char_to_elm<Exponent>( (uint8_t)0b10101101 ),
                 char_to_elm<Exponent>( (uint8_t)0b00110101 ),
                 char_to_elm<Exponent>( (uint8_t)0b10100001 )
             }
-        } ),
-        code.GenerateCodeword( PolynomialOverFiniteField<Prime,Exponent,k-1>{
+        ),
+        code.GenerateCodeword(
             std::array<ElementOfFiniteField<Prime,Exponent>, k>{
                 char_to_elm<Exponent>( (uint8_t)0b11011000 ),
                 char_to_elm<Exponent>( (uint8_t)0b11111110 ),
                 char_to_elm<Exponent>( (uint8_t)0b11111101 ),
                 char_to_elm<Exponent>( (uint8_t)0b00110100 )
             }
-        } ),
-        code.GenerateCodeword( PolynomialOverFiniteField<Prime,Exponent,k-1>{
+        ),
+        code.GenerateCodeword(
             std::array<ElementOfFiniteField<Prime,Exponent>, k>{
                 char_to_elm<Exponent>( (uint8_t)0b01000010 ),
                 char_to_elm<Exponent>( (uint8_t)0b00011001 ),
                 char_to_elm<Exponent>( (uint8_t)0b11010110 ),
                 char_to_elm<Exponent>( (uint8_t)0b11110011 )
             }
-        } ),
-        code.GenerateCodeword( PolynomialOverFiniteField<Prime,Exponent,k-1>{
+        ),
+        code.GenerateCodeword(
             std::array<ElementOfFiniteField<Prime,Exponent>, k>{
                 char_to_elm<Exponent>( (uint8_t)86 ),
                 char_to_elm<Exponent>( (uint8_t)12 ),
                 char_to_elm<Exponent>( (uint8_t)255 ),
                 char_to_elm<Exponent>( (uint8_t)32 )
             }
-        } ),
-        code.GenerateCodeword( PolynomialOverFiniteField<Prime,Exponent,k-1>{
+        ),
+        code.GenerateCodeword(
             std::array<ElementOfFiniteField<Prime,Exponent>, k>{
                 char_to_elm<Exponent>( (uint8_t)53 ),
                 char_to_elm<Exponent>( (uint8_t)7 ),
                 char_to_elm<Exponent>( (uint8_t)112 ),
                 char_to_elm<Exponent>( (uint8_t)187 )
             }
-        } ),
-        code.GenerateCodeword( PolynomialOverFiniteField<Prime,Exponent,k-1>{
+        ),
+        code.GenerateCodeword(
             std::array<ElementOfFiniteField<Prime,Exponent>, k>{
                 char_to_elm<Exponent>( 0 ),
                 char_to_elm<Exponent>( 0 ),
                 char_to_elm<Exponent>( 0 ),
                 char_to_elm<Exponent>( 0 )
             }
-        } ),
-        code.GenerateCodeword( PolynomialOverFiniteField<Prime,Exponent,k-1>{
+        ),
+        code.GenerateCodeword(
             std::array<ElementOfFiniteField<Prime,Exponent>, k>{
                 char_to_elm<Exponent>( 'c' ),
                 char_to_elm<Exponent>( 'h' ),
                 char_to_elm<Exponent>( ',' ),
                 char_to_elm<Exponent>( 'o' )
             }
-        } )
+        )
     };
 
 	const BerklekampWelchDecoder<n, k, Prime, Exponent> bw_decoder{ code };

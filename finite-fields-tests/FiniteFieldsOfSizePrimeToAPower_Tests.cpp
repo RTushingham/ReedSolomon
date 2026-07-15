@@ -342,3 +342,4 @@ TEST( ElementOfFiniteFieldTests, Addition )
 
 	EXPECT_EQ( a+e, ae_expected );
 }
+

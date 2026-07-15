@@ -20,3 +20,14 @@ constexpr std::array<ElemType, TargetLength> CopyIf( const std::array<ElemType, 
 	return output;
 };
 
+template<class ElemType, std::size_t TargetLength, std::size_t SourceLength>
+constexpr std::array<ElemType, TargetLength> CopyFirstKElements( const std::array<ElemType, SourceLength>& source )
+{
+	std::array<ElemType, TargetLength> return_value{};
+	for( std::size_t index{ 0 }; index < TargetLength; index++ )
+	{
+		return_value.at( index ) = source.at( index );
+	}
+	return return_value;
+}
+

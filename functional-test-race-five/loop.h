@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CodeSchema.h"
-#include "reed-solomon-decoders-tests/helpers/TestData.h"
+#include "reed-solomon-decoders-tmp-tests/helpers/TestData.h"
 
 #include "finite-fields-tests/binary-helpers/CharToElm.h"
 #include "integer-packing-helpers/UIntAtLeast.h"
@@ -10,7 +10,7 @@
 #include <fstream>
 #include <vector>
 
-using namespace TestCaseOne;
+using namespace TestCaseFive;
 
 namespace
 {
@@ -87,7 +87,7 @@ std::vector<TestData<n, k, Prime, Exponent>> main_loop()
 
 		// TODO - begin:
 		//   - Move this into encoder util
-		const std::array<ElementOfFiniteField<Prime, Exponent>,k> initializer{
+		const std::array<ElementOfFiniteField<2, Exponent>,k> initializer{
 			char_to_elm( chars_to_bitset( next_codeword.at( 0 ), next_codeword.at( 1 ) ) ),
 			char_to_elm( chars_to_bitset( next_codeword.at( 2 ), next_codeword.at( 3 ) ) )
 		};
@@ -105,7 +105,7 @@ std::vector<TestData<n, k, Prime, Exponent>> main_loop()
 		// TODO - begin:
 		//   - Move this into util
 		new_output.twiddled_bits.push_back( 0 );
-		new_output.recived_block.at( 0 ) = ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient();		
+		new_output.recived_block.at( 0 ) = ElementOfFiniteField<2,Exponent>::GetAdditionInvarient();		
 		// TODO - end
 		
 		outputs.push_back( new_output );

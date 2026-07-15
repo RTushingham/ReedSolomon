@@ -1,13 +1,12 @@
 load( "@rules_cc//cc:defs.bzl", "cc_library" )
 
 cc_library(
-    name = "reed-solomon-codes",
+    name = "finite-fields-extensions-tmp",
     hdrs = glob([
         "*.h"
     ]),
     deps = [
-        "//finite-fields",
-        "//finite-fields-extensions",
+        "//finite-fields-tmp",
     ],
     visibility = ["//visibility:public"],
 )

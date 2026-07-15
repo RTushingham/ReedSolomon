@@ -5,13 +5,13 @@
 #include <string>
 #include <vector>
 
-template<std::size_t n, std::size_t k, integer Exponent>
+template<std::size_t n, std::size_t k, integer Prime, integer Exponent>
 struct TestData
 {
     std::string message_seed{};
     std::vector<std::size_t> twiddled_bits{};
     
-    std::array<ElementOfFiniteField<2, Exponent>, k> message{};
-    Codeword<n, k, 2, Exponent> sent_codeword{ std::array<ElementOfFiniteField<2, Exponent>, n>{} };
-    Codeword<n, k, 2, Exponent> recived_block{ std::array<ElementOfFiniteField<2, Exponent>, n>{} };
+    Message<n, k, Prime, Exponent> message{};
+    Codeword<n, k, Prime, Exponent> sent_codeword{ };
+    Signal<n, k, Prime, Exponent> recived_block{ };
 };

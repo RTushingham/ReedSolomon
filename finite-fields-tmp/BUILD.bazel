@@ -1,0 +1,17 @@
+load( "@rules_cc//cc:defs.bzl", "cc_library" )
+
+cc_library(
+    name = "finite-fields-tmp",
+    hdrs = glob([
+        "*.h"
+    ]),
+    deps = [
+        "//container-helpers",
+        "//cpp-helpers",
+        "//elementary-mathematical-functions",
+        "//elementary-number-theory",
+        "//finite-fields",
+        "//integer-packing-helpers",
+    ],
+    visibility = ["//visibility:public"],
+)

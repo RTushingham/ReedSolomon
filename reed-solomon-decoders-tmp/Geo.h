@@ -1,10 +1,10 @@
 #pragma once
 
 #include "container-helpers/ArrayExtensions.h"
-#include "finite-fields/PolynomialsOverFieldAlgorithms.h"
-#include "finite-fields-extensions/LagrangeInterpolation.h"
-#include "reed-solomon-codes/Code.h"
-#include "reed-solomon-codes/Codeword.h"
+#include "finite-fields-extensions-tmp/tmp_LagrangeInterpolation.h"
+#include "finite-fields-tmp/tmp_PolynomialsOverFieldAlgorithms.h"
+#include "reed-solomon-codes-tmp/Code.h"
+#include "reed-solomon-codes-tmp/Codeword.h"
 
 #include <algorithm>
 #include <optional>
@@ -13,28 +13,28 @@ template<std::size_t n, std::size_t k, integer Prime, integer Exponent>
 class GeoDecoder
 {
     const Code<n, k, Prime, Exponent> schema;
-    const LagrangeInterpolation<n, ElementOfFiniteField<Prime,Exponent>> interpolator;
+    const tmp_LagrangeInterpolation<n,Exponent> interpolator;
 
     constexpr static std::size_t e{ GetReedSolomonParameters(n,k).e };
     static_assert( e > 0, "As polynomial lengths are template parameters we restrict our use cases to well defined ones." );
 
-    static PolynomialOverFiniteField<Prime, Exponent, n> CreateInitialPolynomial( const Code<n, k, Prime, Exponent>& defining_schema )
+    static ElementOfFiniteField_Poly<n,Exponent> CreateInitialPolynomial( const Code<n, k, Prime, Exponent>& defining_schema )
     {
-        auto initial_term{ PolynomialOverFiniteField<Prime, Exponent, n>::GetMultiplicativeInvarient() };
+        auto initial_term{ ElementOfFiniteField_Poly<n,Exponent>::GetMultiplicativeInvarient() };
         
-        PolynomialOverFiniteField<Prime, Exponent, n> setup_multiplyer{};
+        ElementOfFiniteField_Poly<n,Exponent> setup_multiplyer{};
         setup_multiplyer.SetCoeff( ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient(), 1 );
         for( const auto& generator_element : defining_schema.generating_elements )
         {
             setup_multiplyer.SetCoeff( ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() - generator_element, 0 );
-            initial_term = initial_term.MultiplyUpToSameDegree( setup_multiplyer );
+            initial_term = MultiplyUpToSameDegree( initial_term, setup_multiplyer );
         }
 
         return initial_term;
     }
 
 public:
-    const PolynomialOverFiniteField<Prime, Exponent, n> m_initial_term;
+    const ElementOfFiniteField_Poly<n,Exponent> m_initial_term;
 
     constexpr GeoDecoder( const Code<n, k, Prime, Exponent>& defining_schema )
         : schema{ defining_schema }
@@ -42,7 +42,7 @@ public:
         , interpolator{ schema.generating_elements }
     {}
 
-    PolynomialOverFiniteField<Prime, Exponent, n-1> LagrangeInterpolation( const Codeword<n, k, Prime, Exponent>& recieved_signal ) const
+    ElementOfFiniteField_Poly<n-1,Exponent> LagrangeInterpolation( const Codeword<n, k, Prime, Exponent>& recieved_signal ) const
     {
         return interpolator.Interpolate( recieved_signal );
     }
@@ -51,10 +51,12 @@ public:
     {
         auto interpolated_polynomial{ LagrangeInterpolation( recieved_signal ) };
 
+        // TODO:
+        //   double check that works for all d paraties
         static_assert( k+e == n-e, "" );
-        const auto eea_result{ ExtendedEuclideanAlgorithm( k+e-1, m_initial_term, interpolated_polynomial ) };
+        const auto eea_result{ tmp_ExtendedEuclideanAlgorithm( k+e-1, m_initial_term, interpolated_polynomial ) };
 
-        auto longDivisionRes{ LongDivideBy( eea_result.remainder, eea_result.divisor_multiplyer ) };
+        auto longDivisionRes{ tmp_LongDivideBy( eea_result.remainder, eea_result.divisor_multiplyer ) };
         
         if( ! longDivisionRes.remainder.IsZero() )
         {

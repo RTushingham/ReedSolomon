@@ -1,7 +1,7 @@
-#include "reed-solomon-decoders/Geo.h"
+#include "reed-solomon-decoders-tmp/Geo.h"
 
+#include "finite-fields-tmp/tmp_FiniteFieldsOfSizePrimeToAPower.h"
 #include "finite-fields-tests/helpers/InitializerHelper.h"
-#include "reed-solomon-codes/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -10,112 +10,124 @@
 
 namespace
 {
-    constexpr integer Prime{ 101 };
-    constexpr integer Exponent{ 2 };
+    constexpr integer Prime{ 2 };
+    constexpr integer Exponent{ 8 };
     constexpr std::size_t n{ 4 };
     constexpr std::size_t k{ 2 };
 
-    std::vector<PolynomialOverFiniteField<Prime,Exponent,k-1>> polynomials{ 
-		PolynomialOverFiniteField<Prime,Exponent,k-1> 
+    std::vector<ElementOfFiniteField_Poly<k-1,Exponent>> polynomials{ 
+		ElementOfFiniteField_Poly<k-1,Exponent> 
         {
             std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 4,0 ) + x_to( 5, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 1,0 ) + x_to( 1,1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 },
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 7,0 ) + x_to( 6, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 1,1 ) + x_to( 1,2 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 }
             } 
         },
-        PolynomialOverFiniteField<Prime,Exponent,k-1> 
+        ElementOfFiniteField_Poly<k-1,Exponent> 
         {
             std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 100,0 ) + x_to( 56, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 1,2 ) + x_to( 1,3 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 },
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 1,0 ) + x_to( 23, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 1,3 ) + x_to( 1,4 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 }
             } 
         },
-        PolynomialOverFiniteField<Prime,Exponent,k-1> 
+        ElementOfFiniteField_Poly<k-1,Exponent> 
         {
             std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 0,0 ) + x_to( 0, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 1,0 ) + x_to( 1,2 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 },
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 0,0 ) + x_to( 0, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 1,1 ) + x_to( 1,4 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 }
             } 
         },
-        PolynomialOverFiniteField<Prime,Exponent,k-1> 
+        ElementOfFiniteField_Poly<k-1,Exponent> 
         {
             std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 2,0 ) + x_to( 3, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 1,2 ) + x_to( 1,6 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 },
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 5,0 ) + x_to( 7, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 1,3 ) + x_to( 1,0 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 }
             } 
         },
-        PolynomialOverFiniteField<Prime,Exponent,k-1> 
+        ElementOfFiniteField_Poly<k-1,Exponent> 
         {
             std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 11,0 ) + x_to( 13, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 1,2 ) + x_to( 1,3 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 },
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 17,0 ) + x_to( 19, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 1,5 ) + x_to( 1,7 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 }
             } 
         },
-        PolynomialOverFiniteField<Prime,Exponent,k-1> 
+        ElementOfFiniteField_Poly<k-1,Exponent> 
         {
             std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 23,0 ) + x_to( 29, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 1,3 ) + x_to( 1,5 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 },
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 31,0 ) + x_to( 37, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 1,1 ) + x_to( 1,3 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 }
             } 
         },
-        PolynomialOverFiniteField<Prime,Exponent,k-1> 
+        ElementOfFiniteField_Poly<k-1,Exponent> 
         {
             std::array<ElementOfFiniteField<Prime, Exponent>, k>
             {
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 41,0 ) + x_to( 43, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 0,0 ) + x_to( 0,1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 },
                 ElementOfFiniteField<Prime, Exponent>{
-                    (x_to( 47,0 ) + x_to( 53, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+                    ( x_to( 0,0 ) + x_to( 0,1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
+                }
+            } 
+        },
+        ElementOfFiniteField_Poly<k-1,Exponent> 
+        {
+            std::array<ElementOfFiniteField<Prime, Exponent>, k>
+            {
+                ElementOfFiniteField<Prime, Exponent>{
+                    ( x_to( 0,0 ) + x_to( 0,1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
+                },
+                ElementOfFiniteField<Prime, Exponent>{
+                    ( x_to( 0,0 ) + x_to( 0,1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
                 }
             } 
         }
 	};
 
 	const ElementOfFiniteField<Prime, Exponent> argument_one{
-        (x_to( 9,0 ) + x_to( 8, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+        ( x_to( 1,0 ) + x_to( 1,1 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
 	};
     
 	const ElementOfFiniteField<Prime, Exponent> argument_two{
-        (x_to( 10,0 ) + x_to( 11, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+        ( x_to( 1,1 ) + x_to( 1,2 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
 	};
     
 	const ElementOfFiniteField<Prime, Exponent> argument_three{
-        (x_to( 12,0 ) + x_to( 13, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+        ( x_to( 1,2 ) + x_to( 1,3 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
 	};
     
 	const ElementOfFiniteField<Prime, Exponent> argument_four{
-        (x_to( 14,0 ) + x_to( 15, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
+        ( x_to( 1,3 ) + x_to( 1,4 ) ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
 	};
 
 	Code<n, k, Prime, Exponent> code{ 

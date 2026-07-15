@@ -82,11 +82,11 @@ std::vector<Erasure_TestData> main_loop()
 				initializer
 			);
 		
-		for( std::size_t target_index{ 0 }, source_index{ 0 }; target_index < new_output.recived_block.size() && source_index < new_output.sent_codeword.blocks.size(); source_index++ )
+		for( std::size_t target_index{ 0 }, source_index{ 0 }; target_index < new_output.recived_block.size() && source_index < new_output.sent_codeword.size(); source_index++ )
 		{
 			if( false == Erasures.test( source_index ) )
 			{
-				new_output.recived_block.at( target_index ) = new_output.sent_codeword.blocks.at( source_index );
+				new_output.recived_block.at( target_index ) = new_output.sent_codeword.at( source_index );
 				target_index++;
 			}
 		}

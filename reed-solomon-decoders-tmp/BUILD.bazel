@@ -1,13 +1,14 @@
 load( "@rules_cc//cc:defs.bzl", "cc_library" )
 
 cc_library(
-    name = "reed-solomon-codes",
+    name = "reed-solomon-decoders-tmp",
     hdrs = glob([
         "*.h"
     ]),
     deps = [
-        "//finite-fields",
-        "//finite-fields-extensions",
+        "//container-helpers",
+        "//finite-fields-extensions-tmp",
+        "//reed-solomon-codes-tmp",
     ],
     visibility = ["//visibility:public"],
 )

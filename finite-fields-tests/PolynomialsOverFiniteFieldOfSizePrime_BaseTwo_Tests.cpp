@@ -10,6 +10,8 @@ namespace
 	constexpr integer Prime{ 2 };
 }
 
+// GetCoeff
+
 TEST( PolynomialsOverPrimeFieldBaseTwoTests, GetCoeffAllZero )
 {
 	PolynomialOverPrimeSizeFiniteField<Prime,7> value{ 0 };
@@ -27,6 +29,7 @@ TEST( PolynomialsOverPrimeFieldBaseTwoTests, GetCoeffAllZero )
 TEST( PolynomialsOverPrimeFieldBaseTwoTests, GetCoeffAllOne )
 {
 	PolynomialOverPrimeSizeFiniteField<Prime,7> value{ (uint8_t)-1 };
+	EXPECT_FALSE( value.IsZero() );
 
 	constexpr auto one{ ElementOfFiniteFieldP<2>::GetMultiplicativeInvarient() };
 	for( std::size_t index{ 0 }; index < value.GetCoeffCount(); index++ )
@@ -57,19 +60,37 @@ TEST( PolynomialsOverPrimeFieldBaseTwoTests, GetCoeffPredefined )
 	}
 }
 
-//
+// SetCoeff
 
-TEST( PolynomialsOverPrimeFieldBaseTwoTests, SetCoeffAllZero )
+TEST( PolynomialsOverPrimeFieldBaseTwoTests, SetCoeffFromAllOneToAllZero )
 {
 	PolynomialOverPrimeSizeFiniteField<Prime,7> value{ (uint8_t)-1 };
 
 	constexpr auto zero{ ElementOfFiniteFieldP<2>::GetAdditionInvarient() };
 	for( std::size_t index{ 0 }; index < value.GetCoeffCount(); index++ )
 	{
+		EXPECT_TRUE( value.GetCoeff( index ).IsOne() );
 		value.SetCoeff( zero, index );
+		EXPECT_TRUE( value.GetCoeff( index ).IsZero() );
 	}
 
 	EXPECT_TRUE( value.IsZero() );
+}
+
+TEST( PolynomialsOverPrimeFieldBaseTwoTests, SetCoeffFromAllZeroOneToAllOne )
+{
+	PolynomialOverPrimeSizeFiniteField<Prime,7> value{ (uint8_t)0 };
+
+	constexpr auto one{ ElementOfFiniteFieldP<2>::GetMultiplicativeInvarient() };
+	for( std::size_t index{ 0 }; index < value.GetCoeffCount(); index++ )
+	{
+		EXPECT_TRUE( value.GetCoeff( index ).IsZero() );
+		value.SetCoeff( one, index );
+		EXPECT_TRUE( value.GetCoeff( index ).IsOne() );
+	}
+
+	PolynomialOverPrimeSizeFiniteField<Prime,7> all_one{ (uint8_t)-1 };
+	EXPECT_EQ( value, all_one );
 }
 
 TEST( PolynomialsOverPrimeFieldBaseTwoTests, SetCoeffPredefined )
@@ -93,7 +114,7 @@ TEST( PolynomialsOverPrimeFieldBaseTwoTests, SetCoeffPredefined )
 	EXPECT_EQ( value, expected );
 }
 
-//
+// MultiplyUpToSameDegree
 
 TEST( PolynomialsOverPrimeFieldBaseTwoTests, MultiplyUpToSameDegreeTruncatesCorrectly )
 {
@@ -113,6 +134,8 @@ TEST( PolynomialsOverPrimeFieldBaseTwoTests, MultiplyUpToSameDegreeNoTruncationR
 	EXPECT_EQ( value.MultiplyUpToSameDegree( value ), expected );
 }
 
+// operator*
+
 TEST( PolynomialsOverPrimeFieldBaseTwoTests, Multiplication )
 {
 	PolynomialOverPrimeSizeFiniteField<Prime,1> value{ (uint8_t)0b11 };
@@ -122,7 +145,7 @@ TEST( PolynomialsOverPrimeFieldBaseTwoTests, Multiplication )
 	EXPECT_EQ( value*value, expected );
 }
 
-//
+// ScalarMultiplication
 
 TEST( PolynomialsOverPrimeFieldBaseTwoTests, ScalarMultiplication )
 {

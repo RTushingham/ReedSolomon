@@ -1,5 +1,7 @@
 #include "IrriduciblePolynomial.h"
 
+#include "finite-fields/PolynomialsOverFieldAlgorithms.h"
+
 #include "gtest/gtest.h"
 
 #include <algorithm>

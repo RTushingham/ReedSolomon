@@ -1,6 +1,7 @@
 #pragma once
 
 #include "container-helpers/ArrayExtensions.h"
+#include "finite-fields/PolynomialsOverFieldAlgorithms.h"
 #include "finite-fields-extensions/GaussianElimination.h"
 #include "reed-solomon-codes/Code.h"
 #include "reed-solomon-codes/Codeword.h"
@@ -61,7 +62,7 @@ public:
         : schema{ defining_schema }
     {}
 
-    std::optional<PolynomialOverFiniteField<Prime,Exponent,k-1>> Decode( const Codeword<n, k, Prime, Exponent>& recieved_signal ) const
+    std::optional<Message<n, k, Prime, Exponent>> Decode( const Codeword<n, k, Prime, Exponent>& recieved_signal ) const
     {
         ElementaryMatrix<n, n+1, ElementOfFiniteField<Prime,Exponent>> matrix{ ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() };
 
@@ -92,7 +93,7 @@ public:
 			static_assert( e > 0, "As polynomial lengths are template parameters we restrict our use cases to well defined ones." );
             if( longDivisionRes.remainder.IsZero() )
             {
-                return longDivisionRes.quotient.Downsize<k-1>();
+                return schema.PolynomialToMessage( longDivisionRes.quotient.Downsize<k-1>() );
             }
         }
 
@@ -126,7 +127,7 @@ public:
 			// e entries
 
 			running_product = ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() - ElementOfFiniteField<Prime,Exponent>::GetMultiplicativeInvarient();
-			running_product = running_product * recieved_signal.blocks.at( row_index );
+			running_product = running_product * recieved_signal.at( row_index );
 			for( std::size_t e_index{ indexes.e_first_index }; e_index < indexes.e_boundary_index; e_index++ )
 			{
 				row.at( e_index ) = running_product;
