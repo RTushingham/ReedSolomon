@@ -1,7 +1,7 @@
 #pragma once
 
 #include "container-helpers/ArrayExtensions.h"
-#include "finite-fields-tmp/tmp_FiniteFieldsOfSizePrimeToAPower.h"
+#include "finite-fields-tmp/ElementOfFiniteField_Poly.h"
 
 #include <array>
 

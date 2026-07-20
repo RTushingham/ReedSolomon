@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Codeword.h"
-#include "PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include "cpp-helpers/Typedef.h"
 #include "finite-fields/FiniteFieldsOfSizePrimeToAPower.h"
+#include "finite-fields-polynomials/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 template<typename E, std::size_t n, std::size_t k, integer Prime, integer Exponent>
 class IEncoderSchema

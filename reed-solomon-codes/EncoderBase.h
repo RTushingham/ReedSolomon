@@ -5,11 +5,11 @@
 #include "IEncoderSchema.h"
 #include "Schema.h"
 #include "SystematicEncoderSchema.h"
-#include "PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include "container-helpers/ArrayExtensions.h"
 #include "cpp-helpers/Typedef.h"
 #include "finite-fields/FiniteFieldsOfSizePrimeToAPower.h"
+#include "finite-fields-polynomials/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include <array>
 
@@ -20,6 +20,15 @@ constexpr static BlockCodeParameters GetReedSolomonParameters( std::size_t n, st
         k,
         n-k+1
     );
+}
+
+template<std::size_t n, std::size_t k, integer Prime, integer Exponent>
+void PolynomialToCodeword( const std::array<ElementOfFiniteField<Prime,Exponent>, n>& generating_elements, Codeword<n, k, Prime, Exponent>& blocks, size_t start_index, const PolynomialOverFiniteField<Prime,Exponent,k-1>& generator_polynomial )
+{
+    for( std::size_t block_index{ start_index }; block_index < blocks.size(); block_index++ )
+    {
+        blocks.at( block_index ) = generator_polynomial( generating_elements.at( block_index ) );
+    }
 }
 
 template<typename EncoderSchemaType, std::size_t n, std::size_t k, integer Prime, integer Exponent>
@@ -34,7 +43,8 @@ public:
 
     Codeword<n, k, Prime, Exponent> GenerateCodeword( const Message<n, k, Prime, Exponent>& message ) const
     {
-        std::array<ElementOfFiniteField<Prime,Exponent>, n> blocks{};
+        Codeword<n, k, Prime, Exponent> blocks{};
+
         std::size_t first_empty_block_index{ 0 };
 
         if constexpr ( std::is_same_v<EncoderSchemaType, SystematicEncoderSchema<n,k,Prime,Exponent>> )
@@ -43,15 +53,11 @@ public:
             {
                 blocks.at( block_index ) = message.at( block_index );
             }
+
             first_empty_block_index = k;
         }
 
-        const auto generator_polynomial{ encoder_schema.MessageToPolynomial( message ) };
-        
-        for( std::size_t block_index{ first_empty_block_index }; block_index < blocks.size(); block_index++ )
-        {
-            blocks.at( block_index ) = generator_polynomial( generating_elements.at( block_index ) );
-        }
+        PolynomialToCodeword<n, k, Prime, Exponent>( generating_elements, blocks, first_empty_block_index, encoder_schema.MessageToPolynomial( message ) );
 
         return blocks;
     }

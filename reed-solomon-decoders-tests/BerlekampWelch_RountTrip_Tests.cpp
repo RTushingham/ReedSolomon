@@ -2,8 +2,6 @@
 
 #include "helpers/ErrorIntroduction.h"
 
-#include "functional-test-race-one/CodeSchema.h"
-#include "functional-test-race-two/CodeSchema.h"
 #include "finite-fields-tests/binary-helpers/CharToElm.h"
 
 #include "finite-fields-tests/helpers/InitializerHelper.h"
@@ -19,6 +17,49 @@ constexpr integer Prime{ 2 };
 
 namespace TestCaseTwo
 {
+    // TODO:
+    //   - Make this part of config
+    constexpr integer Prime{ 2 };
+    constexpr integer Exponent{ 8 };
+    constexpr std::size_t k{ 4 };
+    constexpr std::size_t n{ 8 };
+
+	const ElementOfFiniteField<Prime, Exponent> argument_one{
+		x_to( 1,0 ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> argument_two{
+		x_to( 1,1 ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> argument_three{
+		x_to( 1,2 ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> argument_four{
+		x_to( 1,3 ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> argument_five{
+		x_to( 1,4 ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> argument_six{
+		x_to( 1,5 ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> argument_seven{
+		x_to( 1,6 ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
+	};
+
+	const ElementOfFiniteField<Prime, Exponent> argument_eight{
+		x_to( 1,7 ).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,Exponent-1>>()
+	};
+
+	Code<n, k, Prime, Exponent> code{ std::array<ElementOfFiniteField<Prime, Exponent>,n>{ argument_one, argument_two, argument_three, argument_four, argument_five, argument_six, argument_seven, argument_eight } };
+	const GeoDecoder<n, k, Prime, Exponent> decoder{ code };
+
+
     std::vector<Codeword<n, k, Prime, Exponent>> codewords{
         code.GenerateCodeword(
             std::array<ElementOfFiniteField<Prime,Exponent>, k>{
@@ -160,3 +201,4 @@ TEST( BerlekampWelchTestsTwo, OldUnsolvableCasesTwoErrors )
             EXPECT_EQ( sent_signal, TestCaseTwo::code.GenerateCodeword( TestCaseTwo::decoder.Decode( recieved_signal ).value() ) );
     }
 }
+

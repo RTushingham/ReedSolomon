@@ -1,7 +1,7 @@
 #include "reed-solomon-decoders/Geo.h"
 
 #include "finite-fields-tests/helpers/InitializerHelper.h"
-#include "reed-solomon-codes/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
+#include "finite-fields-polynomials/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"

@@ -3,9 +3,9 @@
 
 #include "helpers/ErrorIntroduction.h"
 
+#include "finite-fields-polynomials/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 #include "reed-solomon-codes/Code.h"
 #include "reed-solomon-codes/Codeword.h"
-#include "reed-solomon-codes/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include "finite-fields-tests/helpers/InitializerHelper.h"
 

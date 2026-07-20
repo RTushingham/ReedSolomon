@@ -1,0 +1,12 @@
+load( "@rules_cc//cc:defs.bzl", "cc_library" )
+
+cc_library(
+    name = "finite-fields-polynomials",
+    hdrs = glob([
+        "*.h"
+    ]),
+    deps = [
+        "//finite-fields",
+    ],
+    visibility = ["//visibility:public"],
+)

@@ -1,6 +1,6 @@
 #include "reed-solomon-decoders-tmp/Geo.h"
 
-#include "finite-fields-tmp/tmp_FiniteFieldsOfSizePrimeToAPower.h"
+#include "finite-fields-tmp/ElementOfFiniteField_Poly.h"
 #include "finite-fields-tests/helpers/InitializerHelper.h"
 
 #include "gmock/gmock.h"

@@ -1,5 +1,4 @@
-#include "finite-fields-tmp/tmp_FiniteFieldsOfSizePrimeToAPower.h"
-#include "reed-solomon-codes-tmp/Code.h"
+#include "finite-fields-tmp/ElementOfFiniteField_Poly.h"
 #include "reed-solomon-codes-tmp/Codeword.h"
 
 #include <string>
@@ -11,7 +10,7 @@ struct TestData
     std::string message_seed{};
     std::vector<std::size_t> twiddled_bits{};
     
-    Message<n, k, 2, Exponent> message{};
-    Codeword<n, k, 2, Exponent> sent_codeword{};
-    Signal<n, k, 2, Exponent> recived_block{};
+    Message<n, k, Prime, Exponent> message{};
+    Codeword<n, k, Prime, Exponent> sent_codeword{};
+    Signal<n, k, Prime, Exponent> recived_block{};
 };

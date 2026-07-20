@@ -12,7 +12,7 @@ class Schema
 public:
     const std::array<ElementOfFiniteField<Prime,Exponent>, n> generating_elements;
     
-    Schema( const std::array<ElementOfFiniteField<Prime,Exponent>, n>& generators )
+    constexpr Schema( const std::array<ElementOfFiniteField<Prime,Exponent>, n>& generators )
         : generating_elements{ generators }
     {
         if( array_contains( generators, ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() ) )

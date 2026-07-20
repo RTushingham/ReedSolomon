@@ -1,6 +1,6 @@
+#include "finite-fields-polynomials/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 #include "reed-solomon-codes/Code.h"
 #include "reed-solomon-codes/Codeword.h"
-#include "reed-solomon-codes/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include <string>
 #include <vector>
@@ -15,3 +15,4 @@ struct TestData
     Codeword<n, k, Prime, Exponent> sent_codeword{ };
     Signal<n, k, Prime, Exponent> recived_block{ };
 };
+

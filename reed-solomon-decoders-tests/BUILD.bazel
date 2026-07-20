@@ -22,8 +22,6 @@ cc_test(
         ":test-helpers",
         "//reed-solomon-codes",
         "//reed-solomon-decoders",
-        "//functional-test-race-one:main-loop",
-        "//functional-test-race-two:main-loop",
         "//finite-fields-tests:test-helpers",
         "//imports/thirdparty/GoogleTest:GoogleTest",
         "//imports/thirdparty/GoogleTest:GoogleTest-Main",

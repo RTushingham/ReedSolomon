@@ -3,7 +3,7 @@
 
 #include "helpers/ErrorIntroduction.h"
 
-#include "finite-fields-tmp/tmp_FiniteFieldsOfSizePrimeToAPower.h"
+#include "finite-fields-tmp/ElementOfFiniteField_Poly.h"
 #include "reed-solomon-codes-tmp/Code.h"
 #include "reed-solomon-codes-tmp/Codeword.h"
 

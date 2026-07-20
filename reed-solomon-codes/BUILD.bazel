@@ -8,6 +8,7 @@ cc_library(
     deps = [
         "//finite-fields",
         "//finite-fields-extensions",
+        "//finite-fields-polynomials",
     ],
     visibility = ["//visibility:public"],
 )

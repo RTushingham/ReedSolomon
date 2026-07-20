@@ -3,11 +3,11 @@
 #include "Schema.h"
 #include "Codeword.h"
 #include "IEncoderSchema.h"
-#include "PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include "container-helpers/ArrayTransformation.h"
 #include "cpp-helpers/Typedef.h"
 #include "finite-fields/FiniteFieldsOfSizePrimeToAPower.h"
+#include "finite-fields-polynomials/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 template<std::size_t n, std::size_t k, integer Prime, integer Exponent>
 class SimpleEncoderSchema : public IEncoderSchema<SimpleEncoderSchema<n,k,Prime,Exponent>,n,k,Prime,Exponent>

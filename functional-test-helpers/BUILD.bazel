@@ -1,0 +1,22 @@
+load( "@rules_cc//cc:defs.bzl", "cc_library" )
+
+cc_library(
+    name = "functional-test-helpers",
+    testonly = True,
+    srcs = glob([
+        "*.cpp",
+    ]),
+    hdrs = glob([
+        "*.h",
+    ]),
+    deps = [
+        "//finite-fields",
+        "//finite-fields-tests:binary-helpers",
+        "//finite-fields-tests:test-helpers",
+        "//reed-solomon-codes-tmp",
+        "//reed-solomon-decoders-tmp",
+        "//reed-solomon-decoders-tmp-tests:test-helpers",
+        "//functional-test-schemas",
+    ],
+    visibility = ["//visibility:public"],
+)

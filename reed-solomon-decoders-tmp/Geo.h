@@ -2,7 +2,7 @@
 
 #include "container-helpers/ArrayExtensions.h"
 #include "finite-fields-extensions-tmp/tmp_LagrangeInterpolation.h"
-#include "finite-fields-tmp/tmp_PolynomialsOverFieldAlgorithms.h"
+#include "finite-fields-tmp/ElementOfFiniteField_Poly_Algorithms.h"
 #include "reed-solomon-codes-tmp/Code.h"
 #include "reed-solomon-codes-tmp/Codeword.h"
 
