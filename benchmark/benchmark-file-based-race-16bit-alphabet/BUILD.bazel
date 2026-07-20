@@ -1,0 +1,39 @@
+load( "@rules_cc//cc:defs.bzl", "cc_library", "cc_binary", "cc_test" )
+
+cc_library(
+    name = "main-loop",
+    testonly = True,
+    hdrs = glob([
+        "CodeSchema.h",
+    ]),
+    deps = [
+        "//functional-tests/helpers",
+        "//functional-tests/schemas",
+        "//reed-solomon-codes",
+        "//reed-solomon-decoders",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_binary(
+    name = "benchmark-file-based",
+    testonly = True,
+    srcs = glob([
+        "main.cpp",
+    ]),
+    deps = [
+        ":main-loop",
+    ],
+)
+
+cc_test(
+    name = "validity-tests",
+    srcs = glob([
+        "test.cpp",
+    ]),
+    deps = [
+        ":main-loop",
+        "//imports/thirdparty/GoogleTest:GoogleTest",
+        "//imports/thirdparty/GoogleTest:GoogleTest-Main",
+    ],
+)

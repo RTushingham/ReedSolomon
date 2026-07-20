@@ -1,0 +1,16 @@
+load( "@rules_cc//cc:defs.bzl", "cc_test", "cc_library" )
+
+cc_test(
+    name = "finite-fields-tmp-tests",
+    srcs = glob([
+        "*.cpp",
+    ]),
+    deps = [
+        "//finite-fields-tmp",
+        "//tests/finite-fields-tests:test-data",
+        "//tests/finite-fields-tests:test-helpers",
+        "//imports/thirdparty/GoogleTest:GoogleTest",
+        "//imports/thirdparty/GoogleTest:GoogleTest-Main",
+    ],
+    visibility = ["//visibility:public"],
+)

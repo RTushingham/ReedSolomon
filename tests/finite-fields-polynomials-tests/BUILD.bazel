@@ -1,0 +1,16 @@
+load( "@rules_cc//cc:defs.bzl", "cc_test" )
+
+cc_test(
+    name = "finite-fields-polynomials-tests",
+    srcs = glob([
+        "*_Tests.cpp",
+    ]),
+    deps = [
+        "//finite-fields-polynomials",
+        "//tests/finite-fields-tests:test-data",
+        "//tests/finite-fields-tests:test-helpers",
+        "//imports/thirdparty/GoogleTest:GoogleTest",
+        "//imports/thirdparty/GoogleTest:GoogleTest-Main",
+    ],
+    visibility = ["//visibility:public"],
+)

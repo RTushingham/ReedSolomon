@@ -1,0 +1,13 @@
+load( "@rules_cc//cc:defs.bzl", "cc_library", "cc_binary", "cc_test" )
+
+cc_test(
+    name = "functional-tests/file-based-all-configs-erasure",
+    srcs = glob([
+        "*.cpp",
+    ]),
+    deps = [
+        "//functional-tests/helpers",
+        "//imports/thirdparty/GoogleTest:GoogleTest",
+        "//imports/thirdparty/GoogleTest:GoogleTest-Main",
+    ],
+)
