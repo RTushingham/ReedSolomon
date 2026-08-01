@@ -6,14 +6,11 @@ cc_library(
     hdrs = glob([
         "*.h"
     ]),
-    srcs = glob([
-        "*.cpp",
-    ]),
     deps = [
         "//cpp-helpers",
         "//reed-solomon-codes",
         "//reed-solomon-decoders",
-        "//tests/finite-fields-tests:test-helpers",
+        "//tests/finite-fields-tests:helpers",
     ],
     visibility = ["//visibility:public"],
 )

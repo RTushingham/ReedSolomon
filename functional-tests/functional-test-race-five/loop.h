@@ -1,13 +1,13 @@
 #pragma once
 
 #include "CodeSchema.h"
-#include "tests/reed-solomon-decoders-tmp-tests/helpers/TestData.h"
-
-#include "tests/finite-fields-tests/binary-helpers/CharToElm.h"
 #include "integer-packing-helpers/UIntAtLeast.h"
 
+#include "tests/reed-solomon-decoders-tests/helpers/TestData.h"
+#include "tests/finite-fields-tests/binary-helpers/CharToElm.h"
+#include "functional-tests/helpers/LoadDataFromFile.h"
+
 #include <bitset>
-#include <fstream>
 #include <vector>
 
 using namespace TestCaseFive;
@@ -28,20 +28,7 @@ namespace
 
 std::vector<TestData<n, k, Prime, Exponent>> main_loop()
 {
-	std::fstream stream( R"(D:\ReedSolomon\functional-tests\data\error-correcting\text.txt)" );
-	std::string text{};
-
-	if( !stream.is_open() )
-	{
-		throw std::exception( "Test invalid." );
-	}
-	
-	while( !stream.eof() )
-	{
-		std::string buffer{};
-		stream >> buffer;
-		text += buffer;
-	}
+	const auto text{ LoadDataFromFile( TestDataPaths::Large_File ) };
 
 	if( text.empty() )
 	{

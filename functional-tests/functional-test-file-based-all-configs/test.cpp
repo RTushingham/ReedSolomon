@@ -1,3 +1,4 @@
+#include "reed-solomon-codes/ReedSolomonBlockCodeParameters.h"
 #include "reed-solomon-codes/SimpleEncoderSchema.h"
 #include "reed-solomon-codes/SystematicEncoderSchema.h"
 #include "reed-solomon-decoders/GeoDecoderSchema.h"
@@ -45,17 +46,12 @@ namespace
     TYPED_TEST_SUITE( FunctionalFileBaseTests, AllBinaryFunctionalTestSchemas );
 }
 
-// TODO - begin:
-//   - Simplify
 #include "reed-solomon-codes/EncoderBase.h"
 
 #include <numeric>
-// TODO - end
 
 TYPED_TEST( FunctionalFileBaseTests, TestCase )
 {
-	// TODO - begin:
-	//   - Simplify
 	constexpr size_t e{ GetReedSolomonParameters( TypeParam::m_RSSchema::n, TypeParam::m_RSSchema::k ).e };
 
 	std::vector<size_t> error_indexes;
@@ -66,7 +62,6 @@ TYPED_TEST( FunctionalFileBaseTests, TestCase )
 	ASSERT_THAT( error_indexes, ::testing::Not( ::testing::IsEmpty() ) );
 	ASSERT_THAT( error_indexes, ::testing::Each( ::testing::Ge( 0 ) ) );
 	ASSERT_THAT( error_indexes, ::testing::Each( ::testing::Lt( TypeParam::m_RSSchema::n ) ) );
-	// TODO - end
 	
 	const auto outputs{ FormatTestData<TypeParam>( text, error_indexes ) };
 
@@ -74,10 +69,7 @@ TYPED_TEST( FunctionalFileBaseTests, TestCase )
 	const auto decoder{ TypeParam{}.decoder };
 
 	ASSERT_LT( 0, outputs.size() );
-	// TODO - begin:
-	//   - Test the test helpers elsewhere?
 	ASSERT_EQ( 12185, outputs.size() );
-	// TODO - end
 	for( const auto& output : outputs )
 	{
 		const auto decode_res{ decoder.Decode( output.recived_signal ) };

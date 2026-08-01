@@ -5,6 +5,7 @@
 #include "finite-fields/FiniteFieldsOfSizePrimeToAPower.h"
 
 #include <array>
+#include <exception>
 
 template<std::size_t n, std::size_t k, integer Prime, integer Exponent>
 class Schema
@@ -17,12 +18,12 @@ public:
     {
         if( array_contains( generators, ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() ) )
         {
-            throw;
+            throw std::exception( "Schema generators cannot be zero." );
         }
 
         if( false == array_is_all_mutually_distinct( generators ) )
         {
-            throw;
+            throw std::exception( "Schema generators must be distinct." );
         }
     }
 };

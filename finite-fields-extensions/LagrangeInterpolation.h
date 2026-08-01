@@ -43,7 +43,7 @@ public:
         return legrange_basis;
     }
 
-    LagrangeInterpolation( const std::array<FieldElements, node_count>& nodes )
+    constexpr LagrangeInterpolation( const std::array<FieldElements, node_count>& nodes )
         : legrange_basis{ CreateLegrangeBasis( nodes ) }
     {
         if( ! array_is_all_mutually_distinct( nodes ) )
@@ -52,7 +52,7 @@ public:
         }
     }
 
-    PolynomialOverField<node_count-1, FieldElements> Interpolate( const std::array<FieldElements, node_count>& values ) const
+    constexpr PolynomialOverField<node_count-1, FieldElements> Interpolate( const std::array<FieldElements, node_count>& values ) const
     {
         PolynomialOverField<node_count-1, FieldElements> interpolated_polynomial{};
 

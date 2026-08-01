@@ -1,3 +1,4 @@
+#include "reed-solomon-codes/ReedSolomonBlockCodeParameters.h"
 #include "reed-solomon-codes/SimpleEncoderSchema.h"
 #include "reed-solomon-codes/SystematicEncoderSchema.h"
 #include "reed-solomon-decoders/ErasureDecoderSchema.h"
@@ -47,17 +48,12 @@ namespace
     TYPED_TEST_SUITE( FunctionalFileBaseTests, AllBinaryFunctionalTestSchemas );
 }
 
-// TODO - begin:
-//   - Simplify
 #include "reed-solomon-codes/EncoderBase.h"
 
 #include <numeric>
-// TODO - end
 
 TYPED_TEST( FunctionalFileBaseTests, ErasuresAreCheckBits )
 {
-	// TODO - begin:
-	//   - Simplify
 	constexpr size_t S{ GetReedSolomonParameters( TypeParam::m_RSSchema::n, TypeParam::m_RSSchema::k ).d - 1 };
 
 	std::vector<size_t> erasure_indexes;
@@ -70,7 +66,6 @@ TYPED_TEST( FunctionalFileBaseTests, ErasuresAreCheckBits )
 		erasures.set( index );
 	}
 	ASSERT_EQ( S, erasures.count() );
-	// TODO - end
 
 	const auto outputs{ FormatTestData_Erasure<TypeParam>( text, erasures ) };
 
@@ -78,10 +73,7 @@ TYPED_TEST( FunctionalFileBaseTests, ErasuresAreCheckBits )
 	const auto decoder{ TypeParam{ erasures }.decoder };
 
 	ASSERT_LT( 0, outputs.size() );
-	// TODO - begin:
-	//   - Test the test helpers elsewhere?
 	ASSERT_EQ( 12185, outputs.size() );
-	// TODO - end
 	for( const auto& output : outputs )
 	{
 		const auto decode_res{ decoder.Decode( output.recived_signal ) };
@@ -91,8 +83,6 @@ TYPED_TEST( FunctionalFileBaseTests, ErasuresAreCheckBits )
 
 TYPED_TEST( FunctionalFileBaseTests, ErasuresAreMessageBits )
 {
-	// TODO - begin:
-	//   - Simplify
 	constexpr size_t S{ GetReedSolomonParameters( TypeParam::m_RSSchema::n, TypeParam::m_RSSchema::k ).d - 1 };
 
 	std::vector<size_t> erasure_indexes;
@@ -105,7 +95,6 @@ TYPED_TEST( FunctionalFileBaseTests, ErasuresAreMessageBits )
 		erasures.set( index );
 	}
 	ASSERT_EQ( S, erasures.count() );
-	// TODO - end
 
 	const auto outputs{ FormatTestData_Erasure<TypeParam>( text, erasures ) };
 
@@ -113,10 +102,7 @@ TYPED_TEST( FunctionalFileBaseTests, ErasuresAreMessageBits )
 	const auto decoder{ TypeParam{ erasures }.decoder };
 
 	ASSERT_LT( 0, outputs.size() );
-	// TODO - begin:
-	//   - Test the test helpers elsewhere?
 	ASSERT_EQ( 12185, outputs.size() );
-	// TODO - end
 	for( const auto& output : outputs )
 	{
 		const auto decode_res{ decoder.Decode( output.recived_signal ) };
@@ -126,8 +112,6 @@ TYPED_TEST( FunctionalFileBaseTests, ErasuresAreMessageBits )
 
 TYPED_TEST( FunctionalFileBaseTests, ErasuresAreArbitrary )
 {
-	// TODO - begin:
-	//   - Simplify
 	constexpr size_t S{ GetReedSolomonParameters( TypeParam::m_RSSchema::n, TypeParam::m_RSSchema::k ).d - 1 };
 
 	std::bitset<TypeParam::m_RSSchema::n> erasures{ 0 };
@@ -137,7 +121,6 @@ TYPED_TEST( FunctionalFileBaseTests, ErasuresAreArbitrary )
 		erasures.set( (3*index) % TypeParam::m_RSSchema::n );
 	}
 	ASSERT_EQ( S, erasures.count() );
-	// TODO - end
 
 	const auto outputs{ FormatTestData_Erasure<TypeParam>( text, erasures ) };
 
@@ -145,10 +128,7 @@ TYPED_TEST( FunctionalFileBaseTests, ErasuresAreArbitrary )
 	const auto decoder{ TypeParam{ erasures }.decoder };
 
 	ASSERT_LT( 0, outputs.size() );
-	// TODO - begin:
-	//   - Test the test helpers elsewhere?
 	ASSERT_EQ( 12185, outputs.size() );
-	// TODO - end
 	for( const auto& output : outputs )
 	{
 		const auto decode_res{ decoder.Decode( output.recived_signal ) };

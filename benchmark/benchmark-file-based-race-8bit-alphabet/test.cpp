@@ -1,19 +1,18 @@
 #include "CodeSchema.h"
 
+#include "reed-solomon-codes/ReedSolomonBlockCodeParameters.h"
+
 #include "functional-tests/helpers/FormatTestData.h"
 #include "functional-tests/helpers/LoadDataFromFile.h"
 
 #include "gtest/gtest.h"
 
-// TODO - begin:
-//   - Simplify
 #include "reed-solomon-codes/EncoderBase.h"
 
 namespace
 {
 	constexpr size_t e{ GetReedSolomonParameters( TestSchema::m_RSSchema::n, TestSchema::m_RSSchema::k ).e };
 }
-// TODO - end
 
 TEST( BenchmarkValidityTests, AllDataDecodedCorrectly )
 {
@@ -24,8 +23,6 @@ TEST( BenchmarkValidityTests, AllDataDecodedCorrectly )
 
 	const auto outputs{ FormatTestData<TestSchema>( text, error_indexes ) };
 
-	// TODO:
-	//   - Make constexpr
 	const auto code{ TestSchema{}.encoder };
 	const auto decoder{ TestSchema{}.decoder };
 

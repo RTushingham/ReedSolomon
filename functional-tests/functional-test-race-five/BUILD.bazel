@@ -8,11 +8,12 @@ cc_library(
         "loop.h",
     ]),
     deps = [
+        "//functional-tests/helpers",
         "//tests/finite-fields-tests:binary-helpers",
-        "//tests/finite-fields-tests:test-helpers",
+        "//tests/finite-fields-tests:helpers",
         "//reed-solomon-codes-tmp",
         "//reed-solomon-decoders-tmp",
-        "//tests/reed-solomon-decoders-tmp-tests:test-helpers",
+        "//tests/reed-solomon-decoders-tests:helpers",
     ],
     visibility = ["//visibility:public"],
 )

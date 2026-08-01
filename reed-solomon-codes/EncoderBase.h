@@ -3,6 +3,7 @@
 #include "BlockCodeParameters.h"
 #include "Codeword.h"
 #include "IEncoderSchema.h"
+#include "ReedSolomonBlockCodeParameters.h"
 #include "Schema.h"
 #include "SystematicEncoderSchema.h"
 
@@ -12,15 +13,6 @@
 #include "finite-fields-polynomials/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
 
 #include <array>
-
-constexpr static BlockCodeParameters GetReedSolomonParameters( std::size_t n, std::size_t k )
-{
-    return BlockCodeParameters::CreateFromBlockLengthMessageLengthHammingDistance(
-        n,
-        k,
-        n-k+1
-    );
-}
 
 template<std::size_t n, std::size_t k, integer Prime, integer Exponent>
 void PolynomialToCodeword( const std::array<ElementOfFiniteField<Prime,Exponent>, n>& generating_elements, Codeword<n, k, Prime, Exponent>& blocks, size_t start_index, const PolynomialOverFiniteField<Prime,Exponent,k-1>& generator_polynomial )
@@ -37,7 +29,7 @@ class EncoderBase
     static_assert( std::is_base_of_v<IEncoderSchema<EncoderSchemaType,n,k,Prime,Exponent>, EncoderSchemaType>, "EncoderSchemaType is not a child of desired interface class." );
 
 public:
-    const std::array<ElementOfFiniteField<Prime,Exponent>, n> generating_elements;
+    const Schema<n, k, Prime, Exponent> schema;
 
     const EncoderSchemaType encoder_schema;
 
@@ -57,7 +49,7 @@ public:
             first_empty_block_index = k;
         }
 
-        PolynomialToCodeword<n, k, Prime, Exponent>( generating_elements, blocks, first_empty_block_index, encoder_schema.MessageToPolynomial( message ) );
+        PolynomialToCodeword<n, k, Prime, Exponent>( schema.generating_elements, blocks, first_empty_block_index, encoder_schema.MessageToPolynomial( message ) );
 
         return blocks;
     }
@@ -67,21 +59,9 @@ public:
         return encoder_schema.PolynomialToMessage( polynomial );
     }
 
-    EncoderBase( const std::array<ElementOfFiniteField<Prime,Exponent>, n>& generators )
-        : generating_elements{ generators }
-        , encoder_schema{ Schema<n, k, Prime, Exponent>{ generators } }
-    {
-        if( array_contains( generators, ElementOfFiniteField<Prime,Exponent>::GetAdditionInvarient() ) )
-        {
-            throw;
-        }
-
-        if( false == array_is_all_mutually_distinct( generators ) )
-        {
-            throw;
-        }
-    }
-
-    constexpr static BlockCodeParameters parameters{ GetReedSolomonParameters(n,k) };
+    constexpr EncoderBase( const Schema<n, k, Prime, Exponent>& generators )
+        : schema{ generators }
+        , encoder_schema{ generators }
+    {}
 };
 

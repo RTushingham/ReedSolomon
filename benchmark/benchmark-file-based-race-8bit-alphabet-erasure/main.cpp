@@ -18,8 +18,6 @@ void main()
 
 	const auto outputs{ FormatTestData_Erasure<TestSchema>( text, erasures ) };
 
-	// TODO:
-	//   - Make constexpr
 	const auto code{ TestSchema{ erasures }.encoder };
 	const auto decoder{ TestSchema{ erasures }.decoder };
 

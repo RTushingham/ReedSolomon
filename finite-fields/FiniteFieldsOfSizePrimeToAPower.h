@@ -317,7 +317,7 @@ public:
 				return false;
 			}
 		}
-		return values.at( 0 ) == 1
+		return values.at( 0 ) == 1;
 	}
 
 	constexpr PolynomialOverField<MaxDegree, ElementOfFiniteField<2,Exponent>> operator+(const PolynomialOverField<MaxDegree, ElementOfFiniteField<2,Exponent>>& a) const

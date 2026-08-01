@@ -4,8 +4,8 @@
 
 #include "finite-fields-tmp/ElementOfFiniteField_Poly_Algorithms.h"
 
+#include "reed-solomon-codes/Codeword.h"
 #include "reed-solomon-codes-tmp/Code.h"
-#include "reed-solomon-codes-tmp/Codeword.h"
 
 #include "tests/finite-fields-tests/helpers/InitializerHelper.h"
 

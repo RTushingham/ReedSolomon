@@ -1,22 +1,11 @@
 #pragma once
 
-#include "BlockCodeParameters.h"
-#include "Codeword.h"
-
 #include "container-helpers/ArrayExtensions.h"
 #include "cpp-helpers/Typedef.h"
 #include "finite-fields-tmp/ElementOfFiniteField_Poly.h"
+#include "reed-solomon-codes/Codeword.h"
 
 #include <array>
-
-constexpr static BlockCodeParameters GetReedSolomonParameters( std::size_t n, std::size_t k )
-{
-    return BlockCodeParameters::CreateFromBlockLengthMessageLengthHammingDistance(
-        n,
-        k,
-        n-k+1
-    );
-}
 
 template<std::size_t n, std::size_t k, integer Prime, integer Exponent>
 class Code
@@ -66,8 +55,4 @@ public:
             throw;
         }
     }
-
-    // TODO:
-    //   - Effectively code dupe.
-    constexpr static BlockCodeParameters parameters{ GetReedSolomonParameters(n,k) };
 };

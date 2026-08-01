@@ -26,7 +26,7 @@ cc_library(
 )
 
 cc_library(
-    name = "test-helpers",
+    name = "helpers",
     testonly = True,
     srcs = glob([
         "helpers/*.h",
@@ -57,7 +57,7 @@ cc_test(
     deps = [
         ":test-data",
         "//finite-fields",
-        "//tests/finite-fields-tests:test-helpers",
+        "//tests/finite-fields-tests:helpers",
         "//imports/thirdparty/GoogleTest:GoogleTest",
         "//imports/thirdparty/GoogleTest:GoogleTest-Main",
     ],

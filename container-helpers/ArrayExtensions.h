@@ -15,6 +15,20 @@ bool constexpr array_contains( const std::array<ElemType, Length>& array, const 
 };
 
 template<class ElemType, std::size_t Length>
+bool constexpr array_equals(  const std::array<ElemType, Length>& lhs, const std::array<ElemType, Length>& rhs )
+{
+	for( std::size_t index{ 0 }; index < lhs.size(); index++ )
+	{
+		if( lhs.at( index ) != rhs.at( index ) )
+		{
+			return false;
+		}
+	}
+
+	return true;
+};
+
+template<class ElemType, std::size_t Length>
 bool constexpr array_is_all_mutually_distinct( const std::array<ElemType, Length>& array )
 {
 	for( std::size_t first_elm_index{ 0 }; first_elm_index < array.size()-1; first_elm_index++ )

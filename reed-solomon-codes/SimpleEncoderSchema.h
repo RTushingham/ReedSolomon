@@ -32,7 +32,7 @@ public:
         return message;
     }
 
-    SimpleEncoderSchema( const Schema<n,k,Prime,Exponent>& input_schema )
+    constexpr SimpleEncoderSchema( const Schema<n,k,Prime,Exponent>& input_schema )
         : schema{ input_schema }
     {}
 };

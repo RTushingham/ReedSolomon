@@ -12,8 +12,6 @@ template<typename RSSchema, typename EncoderSchema, typename DecoderSchema>
 class TestTypes_Erasure
 {
     static_assert( std::is_base_of_v<IEncoderSchema<EncoderSchema,RSSchema::n,RSSchema::k,RSSchema::Prime,RSSchema::Exponent>, EncoderSchema>, "EncoderSchema is not a child of desired interface class." );
-    // TODO:
-    //   - Static assert RSSchema for the CRT types
     
 public:
     using m_RSSchema = RSSchema;
@@ -25,8 +23,8 @@ public:
     ErasureDecoderBase<EncoderSchema,DecoderSchema,RSSchema::n,RSSchema::k,RSSchema::Prime,RSSchema::Exponent> decoder;
 
     TestTypes_Erasure( std::bitset<RSSchema::n> erasures )
-        : encoder{ RSSchema{}.schema.generating_elements }
-        , decoder{ RSSchema{}.schema, erasures }
+        : encoder{ RSSchema::schema }
+        , decoder{ RSSchema::schema, erasures }
         {};
 };
 

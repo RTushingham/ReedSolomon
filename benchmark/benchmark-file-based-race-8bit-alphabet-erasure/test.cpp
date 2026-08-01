@@ -1,19 +1,18 @@
 #include "CodeSchema.h"
 
+#include "reed-solomon-codes/ReedSolomonBlockCodeParameters.h"
+
 #include "functional-tests/helpers/FormatTestData_Erasure.h"
 #include "functional-tests/helpers/LoadDataFromFile.h"
 
 #include "gtest/gtest.h"
 
-// TODO - begin:
-//   - Simplify
 #include "reed-solomon-codes/EncoderBase.h"
 
 namespace
 {
 	constexpr size_t S{ GetReedSolomonParameters( TestSchema::m_RSSchema::n, TestSchema::m_RSSchema::k ).d - 1 };
 }
-// TODO - end
 
 TEST( BenchmarkValidityTests, AllDataDecodedCorrectly )
 {
@@ -30,8 +29,6 @@ TEST( BenchmarkValidityTests, AllDataDecodedCorrectly )
 
 	const auto outputs{ FormatTestData_Erasure<TestSchema>( text, erasures ) };
 
-	// TODO:
-	//   - Make constexpr
 	const auto code{ TestSchema{ erasures }.encoder };
 	const auto decoder{ TestSchema{ erasures }.decoder };
 

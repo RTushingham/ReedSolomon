@@ -6,6 +6,8 @@
 #include "gtest/gtest.h"
 
 #include <algorithm>
+#include <array>
+#include <type_traits>
 #include <vector>
 
 constexpr integer Prime{ 101 };
@@ -341,5 +343,17 @@ TEST( ElementOfFiniteFieldTests, Addition )
 	};
 
 	EXPECT_EQ( a+e, ae_expected );
+}
+
+TEST( ElementOfFiniteFieldTests, IsLiteralType )
+{
+	constexpr bool is_literal_type{ std::is_literal_type_v<ElementOfFiniteField<Prime, Exponent>> };
+	ASSERT_TRUE( is_literal_type );
+}
+
+TEST( ElementOfFiniteFieldTests, ArrayOfIsLiteralType )
+{
+	constexpr bool is_literal_type{ std::is_literal_type_v<std::array<ElementOfFiniteField<Prime,Exponent>, 4>> };
+	ASSERT_TRUE( is_literal_type );
 }
 

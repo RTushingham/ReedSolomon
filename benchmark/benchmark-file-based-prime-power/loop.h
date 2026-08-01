@@ -1,10 +1,13 @@
-#include "reed-solomon-decoders/BerlekampWelch.h"
 
 #include "finite-fields-polynomials/PolynomialsOverFiniteFieldOfSizePrimeToAPower.h"
-#include "reed-solomon-codes/Code.h"
 #include "reed-solomon-codes/Codeword.h"
+#include "reed-solomon-codes/EncoderBase.h"
+#include "reed-solomon-codes/SimpleEncoderSchema.h"
+#include "reed-solomon-decoders/BerlekampWelchSchema.h"
+#include "reed-solomon-decoders/DecoderBase.h"
 
-#include <fstream>
+#include "functional-tests/helpers/LoadDataFromFile.h"
+
 #include <vector>
 #include <string_view>
 
@@ -55,8 +58,8 @@ namespace
 	//   - Template thes?
     const Schema<n, k, Prime, Exponent> schema{ std::array<ElementOfFiniteField<Prime, Exponent>,n>{ argument_one, argument_two, argument_three, argument_four } };
 
-	Code<n, k, Prime, Exponent> code{ schema.generating_elements };
-	const BerklekampWelchDecoder<n, k, Prime, Exponent> decoder{ schema };
+	const EncoderBase<SimpleEncoderSchema<n,k,Prime,Exponent>, n,k,Prime,Exponent> code{ schema };
+	const DecoderBase<SimpleEncoderSchema<n,k,Prime,Exponent>, BerlekampWelchSchema<n,k,Prime,Exponent>, n,k,Prime,Exponent> decoder{ schema };
 }
 
 struct TestOutputs
@@ -67,20 +70,7 @@ struct TestOutputs
 
 TestOutputs main_loop()
 {
-	std::fstream stream( R"(D:\ReedSolomon\functional-tests\data\error-correcting\text.txt)" );
-	std::string text{};
-
-	if( !stream.is_open() )
-	{
-		throw std::exception( "Test invalid." );
-	}
-	
-	while( !stream.eof() )
-	{
-		std::string buffer{};
-		stream >> buffer;
-		text += buffer;
-	}
+	const auto text{ LoadDataFromFile( TestDataPaths::Large_File ) };
 
 	if( text.empty() )
 	{

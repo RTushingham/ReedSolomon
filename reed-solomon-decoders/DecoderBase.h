@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IErrorDecoderSchema.h"
+#include "reed-solomon-codes/ReedSolomonBlockCodeParameters.h"
 
 #include "container-helpers/ArrayExtensions.h"
 #include "finite-fields/PolynomialsOverFieldAlgorithms.h"

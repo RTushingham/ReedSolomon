@@ -1,5 +1,6 @@
 #pragma once
 
+#include "container-helpers/ArrayExtensions.h"
 #include "cpp-helpers/Sentinal.h"
 #include "cpp-helpers/Typedef.h"
 
@@ -137,7 +138,7 @@ public:
 	
 	constexpr bool operator==(const PolynomialOverField<MaxDegree, FieldElements>& a) const
 	{
-		return coefficients == a.coefficients;
+		return array_equals( coefficients, a.coefficients );
 	}
 	constexpr bool operator!=(const PolynomialOverField<MaxDegree, FieldElements>& a) const
 	{

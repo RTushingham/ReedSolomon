@@ -7,22 +7,17 @@
 
 void main()
 {
-	// TODO - begin:
-	//   - Fold into one
 	std::vector<size_t> erasure_indexes{ 0, 1, 2, 3 };
 	std::bitset<TestSchema::m_RSSchema::n> erasures{ 0 };
 	for( const size_t index : erasure_indexes )
 	{
 		erasures.set( index );
 	}
-	// TODO - end
 
 	const auto text{ LoadDataFromFile( TestDataPaths::Large_File ) };
 
 	const auto outputs{ FormatTestData_Erasure<TestSchema>( text, erasures ) };
 
-	// TODO:
-	//   - Make constexpr
 	const auto code{ TestSchema{ erasures }.encoder };
 	const auto decoder{ TestSchema{ erasures }.decoder };
 

@@ -35,7 +35,7 @@ public:
         return message;
     }
 
-    SystematicEncoderSchema( const Schema<n,k,Prime,Exponent>& input_schema )
+    constexpr SystematicEncoderSchema( const Schema<n,k,Prime,Exponent>& input_schema )
         : schema{ input_schema }
         , interpolator{ CopyFirstKElements<ElementOfFiniteField<Prime,Exponent>, k, n>( input_schema.generating_elements ) }
     {}

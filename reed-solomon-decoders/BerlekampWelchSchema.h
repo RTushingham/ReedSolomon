@@ -5,8 +5,9 @@
 #include "container-helpers/ArrayExtensions.h"
 #include "finite-fields/PolynomialsOverFieldAlgorithms.h"
 #include "finite-fields-extensions/GaussianElimination.h"
-#include "reed-solomon-codes/Schema.h"
 #include "reed-solomon-codes/Codeword.h"
+#include "reed-solomon-codes/ReedSolomonBlockCodeParameters.h"
+#include "reed-solomon-codes/Schema.h"
 
 #include <algorithm>
 #include <optional>

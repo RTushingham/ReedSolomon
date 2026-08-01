@@ -1,4 +1,29 @@
-load( "@rules_cc//cc:defs.bzl", "cc_test" )
+load( "@rules_cc//cc:defs.bzl", "cc_library", "cc_test" )
+
+cc_library(
+    name = "helpers",
+    hdrs = glob([
+        "helpers/*.h",
+    ]),
+    deps = [
+        "//reed-solomon-codes",
+        "//reed-solomon-decoders",
+        "//imports/thirdparty/GoogleTest:GoogleTest",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "test-data",
+    hdrs = glob([
+        "test-data/*.h",
+    ]),
+    deps = [
+        "//reed-solomon-codes",
+        "//imports/thirdparty/GoogleTest:GoogleTest",
+    ],
+    visibility = ["//visibility:public"],
+)
 
 cc_test(
     name = "reed-solomon-codes-tests",
@@ -6,9 +31,12 @@ cc_test(
         "*_Tests.cpp",
     ]),
     deps = [
+        ":test-data",
         "//reed-solomon-codes",
+        "//functional-tests/schemas",
+        "//tests/finite-fields-tests:binary-helpers",
         "//tests/finite-fields-tests:test-data",
-        "//tests/finite-fields-tests:test-helpers",
+        "//tests/finite-fields-tests:helpers",
         "//imports/thirdparty/GoogleTest:GoogleTest",
         "//imports/thirdparty/GoogleTest:GoogleTest-Main",
     ],

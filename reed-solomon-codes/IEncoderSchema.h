@@ -12,12 +12,12 @@ class IEncoderSchema
 public:
     PolynomialOverFiniteField<Prime,Exponent, k-1> MessageToPolynomial( const Message<n, k, Prime, Exponent>& message ) const
     {
-		    return static_cast<E const&>( *this ).MessageToPolynomial( message );
+        return static_cast<E const&>( *this ).MessageToPolynomial( message );
     }
 
     Message<n, k, Prime, Exponent> PolynomialToMessage( const PolynomialOverFiniteField<Prime,Exponent, k-1>& polynomial ) const
     {
-		    return static_cast<E const&>( *this ).PolynomialToMessage( message );
+        return static_cast<E const&>( *this ).PolynomialToMessage( polynomial );
     }
 };
 

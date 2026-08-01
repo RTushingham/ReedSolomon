@@ -13,8 +13,6 @@ void main()
 
 	const auto outputs{ FormatTestData<TestSchema>( text, error_indexes ) };
 
-	// TODO:
-	//   - Make constexpr
 	const auto code{ TestSchema{}.encoder };
 	const auto decoder{ TestSchema{}.decoder };
 

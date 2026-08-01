@@ -2,10 +2,12 @@ load( "@rules_cc//cc:defs.bzl", "cc_library", "cc_binary", "cc_test" )
 
 cc_library(
     name = "main-loop",
+    testonly = True,
     hdrs = glob([
         "loop.h"
     ]),
     deps = [
+        "//functional-tests/helpers",
         "//reed-solomon-codes",
         "//reed-solomon-decoders",
     ],
@@ -13,6 +15,7 @@ cc_library(
 
 cc_binary(
     name = "benchmark-file-based",
+    testonly = True,
     srcs = glob([
         "main.cpp",
     ]),

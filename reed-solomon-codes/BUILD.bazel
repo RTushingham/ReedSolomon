@@ -6,6 +6,7 @@ cc_library(
         "*.h"
     ]),
     deps = [
+        "//container-helpers",
         "//finite-fields",
         "//finite-fields-extensions",
         "//finite-fields-polynomials",

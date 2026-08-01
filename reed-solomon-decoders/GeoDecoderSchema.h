@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IErrorDecoderSchema.h"
+#include "reed-solomon-codes/ReedSolomonBlockCodeParameters.h"
 
 #include "container-helpers/ArrayExtensions.h"
 #include "finite-fields/PolynomialsOverFieldAlgorithms.h"
@@ -19,7 +20,7 @@ class GeoDecoderSchema : public IErrorDecoderSchema<GeoDecoderSchema<n,k,Prime,E
     constexpr static std::size_t e{ GetReedSolomonParameters(n,k).e };
     static_assert( e > 0, "As polynomial lengths are template parameters we restrict our use cases to well defined ones." );
 
-    static PolynomialOverFiniteField<Prime, Exponent, n> CreateInitialPolynomial( const Schema<n, k, Prime, Exponent>& defining_schema )
+    static constexpr PolynomialOverFiniteField<Prime, Exponent, n> CreateInitialPolynomial( const Schema<n, k, Prime, Exponent>& defining_schema )
     {
         auto initial_term{ PolynomialOverFiniteField<Prime, Exponent, n>::GetMultiplicativeInvarient() };
         

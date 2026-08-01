@@ -101,28 +101,6 @@ TEST( PolynomialsOverPrimeFieldTests, LongDivision )
             }
         }
 	};
-	// PolynomialOverFiniteField<Prime,Exponent,MaxDegree> a
-	// {
-    //     std::array<ElementOfFiniteField<Prime, Exponent>, MaxDegree+1>
-    //     {
-    //         ElementOfFiniteField<Prime, Exponent>{
-    //             (x_to( 11,0 ) + x_to( 13, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
-    //         },
-    //         ElementOfFiniteField<Prime, Exponent>{
-    //             (x_to( 17,0 ) + x_to( 19, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
-    //         }
-    //     }
-	// };
-	// ElementOfFiniteField<Prime, Exponent>{
-	// 	(x_to( 23,0 ) + x_to( 29, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
-	// },
-	// ElementOfFiniteField<Prime, Exponent>{
-	// 	(x_to( 31,0 ) + x_to( 37, 1 )).evaluate<PolynomialOverPrimeSizeFiniteField<Prime,1>>()
-	// }
-	// 
-	// EXPECT_EQ( a.LongDivideBy( c ).remainder, acRemainder );
-	// EXPECT_EQ( a.LongDivideBy( c ).quotient, acQuotient );
-	// 
 	constexpr auto zero{ PolynomialOverFiniteField<Prime,Exponent,MaxDegree+1>::GetAdditionInvarient() };
 
 	EXPECT_TRUE( LongDivideBy( zero, c ).remainder.IsZero() );
