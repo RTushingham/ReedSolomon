@@ -11,6 +11,8 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
+#include <numeric>
+
 namespace
 {
     using AllBinaryFunctionalTestSchemas = testing::Types<
@@ -45,10 +47,6 @@ namespace
 
     TYPED_TEST_SUITE( FunctionalFileBaseTests, AllBinaryFunctionalTestSchemas );
 }
-
-#include "reed-solomon-codes/EncoderBase.h"
-
-#include <numeric>
 
 TYPED_TEST( FunctionalFileBaseTests, TestCase )
 {

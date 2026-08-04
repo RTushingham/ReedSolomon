@@ -15,7 +15,7 @@ bool constexpr array_contains( const std::array<ElemType, Length>& array, const 
 };
 
 template<class ElemType, std::size_t Length>
-bool constexpr array_equals(  const std::array<ElemType, Length>& lhs, const std::array<ElemType, Length>& rhs )
+bool constexpr array_equals( const std::array<ElemType, Length>& lhs, const std::array<ElemType, Length>& rhs )
 {
 	for( std::size_t index{ 0 }; index < lhs.size(); index++ )
 	{

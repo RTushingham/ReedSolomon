@@ -1,7 +1,5 @@
 #pragma once
 
-#include "elementary-mathematical-functions/IntegerPowers.h"
-
 #include <vector>
 
 std::vector<unsigned> AllPrimesUntil(unsigned upper_limit)

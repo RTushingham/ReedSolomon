@@ -155,7 +155,6 @@ TEST( ExpressionTemplateTests, MultiplyOperatorMulByOne )
 
 	EXPECT_EQ( a_mul_one_exptmp.GetCoeff( 0 ), a.GetCoeff( 0 ) );
 
-	ElementOfFiniteField_Poly<MaxDegree+MaxDegree,Exponent> a_mul_one{ a_mul_one_exptmp };
 	for( size_t a_coeff_index{ 0 }; a_coeff_index < MaxDegree+1; a_coeff_index++ )
 	{
 		EXPECT_EQ( a_mul_one_exptmp.GetCoeff( a_coeff_index ), a.GetCoeff( a_coeff_index ) );

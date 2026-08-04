@@ -40,7 +40,6 @@ namespace
     class C : public Po<BinaryUint16GFUint32MessageUint64Codeword>
     {
     public:
-        // TODO - unnecessary
         using TestTypesType = DecoderSchemaTestTypes<
             BinaryUint16GFUint32MessageUint64Codeword,
             GeoDecoderSchema< BinaryUint16GFUint32MessageUint64Codeword::n,BinaryUint16GFUint32MessageUint64Codeword::k,BinaryUint16GFUint32MessageUint64Codeword::Prime,BinaryUint16GFUint32MessageUint64Codeword::Exponent >
@@ -100,7 +99,7 @@ TYPED_TEST( GeoDecoderSchemaInternalTests, LegrangeInterpolationWorks )
         
         const auto l_i_res{ geo_decoder.LagrangeInterpolation( signal ) };
 
-        ASSERT_TRUE( generating_elements.size() >= 0 );
+        ASSERT_THAT( generating_elements, ::testing::Not( ::testing::IsEmpty() ) );
         for( std::size_t generator_index{ 0 }; generator_index < generating_elements.size(); generator_index++ )
         {
             EXPECT_EQ( l_i_res( generating_elements.at( generator_index ) ), signal.at( generator_index ) );

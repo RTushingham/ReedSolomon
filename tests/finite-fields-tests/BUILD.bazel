@@ -57,6 +57,8 @@ cc_test(
     deps = [
         ":test-data",
         "//finite-fields",
+        "//elementary-mathematical-functions",
+        "//functional-tests/schemas",
         "//tests/finite-fields-tests:helpers",
         "//imports/thirdparty/GoogleTest:GoogleTest",
         "//imports/thirdparty/GoogleTest:GoogleTest-Main",

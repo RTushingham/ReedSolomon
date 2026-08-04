@@ -1,10 +1,16 @@
 
 #include "finite-fields/IrriduciblePolynomialsOverFiniteFieldOfSizePrime.h"
 
-#include "finite-fields/PolynomialsOverFieldAlgorithms.h"
 #include "test-data/IrriduciblePolynomial.h"
 
+#include "elementary-mathematical-functions/IntegerPowers.h"
+#include "finite-fields/PolynomialsOverFieldAlgorithms.h"
+
+#include "functional-tests/schemas/FamousRSSchemas.h"
+
 #include "gtest/gtest.h"
+
+#include <unordered_set>
 
 TEST( irriduciblePolynomialGenerationTest, MatchesPrecalculated )
 {
@@ -13,55 +19,74 @@ TEST( irriduciblePolynomialGenerationTest, MatchesPrecalculated )
 	EXPECT_EQ( output, irriducible );
 }
 
-TEST( irriduciblePolynomialGenerationTest, Slow )
+namespace
 {
-	constexpr const auto output = GetIrriduciblePolynomial<101, 27>();
+    using GetIrriduciblePolynomialSchemas = testing::Types<
+		PrimePowerGF,
+        BinaryUint8GFUint32MessageUint64Codeword,
+        BinaryUint16GFUint32MessageUint64Codeword
+	>;
 
-	// haven't calculated this yet
-	EXPECT_NE( output, irriducible.Oversize<27>() );
+    template <typename T>
+    class GetIrriduciblePolynomialTests : public testing::Test
+    {
+	public:
+    };
+
+    TYPED_TEST_SUITE( GetIrriduciblePolynomialTests, GetIrriduciblePolynomialSchemas );
 }
 
-//
+// Interface Tests
 
-#include <bitset>
-
-TEST( irriduciblePolynomialGenerationTest, RaceOneSetupTest )
+TYPED_TEST( GetIrriduciblePolynomialTests, IsConstexpr )
 {
-	constexpr const auto irr_poly_candidate{ GetIrriduciblePolynomial<2, 8>() };
-
-	PolynomialOverPrimeSizeFiniteField<2,8> test_divisor{};
-
-	constexpr auto zero{ PolynomialOverPrimeSizeFiniteField<2,8 - 1>::GetAdditionInvarient() };
-	for( uint64_t seed{ 2 }; seed < 32; seed++ )
-	{
-		std::bitset<8+1> bitset{ seed };
-		for( std::size_t coeff_index{ 0 }; coeff_index < test_divisor.GetCoeffCount(); coeff_index++ )
-		{
-			test_divisor.SetCoeff( bitset.test( coeff_index ), coeff_index );
-		}
-
-		const auto result{ LongDivideBy( irr_poly_candidate, test_divisor ) };
-		EXPECT_NE( result.remainder, zero ) << "Divisible to seed: " << seed;
-	}
+	constexpr auto irr_poly{ GetIrriduciblePolynomial<TypeParam::Prime, TypeParam::Exponent>() };
 }
 
-TEST( irriduciblePolynomialGenerationTest, RaceTwoSetupTest )
+// Functionality Tests
+
+TYPED_TEST( GetIrriduciblePolynomialTests, DegreeIsAsExpected )
 {
-	constexpr const auto irr_poly_candidate{ GetIrriduciblePolynomial<2, 16>() };
+	const auto irr_poly{ GetIrriduciblePolynomial<TypeParam::Prime, TypeParam::Exponent>() };
 
-	PolynomialOverPrimeSizeFiniteField<2,16> test_divisor{};
+	EXPECT_EQ( TypeParam::Exponent, irr_poly.GetDegree() );
+	EXPECT_EQ( TypeParam::Exponent + 1, irr_poly.GetCoeffCount() );
+}
 
-	constexpr auto zero{ PolynomialOverPrimeSizeFiniteField<2,16 - 1>::GetAdditionInvarient() };
-	for( uint64_t seed{ 2 }; seed < 512; seed++ )
+TYPED_TEST( GetIrriduciblePolynomialTests, IsIrriducibleBruteForce )
+{
+	const auto irr_poly{ GetIrriduciblePolynomial<TypeParam::Prime, TypeParam::Exponent>() };
+
+	// For Test Verification
+	std::unordered_set<size_t> degrees_tested{};
+
+	for( uint64_t seed{ TypeParam::Prime }; seed < int_pow( TypeParam::Prime, TypeParam::Exponent ); seed++ )
 	{
-		std::bitset<16+1> bitset{ seed };
-		for( std::size_t coeff_index{ 0 }; coeff_index < test_divisor.GetCoeffCount(); coeff_index++ )
+		PolynomialOverPrimeSizeFiniteField<TypeParam::Prime, TypeParam::Exponent> test_divisor{};
+		for( size_t coeff_index{ 0 }; coeff_index < TypeParam::Exponent; coeff_index++ )
 		{
-			test_divisor.SetCoeff( bitset.test( coeff_index ), coeff_index );
+			test_divisor.SetCoeff( ( seed / int_pow( TypeParam::Prime, coeff_index ) ) % TypeParam::Prime, coeff_index );
 		}
 
-		const auto result{ LongDivideBy( irr_poly_candidate, test_divisor ) };
-		EXPECT_NE( result.remainder, zero ) << "Divisible to seed: " << seed;
+		ASSERT_EQ( false, test_divisor.IsZero() );
+		ASSERT_EQ( false, test_divisor.IsOne() );
+
+		const auto result{ LongDivideBy( irr_poly, test_divisor ) };
+		EXPECT_EQ( false, result.remainder.IsZero() ) << "Divisible to seed: " << seed;
+
+		// For Test Verification - begin
+		const auto current_degree{ test_divisor.GetDegree() };
+		if( ! degrees_tested.count( current_degree ) )
+		{
+			degrees_tested.insert( current_degree );
+		}
+		// - end
 	}
+
+	// For Test Verification - begin
+	EXPECT_EQ( 0, degrees_tested.count( 0 ) );
+	EXPECT_EQ( 1, degrees_tested.count( 1 ) );
+	EXPECT_EQ( TypeParam::Exponent - 1, degrees_tested.size() );
+	// - end
 }
 

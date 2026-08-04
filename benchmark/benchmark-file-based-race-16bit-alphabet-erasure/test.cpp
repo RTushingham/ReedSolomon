@@ -7,8 +7,6 @@
 
 #include "gtest/gtest.h"
 
-#include "reed-solomon-codes/EncoderBase.h"
-
 namespace
 {
 	constexpr size_t S{ GetReedSolomonParameters( TestSchema::m_RSSchema::n, TestSchema::m_RSSchema::k ).d - 1 };

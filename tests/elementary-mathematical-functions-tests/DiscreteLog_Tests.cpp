@@ -31,3 +31,11 @@ TEST( DiscreteLogCeilingTests, ErrorCase )
 {
     EXPECT_EQ( discrete_log_ceiling( 0, 2 ), 0 );
 }
+
+TEST( DiscreteLogCeilingTests, IsConstexpr )
+{
+	constexpr auto result{ discrete_log_ceiling( 3, 2 ) };
+
+	EXPECT_EQ( 2, result );
+}
+

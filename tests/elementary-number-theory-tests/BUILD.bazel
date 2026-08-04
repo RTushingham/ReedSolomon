@@ -1,11 +1,21 @@
 load( "@rules_cc//cc:defs.bzl", "cc_test", "cc_library" )
 
+cc_library(
+    name = "helpers",
+    testonly = True,
+    hdrs = glob([
+        "helpers/*.h"
+    ]),
+    visibility = ["//visibility:public"],
+)
+
 cc_test(
     name = "elementary-number-theory-tests",
     srcs = glob([
         "*_Tests.cpp"
     ]),
     deps = [
+        ":helpers",
         "//elementary-number-theory",
         "//imports/thirdparty/GoogleTest:GoogleTest",
         "//imports/thirdparty/GoogleTest:GoogleTest-Main",

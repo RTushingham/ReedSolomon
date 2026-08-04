@@ -2,8 +2,8 @@
 
 #include "IsPrime.h"
 
-#include "elementary-mathematical-functions/DiscreteSquareRoot.h"
-#include "elementary-mathematical-functions/IntegerPowers.h"
+#include "elementary-mathematical-functions/DiscreteLog.h"
+#include "elementary-mathematical-functions/DiscreteRoot.h"
 #include "cpp-helpers/Typedef.h"
 
 struct PrimeFactorAndWeight
@@ -12,34 +12,21 @@ struct PrimeFactorAndWeight
 	unsigned Weight{ 0 };
 };
 
-constexpr PrimeFactorAndWeight PrimeFactorisation_SingleFactor( unsigned n )
+constexpr PrimeFactorAndWeight PrimeFactorisation_SingleFactor( unsigned target )
 {
-	for( unsigned index = 2; index<discrete_sqrt_ceiling(n); index++ )
-	{
-		if( IsPrime(index) )
-		{
-			if( n % index == 0 )
-			{
-				PrimeFactorAndWeight prime_factor_weight{};
-				prime_factor_weight.PrimeFactor = index;
+	PrimeFactorAndWeight return_value{};
+	return_value.PrimeFactor = target;
 
-				auto prime_raised_to_weight = int_pow( index, 2 );
-				for( unsigned last_weight = 1; last_weight < n; last_weight++ )
-				{
-					if( n % prime_raised_to_weight != 0 )
-					{
-						prime_factor_weight.Weight = last_weight;
-						return prime_factor_weight;
-					}
-					
-					prime_raised_to_weight *= index;
-				}
-			}
+	for( unsigned candidate_factor = 2; candidate_factor <= discrete_sqrt_ceiling( target ); candidate_factor++ )
+	{
+		if( IsPrime( candidate_factor ) && ( target % candidate_factor == 0 ) )
+		{
+			return_value.PrimeFactor = candidate_factor;
+			break;
 		}
 	}
 
-	PrimeFactorAndWeight prime_factor_weight;	
-	prime_factor_weight.PrimeFactor = n;
-	prime_factor_weight.Weight = 1;
-	return prime_factor_weight;
+	return_value.Weight = discrete_log_ceiling( target, return_value.PrimeFactor );
+	return return_value;
 }
+

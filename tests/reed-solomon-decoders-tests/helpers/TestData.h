@@ -10,7 +10,7 @@ struct TestData
     std::vector<std::size_t> twiddled_bits{};
     
     Message<n, k, Prime, Exponent> message{};
-    Codeword<n, k, Prime, Exponent> sent_codeword{ };
-    Signal<n, k, Prime, Exponent> recived_block{ };
+    Codeword<n, k, Prime, Exponent> sent_codeword{};
+    Signal<n, k, Prime, Exponent> recived_block{};
 };
 

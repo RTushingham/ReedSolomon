@@ -12,6 +12,7 @@
 #include "gmock/gmock.h"
 
 #include <bitset>
+#include <numeric>
 
 namespace
 {
@@ -47,10 +48,6 @@ namespace
 
     TYPED_TEST_SUITE( FunctionalFileBaseTests, AllBinaryFunctionalTestSchemas );
 }
-
-#include "reed-solomon-codes/EncoderBase.h"
-
-#include <numeric>
 
 TYPED_TEST( FunctionalFileBaseTests, ErasuresAreCheckBits )
 {

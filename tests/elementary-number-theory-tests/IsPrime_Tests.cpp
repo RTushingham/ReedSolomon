@@ -21,3 +21,13 @@ TEST( IsPrimeTests, AllPrimesUntil121 )
 		}
 	}
 }
+
+TEST( IsPrimeTests, IsConstexpr )
+{
+	constexpr bool two_is_prime{ IsPrime( 2 ) };
+	constexpr bool thiryfour_is_prime{ IsPrime( 34 ) };
+
+	EXPECT_EQ( true, two_is_prime );
+	EXPECT_EQ( false, thiryfour_is_prime );
+}
+
